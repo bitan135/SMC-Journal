@@ -149,7 +149,7 @@ export default function AddTrade() {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-[1000px] mx-auto animate-fade-in pb-20">
+    <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-[1000px] mx-auto animate-fade-in pb-20 lg:pl-60">
       <div className="flex items-center gap-4 mb-8">
         <div className="w-12 h-12 rounded-2xl bg-[var(--accent)]/10 flex items-center justify-center border border-[var(--accent)]/20 shadow-lg">
           <Zap className="text-[var(--accent)]" size={24} />

@@ -16,6 +16,27 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+    <html lang="en" className={`${inter.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  const savedTheme = localStorage.getItem('theme') || 'auto';
+                  const root = document.documentElement;
+                  if (savedTheme === 'auto') {
+                    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                    root.setAttribute('data-theme', systemTheme);
+                  } else {
+                    root.setAttribute('data-theme', savedTheme);
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="font-sans antialiased text-[var(--foreground)] bg-[var(--background)]">
         <ThemeProvider>
           <div className="flex min-h-screen">

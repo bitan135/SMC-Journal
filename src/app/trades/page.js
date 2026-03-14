@@ -83,7 +83,7 @@ export default function TradeLibrary() {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-[1400px] mx-auto animate-fade-in pb-20">
+    <div className="px-4 sm:px-6 lg:px-8 py-8 max-w-[1400px] mx-auto animate-fade-in pb-20 lg:pl-60">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)] tracking-tight">Trade Library</h1>
