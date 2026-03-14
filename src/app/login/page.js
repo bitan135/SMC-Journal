@@ -41,12 +41,21 @@ export default function Login() {
   };
 
   const handleGoogleLogin = async () => {
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
-      },
-    });
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { error: googleError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (googleError) throw googleError;
+    } catch (err) {
+      console.error("Google login error:", err);
+      setError("Failed to initialize Google login. Please check your connection.");
+      setIsLoading(false);
+    }
   };
 
   return (
