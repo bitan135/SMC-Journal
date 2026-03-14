@@ -30,7 +30,11 @@ export function ThemeProvider({ children }) {
       } else {
         root.setAttribute('data-theme', currentTheme);
       }
-      localStorage.setItem('theme', currentTheme);
+      
+      // Only set if we have a real value to avoid overwriting during transitions
+      if (currentTheme && currentTheme !== 'undefined') {
+        localStorage.setItem('theme', currentTheme);
+      }
     };
 
     applyTheme(theme);

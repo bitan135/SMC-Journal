@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { Target, TrendingUp, BarChart3, X } from 'lucide-react';
 import { hasOnboarded, setOnboarded } from '@/lib/storage';
 
@@ -29,8 +30,16 @@ export default function Onboarding() {
   const [show, setShow] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
+  const pathname = usePathname();
+
   useEffect(() => {
     const checkOnboarding = async () => {
+      // Don't show Onboarding on auth pages
+      if (pathname === '/login' || pathname === '/signup' || pathname === '/auth/callback') {
+        setShow(false);
+        return;
+      }
+
       // Check local storage first for instant feedback during auth transitions
       const localOnboarded = localStorage.getItem('edge_onboarded');
       if (localOnboarded === 'true') {
@@ -44,7 +53,7 @@ export default function Onboarding() {
       }
     };
     checkOnboarding();
-  }, []);
+  }, [pathname]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
