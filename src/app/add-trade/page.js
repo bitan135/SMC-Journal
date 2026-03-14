@@ -106,7 +106,7 @@ export default function AddTrade() {
       let screenshotBeforeUrl = null;
       let screenshotAfterUrl = null;
 
-      // Import services directly to handle uploads here for clarity
+      // Use the service directly for uploads
       const { tradeService } = await import('@/lib/supabase');
 
       if (formData.screenshotBeforeFile) {
@@ -138,9 +138,8 @@ export default function AddTrade() {
 
       setIsSuccess(true);
       setTimeout(() => {
-        setIsSuccess(false);
         router.push('/');
-      }, 2000);
+      }, 1500);
     } catch (err) {
       console.error('Submission error:', err);
       setErrors({ global: 'Failed to save trade. Please try again.' });

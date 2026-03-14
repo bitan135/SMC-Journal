@@ -7,8 +7,8 @@ export async function updateSession(request) {
   });
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder-url.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key',
     {
       cookies: {
         getAll() {
@@ -28,7 +28,12 @@ export async function updateSession(request) {
   );
 
   // refreshing the auth token
-  await supabase.auth.getUser();
+  try {
+    await supabase.auth.getUser();
+  } catch (e) {
+    // If auth fails or env vars missing, we still want the request to proceed
+    // The client-side logic will handle the unauthenticated state
+  }
 
   return supabaseResponse;
 }
