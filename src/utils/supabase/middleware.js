@@ -39,14 +39,24 @@ export async function updateSession(request) {
     if (!user && !isAuthPage) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
-      return NextResponse.redirect(url);
+      const response = NextResponse.redirect(url);
+      // IMPORTANT: Transfer cookies from the Supabase response to the redirect response
+      supabaseResponse.cookies.getAll().forEach(cookie => {
+        response.cookies.set(cookie.name, cookie.value, cookie.options);
+      });
+      return response;
     }
 
     // Redirect authenticated users away from login/signup to dashboard
     if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
       const url = request.nextUrl.clone();
       url.pathname = '/';
-      return NextResponse.redirect(url);
+      const response = NextResponse.redirect(url);
+      // IMPORTANT: Transfer cookies from the Supabase response to the redirect response
+      supabaseResponse.cookies.getAll().forEach(cookie => {
+        response.cookies.set(cookie.name, cookie.value, cookie.options);
+      });
+      return response;
     }
 
   } catch (e) {
