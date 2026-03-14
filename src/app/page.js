@@ -7,6 +7,7 @@ import {
 import {
   TrendingUp, Target, BarChart3, Clock, Calendar, ArrowUpRight, ArrowDownRight,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import MetricCard from '@/components/MetricCard';
 import ChartCard from '@/components/ChartCard';
 import { MetricSkeleton } from '@/components/ui/SkeletonLoader';
@@ -32,6 +33,7 @@ function CustomTooltip({ active, payload, label }) {
 }
 
 export default function Dashboard() {
+  const router = useRouter();
   const [trades, setTrades] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [greeting, setGreeting] = useState('');
@@ -89,7 +91,7 @@ export default function Dashboard() {
           title="No trades recorded yet"
           description="Log your first trade to start tracking your performance and finding your edge."
           actionLabel="Add First Trade"
-          onAction={() => window.location.href = '/add-trade'}
+          onAction={() => router.push('/add-trade')}
         />
       </div>
     );
@@ -109,7 +111,7 @@ export default function Dashboard() {
           </h1>
         </div>
         <button 
-          onClick={() => window.location.href = '/add-trade'}
+          onClick={() => router.push('/add-trade')}
           className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--accent)] text-white font-bold text-sm shadow-xl shadow-[var(--accent)]/30 hover:bg-[var(--accent-hover)] transition-all hover:scale-105 active:scale-95"
         >
           <ArrowUpRight size={18} />

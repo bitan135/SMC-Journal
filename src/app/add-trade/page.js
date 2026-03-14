@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { 
   Plus, Camera, Check, AlertCircle, TrendingUp, Target, Clock, Zap
 } from 'lucide-react';
@@ -11,6 +12,7 @@ import {
 import TagBadge from '@/components/ui/TagBadge';
 
 export default function AddTrade() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     instrument: 'EURUSD',
     direction: 'Buy',

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { 
   Trash2, Download, Upload, ShieldCheck, Database, RefreshCcw, Bell, DollarSign, Percent, Globe, Save
