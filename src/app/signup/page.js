@@ -2,18 +2,26 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import { TrendingUp, Mail, Lock, User, AlertCircle, Loader2 } from 'lucide-react';
+import { TrendingUp, Mail, Lock, Eye, EyeOff, User, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+
+  const getErrorMessage = (err) => {
+    if (!err) return null;
+    if (err.includes('User already registered')) return 'This email is already registered. Try logging in.';
+    if (err.includes('Password should be')) return 'Password must be at least 6 characters long.';
+    return err;
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -31,7 +39,7 @@ export default function Signup() {
     });
 
     if (signupError) {
-      setError(signupError.message);
+      setError(getErrorMessage(signupError.message));
       setIsLoading(false);
     } else {
       setSuccess(true);
@@ -43,12 +51,12 @@ export default function Signup() {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-3xl p-10 text-center shadow-2xl animate-scale-in">
-          <div className="w-20 h-20 rounded-full bg-[var(--profit)]/20 flex items-center justify-center mx-auto mb-6 text-[var(--profit)]">
-            <Mail size={40} />
+          <div className="w-20 h-20 rounded-full bg-[var(--profit)]/10 flex items-center justify-center mx-auto mb-6 text-[var(--profit)] border border-[var(--profit)]/20 shadow-lg shadow-[var(--profit)]/10">
+            <CheckCircle2 size={40} />
           </div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Check your email</h2>
-          <p className="text-[var(--text-muted)] leading-relaxed mb-8">
-            We've sent a verification link to <span className="text-[var(--text-primary)] font-bold">{email}</span>. Please click it to activate your cockpit.
+          <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-8">
+            We've sent a verification link to <span className="text-[var(--text-primary)] font-bold">{email}</span>. Click it to activate your cockpit.
           </p>
           <Link 
             href="/login" 
@@ -115,14 +123,24 @@ export default function Signup() {
             <div className="relative group">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" size={18} />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Minimum 6 characters"
-                className="w-full pl-12 pr-4 py-3.5 bg-[var(--background)] border border-[var(--border)] rounded-2xl text-sm outline-none focus:border-[var(--accent)] transition-all"
+                className="w-full pl-12 pr-12 py-3.5 bg-[var(--background)] border border-[var(--border)] rounded-2xl text-sm outline-none focus:border-[var(--accent)] transition-all"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
             </div>
+            {password && password.length < 6 && (
+              <p className="text-[10px] text-[var(--loss)] ml-1 font-medium italic animate-fade-in">Password is too short</p>
+            )}
           </div>
 
           <button
