@@ -1,4 +1,5 @@
-import { supabase } from './supabase';
+import { supabase } from './supabaseClient';
+export { supabase };
 
 /**
  * Trade Service - Handles all operations for the trades table in Supabase
