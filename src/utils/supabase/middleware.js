@@ -27,7 +27,11 @@ export async function updateSession(request) {
               sameSite: isLocal ? 'lax' : 'none',
               path: '/',
             };
-            request.cookies.set(name, value);
+            request.cookies.set({
+              name,
+              value,
+              ...cookieOptions
+            });
           });
           supabaseResponse = NextResponse.next({
             request,

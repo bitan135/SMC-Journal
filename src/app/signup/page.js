@@ -49,7 +49,7 @@ export default function Signup() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[var(--background)] grid place-items-center p-4">
         <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-3xl p-10 text-center shadow-2xl animate-scale-in">
           <div className="w-20 h-20 rounded-full bg-[var(--profit)]/10 flex items-center justify-center mx-auto mb-6 text-[var(--profit)] border border-[var(--profit)]/20 shadow-lg shadow-[var(--profit)]/10">
             <CheckCircle2 size={40} />

@@ -16,7 +16,8 @@ export default function MetricCard({
   };
 
   const isPositive = trend?.startsWith('+');
-  const trendColor = isPositive ? 'text-[var(--profit)]' : 'text-[var(--loss)]';
+  const isNegative = trend?.startsWith('-');
+  const trendColor = isPositive ? 'text-[var(--profit)]' : isNegative ? 'text-[var(--loss)]' : 'text-[var(--text-muted)]';
 
   return (
     <div className="bg-[var(--card)] rounded-2xl border border-[var(--border)] p-5 transition-all duration-300 hover:border-[var(--accent)]/50 group shadow-sm hover:shadow-xl hover:shadow-[var(--accent)]/5 animate-fade-in">

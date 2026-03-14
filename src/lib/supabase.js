@@ -9,9 +9,11 @@ export const tradeService = {
    * Fetch all trades for the current user
    */
   async getTrades() {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from('trades')
       .select('*')
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false });
     
     if (error) throw error;
