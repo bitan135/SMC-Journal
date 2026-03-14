@@ -14,15 +14,17 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
+            const host = process.env.NEXT_PUBLIC_SITE_URL || '';
             const isLocal = process.env.NODE_ENV === 'development' || 
-                           process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost') ||
-                           global?.location?.hostname === 'localhost';
+                           host.includes('localhost') ||
+                           host.includes('127.0.0.1');
             
             cookiesToSet.forEach(({ name, value, options }) => {
               const cookieOptions = {
                 ...options,
-                secure: isLocal ? false : options.secure,
-                sameSite: isLocal ? 'lax' : options.sameSite,
+                secure: isLocal ? false : true,
+                sameSite: isLocal ? 'lax' : 'none',
+                path: '/',
               };
               cookieStore.set(name, value, cookieOptions);
             });

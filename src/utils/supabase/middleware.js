@@ -15,15 +15,17 @@ export async function updateSession(request) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
+          const host = request.headers.get('host') || '';
           const isLocal = process.env.NODE_ENV === 'development' || 
-                         request.nextUrl.hostname === 'localhost' || 
-                         request.nextUrl.hostname === '127.0.0.1';
+                         host.includes('localhost') || 
+                         host.includes('127.0.0.1');
           
           cookiesToSet.forEach(({ name, value, options }) => {
             const cookieOptions = {
               ...options,
-              secure: isLocal ? false : options.secure,
-              sameSite: isLocal ? 'lax' : options.sameSite,
+              secure: isLocal ? false : true,
+              sameSite: isLocal ? 'lax' : 'none',
+              path: '/',
             };
             request.cookies.set(name, value);
           });
@@ -33,8 +35,9 @@ export async function updateSession(request) {
           cookiesToSet.forEach(({ name, value, options }) => {
             const cookieOptions = {
               ...options,
-              secure: isLocal ? false : options.secure,
-              sameSite: isLocal ? 'lax' : options.sameSite,
+              secure: isLocal ? false : true,
+              sameSite: isLocal ? 'lax' : 'none',
+              path: '/',
             };
             supabaseResponse.cookies.set(name, value, cookieOptions);
           });

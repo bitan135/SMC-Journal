@@ -22,7 +22,7 @@
   --input-border: #262A36;
   --sidebar-bg: #0B0D14;
   --sidebar-active: rgba(99, 102, 241, 0.1);
-  --font-inter: 'Inter', sans-serif;
+  --font-inter: 'Inter', "Inter Placeholder", sans-serif;
   --tag-bg: rgba(255, 255, 255, 0.05);
 }
 
@@ -96,6 +96,7 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
 /* Custom animations */
