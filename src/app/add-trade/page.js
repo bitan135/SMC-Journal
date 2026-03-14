@@ -29,14 +29,19 @@ export default function AddTrade() {
 
   const [strategies, setStrategies] = useState([]);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [autoCalc, setAutoCalc] = useState({ rr: 0, pips: 0 });
 
   useEffect(() => {
-    setStrategies(getStrategies());
-    if (getStrategies().length > 0) {
-      setFormData(prev => ({ ...prev, strategy: getStrategies()[0] }));
-    }
+    const loadData = async () => {
+      const data = await getStrategies();
+      setStrategies(data);
+      if (data.length > 0) {
+        setFormData(prev => ({ ...prev, strategy: data[0] }));
+      }
+    };
+    loadData();
   }, []);
 
   useEffect(() => {
@@ -71,9 +76,10 @@ export default function AddTrade() {
   const handleFileChange = (e, field) => {
     const file = e.target.files[0];
     if (file) {
+      // For preview, we still use FileReader
       const reader = new FileReader();
       reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, [field]: reader.result }));
+        setFormData(prev => ({ ...prev, [field]: reader.result, [`${field}File`]: file }));
       };
       reader.readAsDataURL(file);
     }
@@ -89,21 +95,56 @@ export default function AddTrade() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate() || isSubmitting) return;
 
-    saveTrade({
-      ...formData,
-      rr: autoCalc.rr,
-      pips: autoCalc.pips,
-    });
+    setIsSubmitting(true);
+    try {
+      let screenshotBeforeUrl = null;
+      let screenshotAfterUrl = null;
 
-    setIsSuccess(true);
-    setTimeout(() => {
-      setIsSuccess(false);
-      window.location.href = '/';
-    }, 2000);
+      // Import services directly to handle uploads here for clarity
+      const { tradeService } = await import('@/lib/supabase');
+
+      if (formData.screenshotBeforeFile) {
+        screenshotBeforeUrl = await tradeService.uploadScreenshot(formData.screenshotBeforeFile, 'before');
+      }
+      if (formData.screenshotAfterFile) {
+        screenshotAfterUrl = await tradeService.uploadScreenshot(formData.screenshotAfterFile, 'after');
+      }
+
+      const tradeToSave = {
+        instrument: formData.instrument,
+        direction: formData.direction,
+        entry_price: parseFloat(formData.entryPrice),
+        stop_loss: parseFloat(formData.stopLoss),
+        take_profit: parseFloat(formData.takeProfit),
+        lot_size: parseFloat(formData.lotSize),
+        result: formData.result,
+        rr: autoCalc.rr,
+        pips: autoCalc.pips,
+        session: formData.session,
+        strategy: formData.strategy,
+        smc_tags: formData.smcTags,
+        notes: formData.notes,
+        screenshot_before: screenshotBeforeUrl,
+        screenshot_after: screenshotAfterUrl,
+      };
+
+      await saveTrade(tradeToSave);
+
+      setIsSuccess(true);
+      setTimeout(() => {
+        setIsSuccess(false);
+        router.push('/');
+      }, 2000);
+    } catch (err) {
+      console.error('Submission error:', err);
+      setErrors({ global: 'Failed to save trade. Please try again.' });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

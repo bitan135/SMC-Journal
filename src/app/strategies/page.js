@@ -18,30 +18,45 @@ export default function Strategies() {
 
   useEffect(() => {
     const loadData = async () => {
-      await new Promise(r => setTimeout(r, 500));
-      const strats = getStrategies();
-      const trades = getTrades();
-      setStrategies(strats);
-      setInsights(getStrategyInsights(trades));
-      setIsLoading(false);
+      try {
+        const [strats, trades] = await Promise.all([
+          getStrategies(),
+          getTrades()
+        ]);
+        setStrategies(strats);
+        setInsights(getStrategyInsights(trades));
+      } catch (err) {
+        console.error('Strategies load failed:', err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadData();
   }, []);
 
-  const handleAdd = (e) => {
+  const handleAdd = async (e) => {
     e.preventDefault();
     if (newStrategy && !strategies.includes(newStrategy)) {
-      addStrategy(newStrategy);
-      const updated = getStrategies();
-      setStrategies(updated);
-      setNewStrategy('');
+      try {
+        await addStrategy(newStrategy);
+        const updated = await getStrategies();
+        setStrategies(updated);
+        setNewStrategy('');
+      } catch (err) {
+        alert('Failed to add strategy');
+      }
     }
   };
 
-  const handleDelete = (name) => {
+  const handleDelete = async (name) => {
     if (confirm(`Delete strategy "${name}"? This will not delete trades associated with it.`)) {
-      deleteStrategy(name);
-      setStrategies(getStrategies());
+      try {
+        await deleteStrategy(name);
+        const updated = await getStrategies();
+        setStrategies(updated);
+      } catch (err) {
+        alert('Failed to delete strategy');
+      }
     }
   };
 

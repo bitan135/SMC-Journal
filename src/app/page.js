@@ -43,11 +43,14 @@ export default function Dashboard() {
     else setGreeting('Good Evening');
 
     const loadData = async () => {
-      // Simulate slight load for better UX feeling
-      await new Promise(r => setTimeout(r, 600));
-      seedDemoData();
-      setTrades(getTrades());
-      setIsLoading(false);
+      try {
+        const fetchedTrades = await getTrades();
+        setTrades(fetchedTrades);
+      } catch (err) {
+        console.error('Dashboard load failed:', err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadData();
   }, []);

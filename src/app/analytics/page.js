@@ -21,9 +21,14 @@ export default function Analytics() {
 
   useEffect(() => {
     const loadData = async () => {
-      await new Promise(r => setTimeout(r, 600));
-      setTrades(getTrades());
-      setIsLoading(false);
+      try {
+        const fetchedTrades = await getTrades();
+        setTrades(fetchedTrades);
+      } catch (err) {
+        console.error('Analytics load failed:', err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadData();
   }, []);

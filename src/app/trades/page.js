@@ -27,18 +27,28 @@ export default function TradeLibrary() {
 
   useEffect(() => {
     const loadTrades = async () => {
-      await new Promise(r => setTimeout(r, 500));
-      setTrades(getTrades().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
-      setIsLoading(false);
+      try {
+        const fetchedTrades = await getTrades();
+        setTrades(fetchedTrades.sort((a, b) => new Date(b.created_at || b.createdAt) - new Date(a.created_at || a.createdAt)));
+      } catch (err) {
+        console.error('Library load failed:', err);
+      } finally {
+        setIsLoading(false);
+      }
     };
     loadTrades();
   }, []);
 
-  const handleDelete = (id, e) => {
+  const handleDelete = async (id, e) => {
     e.stopPropagation();
     if (confirm('Are you sure you want to delete this trade?')) {
-      deleteTrade(id);
-      setTrades(getTrades().sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
+      try {
+        await deleteTrade(id);
+        setTrades(prev => prev.filter(t => t.id !== id));
+        setIsModalOpen(false);
+      } catch (err) {
+        alert('Failed to delete trade');
+      }
     }
   };
 
@@ -185,8 +195,8 @@ export default function TradeLibrary() {
                     <ResultBadge result={trade.result} />
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <p className="text-xs font-bold text-[var(--text-muted)]">{new Date(trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
-                    <p className="text-[10px] text-[var(--text-muted)] opacity-60 font-medium">{new Date(trade.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+                    <p className="text-xs font-bold text-[var(--text-muted)]">{new Date(trade.created_at || trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                    <p className="text-[10px] text-[var(--text-muted)] opacity-60 font-medium">{new Date(trade.created_at || trade.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                   </td>
                 </tr>
               ))}
@@ -216,7 +226,7 @@ export default function TradeLibrary() {
                     <SessionBadge session={trade.session} />
                     <span>{trade.rr}R</span>
                   </div>
-                  <span>{new Date(trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                  <span>{new Date(trade.created_at || trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 </div>
               </div>
             ))}
@@ -259,15 +269,15 @@ export default function TradeLibrary() {
               <div className="grid grid-cols-3 gap-6 bg-[var(--background)] border border-[var(--border)] rounded-2xl p-6">
                 <div>
                   <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Entry</p>
-                  <p className="text-sm font-bold text-[var(--text-primary)]">{selectedTrade.entryPrice}</p>
+                  <p className="text-sm font-bold text-[var(--text-primary)]">{selectedTrade.entry_price || selectedTrade.entryPrice}</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Stop Loss</p>
-                  <p className="text-sm font-bold text-[var(--text-primary)]">{selectedTrade.stopLoss}</p>
+                  <p className="text-sm font-bold text-[var(--text-primary)]">{selectedTrade.stop_loss || selectedTrade.stopLoss}</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Take Profit</p>
-                  <p className="text-sm font-bold text-[var(--text-primary)]">{selectedTrade.takeProfit}</p>
+                  <p className="text-sm font-bold text-[var(--text-primary)]">{selectedTrade.take_profit || selectedTrade.takeProfit}</p>
                 </div>
               </div>
             </div>
@@ -278,7 +288,9 @@ export default function TradeLibrary() {
                 SMC Trace
               </h4>
               <div className="flex flex-wrap gap-2">
-                {selectedTrade.smcTags?.length > 0 ? (
+                {selectedTrade.smc_tags?.length > 0 ? (
+                  selectedTrade.smc_tags.map(tag => <TagBadge key={tag} tag={tag} />)
+                ) : selectedTrade.smcTags?.length > 0 ? (
                   selectedTrade.smcTags.map(tag => <TagBadge key={tag} tag={tag} />)
                 ) : (
                   <p className="text-xs text-[var(--text-muted)] italic">No tags recorded.</p>
@@ -306,16 +318,16 @@ export default function TradeLibrary() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2 text-center">
                   <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Before Setup</p>
-                  {selectedTrade.screenshotBefore ? (
-                    <img src={selectedTrade.screenshotBefore} className="rounded-2xl border border-[var(--border)] w-full shadow-lg" alt="before" />
+                  {selectedTrade.screenshot_before || selectedTrade.screenshotBefore ? (
+                    <img src={selectedTrade.screenshot_before || selectedTrade.screenshotBefore} className="rounded-2xl border border-[var(--border)] w-full shadow-lg" alt="before" />
                   ) : (
                     <div className="aspect-video bg-[var(--background)] border border-[var(--border)] rounded-2xl flex items-center justify-center italic text-xs text-[var(--text-muted)]">No screenshot</div>
                   )}
                 </div>
                 <div className="space-y-2 text-center">
                   <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">Post Result</p>
-                  {selectedTrade.screenshotAfter ? (
-                    <img src={selectedTrade.screenshotAfter} className="rounded-2xl border border-[var(--border)] w-full shadow-lg" alt="after" />
+                  {selectedTrade.screenshot_after || selectedTrade.screenshotAfter ? (
+                    <img src={selectedTrade.screenshot_after || selectedTrade.screenshotAfter} className="rounded-2xl border border-[var(--border)] w-full shadow-lg" alt="after" />
                   ) : (
                     <div className="aspect-video bg-[var(--background)] border border-[var(--border)] rounded-2xl flex items-center justify-center italic text-xs text-[var(--text-muted)]">No screenshot</div>
                   )}

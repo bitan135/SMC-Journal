@@ -30,9 +30,13 @@ export default function Onboarding() {
   const [currentStep, setCurrentStep] = useState(0);
 
   useEffect(() => {
-    if (!hasOnboarded()) {
-      setShow(true);
-    }
+    const checkOnboarding = async () => {
+      const onboarded = await hasOnboarded();
+      if (!onboarded) {
+        setShow(true);
+      }
+    };
+    checkOnboarding();
   }, []);
 
   const handleNext = () => {
@@ -43,8 +47,8 @@ export default function Onboarding() {
     }
   };
 
-  const handleComplete = () => {
-    setOnboarded();
+  const handleComplete = async () => {
+    await setOnboarded();
     setShow(false);
   };
 

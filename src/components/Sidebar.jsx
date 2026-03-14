@@ -1,7 +1,9 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 import {
   LayoutDashboard,
   Plus,
@@ -10,6 +12,9 @@ import {
   Target,
   Settings,
   TrendingUp,
+  LogOut,
+  User as UserIcon,
+  Loader2
 } from 'lucide-react';
 
 const navItems = [
@@ -23,6 +28,47 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      
+      if (user) {
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+        setProfile(profileData);
+      }
+      setIsLoading(false);
+    };
+
+    getUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (!session) {
+        setProfile(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    router.push('/login');
+    router.refresh();
+  };
+
+  // Don't show sidebar on login/signup pages or while loading initial auth
+  if (pathname === '/login' || pathname === '/signup' || pathname === '/auth/callback') return null;
 
   return (
     <>
@@ -73,11 +119,46 @@ export default function Sidebar() {
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="px-4 py-4 border-t border-[var(--border)]">
-          <p className="text-xs text-[var(--text-muted)]">
-            EdgeLedger v1.0
-          </p>
+        {/* User Profile & Logout */}
+        <div className="px-4 py-4 border-t border-[var(--border)] space-y-3">
+          {isLoading ? (
+            <div className="flex items-center gap-3 px-2">
+              <div className="w-8 h-8 rounded-full bg-[var(--card-hover)] animate-pulse" />
+              <div className="flex-1 h-3 bg-[var(--card-hover)] rounded animate-pulse" />
+            </div>
+          ) : user ? (
+            <>
+              <div className="flex items-center gap-3 px-2">
+                <div className="w-8 h-8 rounded-full bg-[var(--accent)]/10 flex items-center justify-center border border-[var(--accent)]/20 overflow-hidden">
+                  {profile?.avatar_url ? (
+                    <img src={profile.avatar_url} alt="avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    <UserIcon size={16} className="text-[var(--accent)]" />
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-[var(--text-primary)] truncate">
+                    {profile?.full_name || user.email.split('@')[0]}
+                  </p>
+                  <p className="text-[10px] text-[var(--text-muted)] truncate">Pro Plan</p>
+                </div>
+              </div>
+              <button 
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold text-[var(--text-muted)] hover:text-[var(--loss)] hover:bg-[var(--loss)]/10 transition-all"
+              >
+                <LogOut size={16} />
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link 
+              href="/login"
+              className="w-full flex items-center justify-center py-2.5 rounded-xl bg-[var(--accent)] text-white text-xs font-bold hover:bg-[var(--accent-hover)] transition-all"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </aside>
 
@@ -108,6 +189,7 @@ export default function Sidebar() {
               </Link>
             );
           })}
+          {/* Mobile Profile/Logout Icon would go here if space permits, or usually in a top bar */}
         </div>
       </nav>
     </>
