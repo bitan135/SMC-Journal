@@ -2,8 +2,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0F1117;
-  --foreground: #F3F4F6;
+  --background: #020617; /* Slate 950 - Absolute Deep Dark */
+  --foreground: #F8FAFC;
   --card: #1A1E28;
   --card-hover: #212632;
   --border: #262A36;

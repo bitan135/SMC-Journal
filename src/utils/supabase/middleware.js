@@ -52,9 +52,18 @@ export async function updateSession(request) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       const response = NextResponse.redirect(url);
-      // IMPORTANT: Transfer cookies from the Supabase response to the redirect response
+      
+      // Sanitized Transfer: Ensure attributes are host-safe
+      const host = request.headers.get('host') || '';
+      const isLocal = process.env.NODE_ENV === 'development' || host.includes('localhost') || host.includes('127.0.0.1');
+
       supabaseResponse.cookies.getAll().forEach(cookie => {
-        response.cookies.set(cookie.name, cookie.value, cookie.options);
+        response.cookies.set(cookie.name, cookie.value, {
+          ...cookie.options,
+          secure: isLocal ? false : true,
+          sameSite: isLocal ? 'lax' : 'none',
+          path: '/',
+        });
       });
       return response;
     }
@@ -64,21 +73,37 @@ export async function updateSession(request) {
       const url = request.nextUrl.clone();
       url.pathname = '/';
       const response = NextResponse.redirect(url);
-      // IMPORTANT: Transfer cookies from the Supabase response to the redirect response
+      
+      // Sanitized Transfer: Ensure attributes are host-safe
+      const host = request.headers.get('host') || '';
+      const isLocal = process.env.NODE_ENV === 'development' || host.includes('localhost') || host.includes('127.0.0.1');
+
       supabaseResponse.cookies.getAll().forEach(cookie => {
-        response.cookies.set(cookie.name, cookie.value, cookie.options);
+        response.cookies.set(cookie.name, cookie.value, {
+          ...cookie.options,
+          secure: isLocal ? false : true,
+          sameSite: isLocal ? 'lax' : 'none',
+          path: '/',
+        });
       });
       return response;
     }
 
   } catch (e) {
-    // If auth fails or env vars missing, we still want the request to proceed
-    // The client-side logic will handle the unauthenticated state
+    // Auth failure
   }
 
-  // Final safety sync of all cookies to the response
+  // Final safety sync of all cookies with sanitization
+  const host = request.headers.get('host') || '';
+  const isLocal = process.env.NODE_ENV === 'development' || host.includes('localhost') || host.includes('127.0.0.1');
+
   supabaseResponse.cookies.getAll().forEach(cookie => {
-    supabaseResponse.cookies.set(cookie.name, cookie.value, cookie.options);
+    supabaseResponse.cookies.set(cookie.name, cookie.value, {
+      ...cookie.options,
+      secure: isLocal ? false : true,
+      sameSite: isLocal ? 'lax' : 'none',
+      path: '/',
+    });
   });
 
   return supabaseResponse;
