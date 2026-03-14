@@ -27,22 +27,11 @@ export async function updateSession(request) {
               sameSite: isLocal ? 'lax' : 'none',
               path: '/',
             };
-            request.cookies.set({
-              name,
-              value,
-              ...cookieOptions
-            });
-          });
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) => {
-            const cookieOptions = {
-              ...options,
-              secure: isLocal ? false : true,
-              sameSite: isLocal ? 'lax' : 'none',
-              path: '/',
-            };
+            
+            // Sync to request
+            request.cookies.set({ name, value, ...cookieOptions });
+            
+            // Sync to response
             supabaseResponse.cookies.set(name, value, cookieOptions);
           });
         },

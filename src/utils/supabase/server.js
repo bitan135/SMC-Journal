@@ -14,7 +14,7 @@ export async function createClient() {
         },
         setAll(cookiesToSet) {
           try {
-            const host = process.env.NEXT_PUBLIC_SITE_URL || '';
+            const host = cookieStore.get('host')?.value || '';
             const isLocal = process.env.NODE_ENV === 'development' || 
                            host.includes('localhost') ||
                            host.includes('127.0.0.1');
@@ -28,10 +28,8 @@ export async function createClient() {
               };
               cookieStore.set(name, value, cookieOptions);
             });
-          } catch {
+          } catch (error) {
             // The `setAll` method was called from a Server Component.
-            // This can be ignored if you have middleware refreshing
-            // user sessions.
           }
         },
       },

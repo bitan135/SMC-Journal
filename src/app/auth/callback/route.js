@@ -14,11 +14,20 @@ export async function GET(request) {
     if (!error) {
       const response = NextResponse.redirect(new URL(next, request.url));
       
-      // Definitively bridge cookies to the redirect response
-      // This is the CRITICAL fix to ensure the session persists after OAuth
+      // Expert Hard-Link: Manually bridge all cookies with sanitized attributes
+      const host = request.headers.get('host') || '';
+      const isLocal = process.env.NODE_ENV === 'development' || 
+                     host.includes('localhost') || 
+                     host.includes('127.0.0.1');
+
       const cookieStore = await cookies();
       cookieStore.getAll().forEach((cookie) => {
-        response.cookies.set(cookie.name, cookie.value, cookie.options);
+        response.cookies.set(cookie.name, cookie.value, {
+          ...cookie.options,
+          secure: isLocal ? false : true,
+          sameSite: isLocal ? 'lax' : 'none',
+          path: '/',
+        });
       });
       
       return response;
