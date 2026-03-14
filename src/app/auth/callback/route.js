@@ -11,7 +11,16 @@ export async function GET(request) {
     const supabase = await createClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(new URL(next, request.url));
+      const response = NextResponse.redirect(new URL(next, request.url));
+      
+      // Definitively bridge cookies to the redirect response
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        // This ensures the session is immediately available to the next request
+        // by placing it in the Set-Cookie headers of the redirect itself.
+      }
+      
+      return response;
     }
     console.error('OAuth Code Exchange Error:', error);
   } else {

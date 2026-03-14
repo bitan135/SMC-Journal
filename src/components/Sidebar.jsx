@@ -74,6 +74,7 @@ export default function Sidebar() {
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[240px] bg-[var(--sidebar-bg)] border-r border-[var(--border)] z-40">
+        <div className="hidden lg:block w-[240px]" /> {/* Spacer to prevent overlap on main content */}
         {/* Logo */}
         <div className="flex items-center gap-3 px-6 h-16 mb-4">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent)] to-purple-500 flex items-center justify-center shadow-lg shadow-[var(--accent)]/20">

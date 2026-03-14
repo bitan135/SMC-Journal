@@ -16,12 +16,11 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
       <body className="font-sans antialiased text-[var(--foreground)] bg-[var(--background)]">
         <ThemeProvider>
           <div className="flex min-h-screen">
             <Sidebar />
-            <main className="flex-1 lg:pl-[240px] pb-24 lg:pb-0 min-h-screen">
+            <main className="flex-1 w-full pb-24 lg:pb-0 min-h-screen">
               {children}
             </main>
           </div>

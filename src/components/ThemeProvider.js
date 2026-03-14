@@ -40,10 +40,11 @@ export function ThemeProvider({ children }) {
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme, mounted]);
 
-  // Prevent flicker by not rendering until mounted (or use a script tag in head for better performance)
+  // Prevent hydration mismatch by not rendering theme-dependent content until mounted
+  // or using a strategy that ensures client/server sync.
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
-      {children}
+      {mounted ? children : <div style={{ visibility: 'hidden' }}>{children}</div>}
     </ThemeContext.Provider>
   );
 }

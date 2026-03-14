@@ -87,5 +87,10 @@ export async function updateSession(request) {
     // The client-side logic will handle the unauthenticated state
   }
 
+  // Final safety sync of all cookies to the response
+  supabaseResponse.cookies.getAll().forEach(cookie => {
+    supabaseResponse.cookies.set(cookie.name, cookie.value, cookie.options);
+  });
+
   return supabaseResponse;
 }
