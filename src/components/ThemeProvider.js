@@ -11,6 +11,12 @@ export function ThemeProvider({ children }) {
     }
     return 'auto';
   });
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('sidebar-collapsed') === 'true';
+    }
+    return false;
+  });
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -39,6 +45,11 @@ export function ThemeProvider({ children }) {
 
     applyTheme(theme);
 
+    // Persist sidebar state
+    if (mounted) {
+      localStorage.setItem('sidebar-collapsed', isSidebarCollapsed);
+    }
+
     const handleChange = () => {
       if (theme === 'auto') applyTheme('auto');
     };
@@ -50,7 +61,12 @@ export function ThemeProvider({ children }) {
   // Prevent hydration mismatch by not rendering theme-dependent content until mounted
   // or using a strategy that ensures client/server sync.
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ 
+      theme, 
+      setTheme, 
+      isSidebarCollapsed, 
+      setSidebarCollapsed 
+    }}>
       {mounted ? children : <div style={{ visibility: 'hidden' }}>{children}</div>}
     </ThemeContext.Provider>
   );

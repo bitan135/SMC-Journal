@@ -53,19 +53,31 @@ export function calculatePips(entry, stopLoss, instrument) {
   const sl = parseFloat(stopLoss);
   const diff = Math.abs(e - sl);
   
-  if (instrument?.includes('JPY')) return parseFloat((diff * 100).toFixed(1));
-  if (instrument?.includes('XAU') || instrument?.includes('GOLD')) return parseFloat((diff * 10).toFixed(1));
-  if (instrument?.includes('NAS') || instrument?.includes('US30')) return parseFloat(diff.toFixed(1));
+  const instr = instrument?.toUpperCase() || '';
   
+  if (instr.includes('JPY')) return parseFloat((diff * 100).toFixed(1));
+  if (instr.includes('XAU') || instr.includes('GOLD')) return parseFloat((diff * 10).toFixed(1));
+  
+  // Indices & Crypto
+  if (instr.includes('NAS') || instr.includes('US30') || instr.includes('SPX') || instr.includes('NDX') || instr.includes('GER') || instr.includes('DAX') || instr.includes('UK100')) {
+    return parseFloat(diff.toFixed(1));
+  }
+  if (instr.includes('BTC') || instr.includes('ETH') || instr.includes('SOL')) return parseFloat(diff.toFixed(0));
+  
+  // Standard 4/5 decimal pairs
   return parseFloat((diff * 10000).toFixed(1));
 }
 
 export function calculateRiskAmount(lotSize, pips, instrument) {
   if (!lotSize || !pips) return 0;
   const lot = parseFloat(lotSize);
-  if (instrument?.includes('NAS') || instrument?.includes('US30')) return parseFloat((lot * pips).toFixed(2));
-  if (instrument?.includes('XAU') || instrument?.includes('GOLD')) return parseFloat((lot * 100 * pips / 10).toFixed(2));
-  if (instrument?.includes('JPY')) return parseFloat((lot * 100000 * pips / 100).toFixed(2));
+  const instr = instrument?.toUpperCase() || '';
+  
+  if (instr.includes('NAS') || instr.includes('US30') || instr.includes('SPX')) return parseFloat((lot * pips).toFixed(2));
+  if (instr.includes('XAU') || instr.includes('GOLD')) return parseFloat((lot * 100 * pips / 10).toFixed(2));
+  if (instr.includes('JPY')) return parseFloat((lot * 100000 * pips / 100).toFixed(2));
+  
+  // Standard Forex (100k units)
   return parseFloat((lot * 100000 * pips / 10000).toFixed(2));
 }
 
@@ -94,8 +106,9 @@ export function getProfitFactor(trades) {
   return parseFloat((totalWinRR / totalLossRR).toFixed(2));
 }
 
-export function getAverageRR(trades) {
-  const wins = trades.filter(t => t.result === 'Win');
+export function getAverageRR(trades = []) {
+  if (!trades || !trades.length) return 0;
+  const wins = trades.filter(t => t && t.result === 'Win');
   if (!wins.length) return 0;
   const avg = wins.reduce((sum, t) => sum + (t.rr || 0), 0) / wins.length;
   return parseFloat(avg.toFixed(2));
@@ -104,16 +117,24 @@ export function getAverageRR(trades) {
 export function getEquityCurve(trades) {
   const sorted = [...trades].sort((a, b) => new Date(a.created_at || a.createdAt) - new Date(b.created_at || b.createdAt));
   let balance = 0;
-  return sorted.map((trade, i) => {
+  
+  // Add an initial zero point if no trades exist to help charting
+  const curve = [];
+  
+  sorted.forEach((trade, i) => {
     if (trade.result === 'Win') balance += (trade.rr || 1);
     else if (trade.result === 'Loss') balance -= 1;
-    return {
+    // Break Even adds 0 to balance
+    
+    curve.push({
       trade: i + 1,
       balance: parseFloat(balance.toFixed(2)),
       date: new Date(trade.created_at || trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
       result: trade.result,
-    };
+    });
   });
+  
+  return curve;
 }
 
 export function getWinRateByGroup(trades, groupKey) {
@@ -283,6 +304,47 @@ export async function hasOnboarded() {
 
 export async function setOnboarded() {
   return await profileService.updateProfile({ has_completed_onboarding: true });
+}
+
+// Data Bridge: Local Storage to Cloud Migration
+export async function migrateLocalToCloud() {
+  const localTrades = JSON.parse(localStorage.getItem('edge_ledger_trades') || '[]');
+  const localStrategies = JSON.parse(localStorage.getItem('edge_ledger_strategies') || '[]');
+  
+  if (localTrades.length === 0 && localStrategies.length === 0) {
+    return { success: true, message: 'No local data found to migrate.' };
+  }
+
+  // 1. Migrate Strategies
+  for (const name of localStrategies) {
+    try {
+      await addStrategy(name);
+    } catch (e) {
+      console.warn(`Strategy ${name} migration skipped (likely exists).`);
+    }
+  }
+
+  // 2. Migrate Trades
+  let migratedCount = 0;
+  for (const trade of localTrades) {
+    try {
+      // Clean up local trade data for Supabase (remove local IDs if present)
+      const { id, ...cleanTrade } = trade;
+      await saveTrade(cleanTrade);
+      migratedCount++;
+    } catch (e) {
+      console.error('Trade migration error:', e);
+    }
+  }
+
+  // 3. Clear Local Storage
+  localStorage.removeItem('edge_ledger_trades');
+  localStorage.removeItem('edge_ledger_strategies');
+  
+  return { 
+    success: true, 
+    message: `Migration complete. Successfully moved ${migratedCount} trades and ${localStrategies.length} strategies to your cloud account.` 
+  };
 }
 
 // Exports

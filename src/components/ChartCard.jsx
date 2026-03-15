@@ -6,17 +6,17 @@ export default function ChartCard({ title, subtitle, children, className = '', h
   if (isLoading) return <ChartSkeleton />;
 
   return (
-    <div className={`bg-[var(--card)] rounded-2xl border border-[var(--border)] p-6 transition-all duration-300 hover:border-[var(--border-custom)] shadow-sm ${className} animate-fade-in`}>
+    <div className={`glass-card shadow-premium animate-fade-in ${className}`}>
       {(title || subtitle) && (
-        <div className="mb-6">
-          {title && <h3 className="text-sm font-bold text-[var(--text-primary)] uppercase tracking-widest">{title}</h3>}
-          {subtitle && <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">{subtitle}</p>}
+        <div className="mb-8">
+          {title && <h3 className="text-[11px] font-black text-white uppercase tracking-[0.2em] mb-3">{title}</h3>}
+          {subtitle && <p className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.2em]">{subtitle}</p>}
         </div>
       )}
       <div className={height}>
         {isEmpty ? (
-          <div className="h-full flex flex-col items-center justify-center text-center opacity-50">
-            <p className="text-sm text-[var(--text-muted)]">No data points yet</p>
+          <div className="h-full flex flex-col items-center justify-center text-center opacity-20">
+            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Awaiting Data Streams</p>
           </div>
         ) : (
           children

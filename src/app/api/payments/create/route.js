@@ -39,18 +39,23 @@ export async function POST(req) {
     const payload = {
       price_amount: prices[planId],
       price_currency: 'usd',
-      pay_currency: 'btc', // You can make this dynamic later
+      pay_currency: 'usdtarb', // USDT on Arbitrum (High speed, Low fee)
       ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: `${user.id}_${Date.now()}`,
       order_description: `EdgeLedger ${planId.replace('_', ' ').toUpperCase()} Plan`
     };
 
-    console.log('Sending NOWPayments payload:', JSON.stringify(payload, null, 2));
+    console.log('--- Payment Request Started ---');
+    console.log('Plan:', planId);
+    console.log('Payload:', JSON.stringify(payload, null, 2));
+
     const payment = await nowPaymentsService.createPayment(payload);
+    
     console.log('NOWPayments Response:', JSON.stringify(payment, null, 2));
 
     if (payment.status === false || payment.error || !payment.payment_id) {
        const msg = payment.message || payment.error || 'NOWPayments API Error';
+       console.error('Payment Error Details:', payment);
        return NextResponse.json({ error: msg }, { status: 400 });
     }
 

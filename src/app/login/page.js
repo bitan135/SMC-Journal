@@ -59,8 +59,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] grid place-items-center p-4">
-      <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-3xl p-8 shadow-2xl animate-fade-in">
+    <div className="min-h-screen bg-[var(--background)] grid place-items-center p-4 relative overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float"></div>
+      <div className="absolute bottom-[5%] left-[-10%] w-[35%] h-[35%] bg-indigo-500/5 blur-[100px] rounded-full delay-700 animate-float"></div>
+
+      <div className="w-full max-w-md glass-card shadow-premium p-10 animate-fade-in relative z-10">
         <div className="flex flex-col items-center text-center mb-10">
           <div className="w-16 h-16 rounded-2xl bg-[var(--accent)]/10 flex items-center justify-center mb-6 border border-[var(--accent)]/20 shadow-xl">
             <TrendingUp className="text-[var(--accent)]" size={32} />
@@ -78,7 +82,7 @@ export default function Login() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase ml-1 tracking-widest">Email Address</label>
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-[0.2em]">Email Address</label>
             <div className="relative group">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" size={18} />
               <input
@@ -93,7 +97,7 @@ export default function Login() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase ml-1 tracking-widest">Password</label>
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-[0.2em]">Password</label>
             <div className="relative group">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" size={18} />
               <input
@@ -117,24 +121,24 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 rounded-2xl bg-[var(--accent)] text-white font-bold text-sm hover:bg-[var(--accent-hover)] transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2 shadow-xl shadow-[var(--accent)]/20 disabled:opacity-70"
+            className="w-full py-5 rounded-[24px] bg-[var(--accent)] text-white font-black text-sm tracking-[0.2em] uppercase hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2 shadow-xl shadow-[var(--accent)]/20 disabled:opacity-70"
           >
             {isLoading ? <Loader2 className="animate-spin" size={20} /> : 'Enter Dashboard'}
           </button>
         </form>
 
-        <div className="mt-8 flex items-center gap-4">
-          <div className="flex-1 h-px bg-[var(--border)]" />
-          <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest">or continue with</span>
-          <div className="flex-1 h-px bg-[var(--border)]" />
+        <div className="mt-10 flex items-center gap-4">
+          <div className="flex-1 h-px bg-white/5" />
+          <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">or continue with</span>
+          <div className="flex-1 h-px bg-white/5" />
         </div>
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full mt-6 py-4 rounded-2xl bg-[var(--card-hover)] border border-[var(--border)] text-[var(--text-primary)] font-bold text-sm hover:border-[var(--text-muted)] transition-all flex items-center justify-center gap-3"
+          className="w-full mt-8 py-5 rounded-[24px] glass-effect border-white/5 text-white font-black text-sm hover:bg-white/5 transition-all flex items-center justify-center gap-3 tracking-[0.2em] uppercase"
         >
           <img src="https://www.svgrepo.com/show/355037/google.svg" className="w-5 h-5" alt="Google" />
-          Sign in with Google
+          Google Sync
         </button>
 
         <p className="mt-8 text-center text-xs text-[var(--text-muted)]">

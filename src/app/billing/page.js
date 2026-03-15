@@ -1,38 +1,41 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Check, Zap, Crown, Rocket, Loader2, ArrowRight } from 'lucide-react';
+import { Check, Zap, Crown, Rocket, Loader2, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { profileService } from '@/lib/storage';
 
 const plans = [
   {
     id: 'free',
-    name: 'Free',
+    name: 'Starter',
     price: '$0',
-    description: 'Perfect for getting started',
-    features: ['30 Trade Limit', 'Basic Analytics', 'Standard Support'],
+    description: 'Master the fundamentals',
+    features: ['30 Trade Limit', 'Basic Analytics', 'Community Access'],
     icon: Rocket,
-    color: 'var(--neutral)',
+    color: '#94A3B8',
+    gradient: 'from-slate-500/10 to-transparent',
   },
   {
     id: 'pro_monthly',
-    name: 'Pro Monthly',
+    name: 'Pro Trader',
     price: '$10',
-    description: 'For dedicated traders',
-    features: ['Unlimited Trades', 'Deep Strategy Insights', 'Priority Support', 'Custom SMC Tags'],
+    description: 'For relentless execution',
+    features: ['Unlimited Trades', 'SMC Logic Engine', 'Priority Signals', 'Priority Support'],
     icon: Zap,
-    color: 'var(--accent)',
+    color: '#6366F1',
+    gradient: 'from-indigo-600/20 to-transparent',
     popular: true,
   },
   {
     id: 'lifetime',
-    name: 'Lifetime',
+    name: 'Legend',
     price: '$50',
-    description: 'Ultimate trading cockpit',
-    features: ['Unlimited Trades', 'All Pro Features', 'One-time Payment', 'Exclusive Beta Access'],
+    description: 'Lifetime domination',
+    features: ['Infinite Trading', 'All Pro Features', 'Early Beta Access', 'One-time Payment'],
     icon: Crown,
-    color: 'var(--profit)',
+    color: '#10B981',
+    gradient: 'from-emerald-600/20 to-transparent',
   },
 ];
 
@@ -43,8 +46,12 @@ export default function BillingPage() {
 
   useEffect(() => {
     async function loadSub() {
-      const sub = await profileService.getSubscription();
-      setCurrentPlan(sub.plan_id);
+      try {
+        const sub = await profileService.getSubscription();
+        setCurrentPlan(sub.plan_id);
+      } catch (e) {
+        console.error('Failed to load sub', e);
+      }
     }
     loadSub();
   }, []);
@@ -64,7 +71,7 @@ export default function BillingPage() {
       if (payment.payment_id) {
         router.push(`/checkout?id=${payment.payment_id}`);
       } else {
-        throw new Error(payment.error || 'Failed to create payment');
+        throw new Error(payment.error || 'Initiation failed');
       }
     } catch (err) {
       alert(err.message);
@@ -74,91 +81,119 @@ export default function BillingPage() {
   };
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-12 max-w-[1200px] mx-auto animate-fade-in lg:pl-64">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-extrabold text-[var(--text-primary)] tracking-tight mb-4">
-          Upgrade Your Edge
-        </h1>
-        <p className="text-lg text-[var(--text-secondary)] max-w-2xl mx-auto">
-          Choose a plan that fits your trading journey. From free journaling to a lifetime cockpit, we've got you covered.
-        </p>
-      </div>
+    <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto relative overflow-hidden bg-[var(--background)]">
+      {/* Background Orbs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--accent)]/10 blur-[120px] rounded-full animate-float"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-full delay-1000 animate-float"></div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {plans.map((plan) => {
-          const Icon = plan.icon;
-          const isCurrent = currentPlan === plan.id;
-          const isProUpgrade = plan.id !== 'free';
+      <div className="max-w-6xl mx-auto relative z-10">
+        <div className="text-center mb-20 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-effect border-white/5 text-[var(--accent)] text-xs font-black uppercase tracking-[0.2em] mb-6">
+            <Sparkles size={14} className="animate-pulse" /> Precision Pricing
+          </div>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-6 text-gradient">
+            Evolve Your <br />Trading Edge
+          </h1>
+          <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto font-medium">
+            Join the elite circle of traders using the most advanced journaling engine in the world.
+          </p>
+        </div>
 
-          return (
-            <div 
-              key={plan.id}
-              className={`relative group bg-[var(--card)] border ${plan.popular ? 'border-[var(--accent)]' : 'border-[var(--border)]'} rounded-[32px] p-8 transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-[var(--accent)]/10`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
-                  Most Popular
-                </div>
-              )}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
+          {plans.map((plan) => {
+            const Icon = plan.icon;
+            const isCurrent = currentPlan === plan.id;
 
-              <div className="mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-[var(--background)] border border-[var(--border)] flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Icon size={28} style={{ color: plan.color }} />
-                </div>
-                <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">{plan.name}</h3>
-                <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-4xl font-black text-[var(--text-primary)]">{plan.price}</span>
-                  <span className="text-[var(--text-muted)] text-sm">{plan.id === 'lifetime' ? 'one-time' : '/ month'}</span>
-                </div>
-                <p className="text-sm text-[var(--text-secondary)]">{plan.description}</p>
-              </div>
-
-              <div className="space-y-4 mb-10">
-                {plan.features.map((feature) => (
-                  <div key={feature} className="flex items-center gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[var(--profit-bg)] flex items-center justify-center">
-                      <Check size={12} className="text-[var(--profit)]" />
-                    </div>
-                    <span className="text-sm text-[var(--text-secondary)]">{feature}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                disabled={isCurrent || loading}
-                onClick={() => handleUpgrade(plan.id)}
-                className={`w-full py-4 rounded-2xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-                  isCurrent 
-                    ? 'bg-[var(--background)] text-[var(--text-muted)] cursor-default'
-                    : plan.popular
-                      ? 'bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] shadow-xl shadow-[var(--accent)]/20'
-                      : 'bg-white text-black hover:bg-gray-100'
+            return (
+              <div 
+                key={plan.id}
+                className={`relative group rounded-[var(--card-radius)] p-10 transition-all duration-500 hover:scale-[1.02] shadow-premium glass-card ${
+                  plan.popular ? 'border-[var(--accent)]/30 scale-[1.05] z-20' : 'border-white/5 md:scale-95 hover:scale-100'
                 }`}
               >
-                {loading === plan.id ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : isCurrent ? (
-                  'Current Plan'
-                ) : (
-                  <>
-                    {plan.id === 'free' ? 'Get Started' : 'Upgrade Now'}
-                    <ArrowRight size={16} />
-                  </>
+                {plan.popular && (
+                  <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-[var(--accent)] text-white text-[10px] font-black uppercase tracking-[0.2em] px-6 py-2 rounded-full shadow-lg shadow-indigo-500/40 border border-white/20">
+                    Elite Choice
+                  </div>
                 )}
-              </button>
-            </div>
-          );
-        })}
-      </div>
 
-      <div className="mt-20 p-8 rounded-[32px] bg-gradient-to-br from-[var(--card)] to-[var(--background)] border border-[var(--border)] text-center">
-        <h3 className="text-lg font-bold text-[var(--text-primary)] mb-2">Secure Crypto Payments</h3>
-        <p className="text-sm text-[var(--text-muted)] mb-6">We accept BTC, ETH, USDT and more through NOWPayments.</p>
-        <img 
-          src="https://nowpayments.io/images/nowpayments-logo-white.svg" 
-          className="h-6 mx-auto opacity-50 grey-invert"
-          alt="Powered by NOWPayments" 
-        />
+                <div className="mb-10">
+                  <div className={`w-16 h-16 rounded-[24px] bg-gradient-to-br ${plan.gradient} flex items-center justify-center mb-8 border border-white/5 transition-transform group-hover:rotate-6`}>
+                    <Icon size={32} style={{ color: plan.color }} />
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-2">{plan.name}</h3>
+                  <div className="flex items-baseline gap-1 mb-4">
+                    <span className="text-5xl font-black text-white">{plan.price}</span>
+                    <span className="text-[var(--text-muted)] text-sm font-bold tracking-tight">
+                        {plan.id === 'lifetime' ? 'FOREVER' : 'PER MONTH'}
+                    </span>
+                  </div>
+                  <p className="text-[var(--text-secondary)] font-medium leading-relaxed">{plan.description}</p>
+                </div>
+
+                <div className="space-y-4 mb-12">
+                  {plan.features.map((feature) => (
+                    <div key={feature} className="flex items-center gap-4">
+                      <div className="w-6 h-6 rounded-full glass-effect flex items-center justify-center border-white/10">
+                        <Check size={14} className="text-white" />
+                      </div>
+                      <span className="text-sm font-medium text-[var(--text-secondary)] group-hover:text-white transition-colors">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  disabled={isCurrent || loading}
+                  onClick={() => handleUpgrade(plan.id)}
+                  className={`w-full py-5 rounded-[24px] font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 active:scale-95 ${
+                    isCurrent 
+                      ? 'bg-white/5 text-[var(--text-muted)] border border-white/5 cursor-default'
+                      : plan.popular
+                        ? 'bg-[var(--accent)] text-white hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] border border-white/20'
+                        : 'bg-white text-black hover:bg-white/90 hover:shadow-xl'
+                  }`}
+                >
+                  {loading === plan.id ? (
+                    <Loader2 className="animate-spin" size={20} />
+                  ) : isCurrent ? (
+                    'ACTIVE'
+                  ) : (
+                    <>
+                      {plan.id === 'free' ? 'SELECTED' : 'UPGRADE NOW'}
+                      <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                    </>
+                  )}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="mt-24 p-12 rounded-[var(--card-radius)] glass-card border-white/5 text-center relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+            <div className="relative z-10 flex flex-col items-center">
+                <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
+                    <ShieldCheck size={24} className="text-[var(--accent)]" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">Institutional Security</h3>
+                <p className="text-[var(--text-secondary)] mb-10 max-w-xl font-medium">
+                    Payments are handled exclusively through the **Arbitrum Network** for sub-cent fees and instant finality. 100% Secure & On-Chain.
+                </p>
+                <div className="flex items-center gap-6 saturate-50 hover:saturate-100 transition-all">
+                    <img 
+                        src="https://nowpayments.io/images/nowpayments-logo-white.svg" 
+                        className="h-7 grey-invert opacity-60"
+                        alt="NOWPayments" 
+                    />
+                    <div className="w-px h-6 bg-white/10"></div>
+                    <img 
+                        src="https://cryptologos.cc/logos/arbitrum-arb-logo.svg?v=032" 
+                        className="h-8 shadow-sm"
+                        alt="Arbitrum" 
+                    />
+                </div>
+            </div>
+        </div>
       </div>
     </div>
   );
