@@ -7,8 +7,9 @@ import {
 } from 'lucide-react';
 import { 
   saveTrade, getStrategies, INSTRUMENTS, SESSIONS, SMC_TAGS, 
-  calculateRR, calculatePips 
+  calculateRR, calculatePips, canAddTrade
 } from '@/lib/storage';
+import { Crown } from 'lucide-react';
 import TagBadge from '@/components/ui/TagBadge';
 
 export default function AddTrade() {
@@ -34,6 +35,7 @@ export default function AddTrade() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
   const [autoCalc, setAutoCalc] = useState({ rr: 0, pips: 0 });
+  const [canAdd, setCanAdd] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
@@ -42,6 +44,9 @@ export default function AddTrade() {
       if (data.length > 0) {
         setFormData(prev => ({ ...prev, strategy: data[0] }));
       }
+      
+      const allowed = await canAddTrade();
+      setCanAdd(allowed);
     };
     loadData();
   }, []);
@@ -394,6 +399,31 @@ export default function AddTrade() {
         <div className="fixed bottom-24 right-8 bg-[var(--loss)] text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-3 animate-slide-up z-[60]">
           <AlertCircle size={20} />
           <p className="text-xs font-bold uppercase tracking-wider">Please fill all required fields</p>
+        </div>
+      )}
+
+      {/* Trade Limit Overlay */}
+      {!canAdd && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[var(--card)] border border-[var(--border)] rounded-[32px] p-10 max-w-sm text-center shadow-2xl animate-scale-in">
+            <Crown className="mx-auto mb-6 text-[var(--accent)]" size={48} />
+            <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-3">Trade Limit Reached</h2>
+            <p className="text-[var(--text-secondary)] mb-8">
+              You've hit the 30 trade limit on the Free plan. Upgrade to Pro to log unlimited trades and find your edge.
+            </p>
+            <button 
+              onClick={() => router.push('/billing')}
+              className="w-full py-4 bg-[var(--accent)] text-white font-bold rounded-2xl shadow-xl shadow-[var(--accent)]/30 hover:scale-105 transition-all mb-4"
+            >
+              Upgrade to Pro
+            </button>
+            <button 
+              onClick={() => router.push('/')}
+              className="text-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
         </div>
       )}
     </div>

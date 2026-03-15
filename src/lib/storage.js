@@ -173,7 +173,7 @@ export function getRRDistribution(trades) {
 
 // -------------- Supabase Bridged Operations --------------------
 
-// Profile Service Wrapper
+// Profile & Subscription Service Wrapper
 export const profileService = {
   async getProfile() {
     const { data: { user } } = await supabase.auth.getUser();
@@ -186,6 +186,18 @@ export const profileService = {
     if (!user) return null;
     const { data } = await supabase.from('profiles').update(updates).eq('id', user.id).select().single();
     return data;
+  },
+  async getSubscription() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return { plan_id: 'free', status: 'none' };
+    
+    const { data } = await supabase
+      .from('subscriptions')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+      
+    return data || { plan_id: 'free', status: 'active' };
   }
 };
 
@@ -199,7 +211,20 @@ export async function getTrades() {
   }
 }
 
+export async function canAddTrade() {
+  const subscription = await profileService.getSubscription();
+  if (subscription.plan_id !== 'free') return true;
+  
+  const trades = await getTrades();
+  return trades.length < 30;
+}
+
 export async function saveTrade(trade) {
+  const canAdd = await canAddTrade();
+  if (!canAdd) {
+    throw new Error('Trade limit reached! Please upgrade to Pro for unlimited trades.');
+  }
+
   // Handle screenshot uploads if they are base64/files
   const tradeData = { ...trade };
   return await tradeService.createTrade(tradeData);

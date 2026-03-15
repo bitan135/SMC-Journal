@@ -14,6 +14,7 @@ import {
   TrendingUp,
   LogOut,
   User as UserIcon,
+  Crown,
   Loader2
 } from 'lucide-react';
 
@@ -23,6 +24,7 @@ const navItems = [
   { href: '/add-trade', label: 'Add Trade', icon: Plus },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/strategies', label: 'Strategies', icon: Target },
+  { href: '/billing', label: 'Billing', icon: Crown },
   { href: '/settings', label: 'Settings', icon: Settings },
 ];
 
