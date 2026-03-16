@@ -1,5 +1,5 @@
 {
-  "name": "edge-ledger",
+  "name": "smc-journal",
   "version": "0.1.0",
   "private": true,
   "scripts": {

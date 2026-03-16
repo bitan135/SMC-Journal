@@ -82,7 +82,7 @@ export default function Sidebar() {
   }, []);
 
   const handleLogout = async () => {
-    await supabase.signOut();
+    await supabase.auth.signOut();
     router.push('/login');
     router.refresh();
   };
@@ -126,7 +126,7 @@ export default function Sidebar() {
               SMC Journal
             </span>
             <span className="text-[8px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mt-1 opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500 leading-relaxed">
-              Collapse
+              Edge · Ledger
             </span>
           </div>
           {/* Collapse Indicator Dot */}
@@ -169,6 +169,25 @@ export default function Sidebar() {
         </nav>
 
 
+
+        {/* Plan Upgrade CTA */}
+        {subscription?.plan_id === 'free' && (
+          <div className="mx-4 mb-4 p-5 rounded-[24px] bg-gradient-to-br from-[var(--accent)] to-purple-600 relative overflow-hidden group/cta">
+            <div className="absolute top-0 right-0 p-2 opacity-20 group-hover/cta:rotate-12 transition-transform">
+              <Sparkles size={40} />
+            </div>
+            <div className="relative z-10">
+              <h4 className="text-white text-[11px] font-black uppercase tracking-widest mb-1">Institutional Pro</h4>
+              <p className="text-white/70 text-[10px] font-bold leading-relaxed mb-4">Unlock advanced quantitative analytics and max drawdown curves.</p>
+              <Link
+                href="/billing"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white text-[var(--accent)] rounded-xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+              >
+                Upgrade Now
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* User Card */}
         <div className="p-4 mx-4 mb-4 rounded-[32px] glass-card border-[var(--glass-border)] relative overflow-hidden group">
@@ -217,30 +236,32 @@ export default function Sidebar() {
 
       {/* Mobile Bottom Nav */}
       <nav className="lg:hidden fixed bottom-4 left-4 right-4 h-20 glass-card rounded-[32px] border-[var(--glass-border)] z-50 flex items-center justify-around px-2 shadow-2xl">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`relative flex flex-col items-center justify-center transition-all duration-300 ${
-                isActive ? 'text-[var(--accent)] scale-110' : 'text-[var(--text-muted)]'
-              }`}
-            >
-              {item.href === '/add-trade' ? (
-                <div className="w-14 h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center -mt-12 shadow-2xl shadow-[var(--accent)]/40 border-4 border-[var(--sidebar-bg)]">
-                  <Icon size={24} className="text-white" />
-                </div>
-              ) : (
-                <>
-                    <Icon size={22} />
-                    {isActive && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-[var(--accent)]" />}
-                </>
-              )}
-            </Link>
-          );
-        })}
+        {navItems
+          .filter(item => ['Dashboard', 'Trades', 'Add Trade', 'Analytics', 'Settings'].includes(item.label))
+          .map((item) => {
+            const isActive = pathname === item.href;
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`relative flex flex-col items-center justify-center transition-all duration-300 ${
+                  isActive ? 'text-[var(--accent)] scale-110' : 'text-[var(--text-muted)]'
+                }`}
+              >
+                {item.href === '/add-trade' ? (
+                  <div className="w-14 h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center -mt-12 shadow-2xl shadow-[var(--accent)]/40 border-4 border-[var(--sidebar-bg)]">
+                    <Icon size={24} className="text-white" />
+                  </div>
+                ) : (
+                  <>
+                      <Icon size={22} />
+                      {isActive && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-[var(--accent)]" />}
+                  </>
+                )}
+              </Link>
+            );
+          })}
       </nav>
     </>
   );

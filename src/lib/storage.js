@@ -114,6 +114,81 @@ export function getAverageRR(trades = []) {
   return parseFloat(avg.toFixed(2));
 }
 
+export function getExpectancy(trades = []) {
+  if (!trades || !trades.length) return 0;
+  const wr = getWinRate(trades) / 100;
+  const avgRR = getAverageRR(trades);
+  // Expectancy = (WR * AvgRR) - (LossRate * 1)
+  const expectancy = (wr * avgRR) - (1 - wr);
+  return parseFloat(expectancy.toFixed(2));
+}
+
+export function getTrend(trades = [], key, samples = 10) {
+  if (trades.length < samples * 2) return 0;
+  const recent = trades.slice(0, samples);
+  const previous = trades.slice(samples, samples * 2);
+  
+  let recentMetric, prevMetric;
+  if (key === 'winRate') {
+    recentMetric = getWinRate(recent);
+    prevMetric = getWinRate(previous);
+  } else if (key === 'profitFactor') {
+    recentMetric = getProfitFactor(recent);
+    prevMetric = getProfitFactor(previous);
+  } else {
+    return 0;
+  }
+  
+  if (prevMetric === 0) return recentMetric > 0 ? 100 : 0;
+  return parseFloat(((recentMetric - prevMetric) / prevMetric * 100).toFixed(1));
+}
+
+export function getDrawdownCurve(trades = []) {
+  if (!trades || !trades.length) return [];
+  const sorted = [...trades].sort((a, b) => new Date(a.trade_date || a.tradeDate || a.created_at || a.createdAt) - new Date(b.trade_date || b.tradeDate || b.created_at || b.createdAt));
+  
+  let balance = 0;
+  let peak = 0;
+  return sorted.map((t, i) => {
+    const r = t.result === 'Win' ? (t.rr || 0) : t.result === 'Break Even' ? 0 : -1;
+    balance += r;
+    if (balance > peak) peak = balance;
+    const dd = peak === 0 ? 0 : ((balance - peak) / (peak || 1)) * 0; // Simplified R-based drawdown
+    const ddR = balance - peak;
+    return {
+      index: i + 1,
+      date: new Date(t.trade_date || t.tradeDate || t.created_at || t.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      drawdown: parseFloat(ddR.toFixed(2)),
+      balance: parseFloat(balance.toFixed(2))
+    };
+  });
+}
+
+export function getMaxDrawdown(trades = []) {
+  const curve = getDrawdownCurve(trades);
+  if (!curve.length) return 0;
+  const max = Math.min(...curve.map(c => c.drawdown));
+  return parseFloat(max.toFixed(2));
+}
+
+export function getMonthlyPerformance(trades = []) {
+  const months = {};
+  trades.forEach(t => {
+    const date = new Date(t.trade_date || t.tradeDate || t.created_at || t.createdAt);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    if (!months[key]) months[key] = 0;
+    const r = t.result === 'Win' ? (t.rr || 0) : t.result === 'Break Even' ? 0 : -1;
+    months[key] += r;
+  });
+
+  return Object.entries(months)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([month, profit]) => ({
+      month: new Date(month + '-01').toLocaleDateString('en-US', { month: 'short', year: '2-digit' }),
+      profit: parseFloat(profit.toFixed(2))
+    }));
+}
+
 export function getEquityCurve(trades) {
   const sorted = [...trades].sort((a, b) => new Date(a.created_at || a.createdAt) - new Date(b.created_at || b.createdAt));
   let balance = 0;
@@ -167,14 +242,22 @@ export function getStrategyInsights(trades) {
     }
   });
   
-  return Object.entries(groups).map(([name, data]) => ({
-    name,
-    trades: data.total,
-    winRate: parseFloat(((data.wins / data.total) * 100).toFixed(1)),
-    avgRR: data.wins > 0 ? parseFloat((data.totalRR / data.wins).toFixed(2)) : 0,
-    wins: data.wins,
-    losses: data.total - data.wins,
-  })).sort((a, b) => b.trades - a.trades);
+  return Object.entries(groups).map(([name, data]) => {
+    const winRate = (data.wins / data.total);
+    const avgRR = data.wins > 0 ? (data.totalRR / data.wins) : 0;
+    // Expectancy = (WR * AvgRR) - (LossRate * 1)
+    const expectancy = (winRate * avgRR) - (1 - winRate);
+    
+    return {
+      name,
+      trades: data.total,
+      winRate: parseFloat((winRate * 100).toFixed(1)),
+      avgRR: parseFloat(avgRR.toFixed(2)),
+      expectancy: parseFloat(expectancy.toFixed(2)),
+      wins: data.wins,
+      losses: data.total - data.wins,
+    };
+  }).sort((a, b) => b.trades - a.trades);
 }
 
 export function getRRDistribution(trades) {

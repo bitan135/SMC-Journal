@@ -2,19 +2,23 @@
 
 import { useEffect, useState } from 'react';
 import { 
-  Plus, Trash2, Target, TrendingUp, BarChart3, Clock, LayoutGrid, Zap, Sparkles, ShieldCheck, ArrowRight
+  Plus, Trash2, Target, TrendingUp, BarChart3, Clock, LayoutGrid, Zap, Sparkles, ShieldCheck, ArrowRight, Brain
 } from 'lucide-react';
 import { 
   getStrategies, addStrategy, deleteStrategy, getStrategyInsights, getTrades 
 } from '@/lib/storage';
 import EmptyState from '@/components/ui/EmptyState';
 import { MetricSkeleton } from '@/components/ui/SkeletonLoader';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmModal';
 
 export default function Strategies() {
   const [strategies, setStrategies] = useState([]);
   const [insights, setInsights] = useState([]);
   const [newStrategy, setNewStrategy] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
+  const { showConfirm } = useConfirm();
 
   useEffect(() => {
     const loadData = async () => {
@@ -42,22 +46,29 @@ export default function Strategies() {
         const updated = await getStrategies();
         setStrategies(updated);
         setNewStrategy('');
+        showToast(`Strategy "${newStrategy}" added.`, 'success');
       } catch (err) {
-        alert('Failed to add strategy');
+        showToast('Failed to add strategy. Please try again.', 'error');
       }
     }
   };
 
   const handleDelete = async (name) => {
-    if (confirm(`Delete strategy "${name}"? This will not delete trades associated with it.`)) {
-      try {
-        await deleteStrategy(name);
-        const updated = await getStrategies();
-        setStrategies(updated);
-      } catch (err) {
-        alert('Failed to delete strategy');
+    showConfirm({
+      title: 'Delete Strategy',
+      message: `"${name}" will be deleted. Trades logged under this strategy will not be affected.`,
+      confirmLabel: 'Delete Strategy',
+      onConfirm: async () => {
+        try {
+          await deleteStrategy(name);
+          const updated = await getStrategies();
+          setStrategies(updated);
+          showToast(`Strategy "${name}" deleted.`, 'info');
+        } catch (err) {
+          showToast('Failed to delete strategy.', 'error');
+        }
       }
-    }
+    });
   };
 
   if (isLoading) {
@@ -176,20 +187,25 @@ export default function Strategies() {
                                     <p className="text-lg font-black text-[var(--foreground)] font-mono">{insight.avgRR}R</p>
                                 </div>
                                 <div className="bg-[var(--glass-bg)] rounded-3xl p-4 border border-[var(--glass-border)] group-hover:border-[var(--accent)]/20 transition-all">
-                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-1">Expected Yield</p>
-                                    <p className={`text-lg font-black font-mono ${(insight.trades * insight.avgRR * (insight.winRate / 100)) >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                                        +{(insight.trades * insight.avgRR * (insight.winRate / 100)).toFixed(1)}R
+                                    <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-wider mb-1">Expectancy / Edge</p>
+                                    <p className={`text-lg font-black font-mono ${insight.expectancy >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                        {insight.expectancy >= 0 ? '+' : ''}{insight.expectancy}R
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="mt-8 pt-8 border-t border-[var(--glass-border)] flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                        <div className="mt-8 pt-8 border-t border-[var(--glass-border)] flex items-center justify-between">
                              <div className="flex items-center gap-2">
-                                <ShieldCheck size={14} className="text-[var(--accent)]" />
-                                <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">Institutional Verified</span>
+                                <ShieldCheck size={14} className={isWinning ? 'text-emerald-500' : 'text-rose-500'} />
+                                <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">
+                                    {insight.trades > 0 ? `${((insight.wins / insight.trades) * 100).toFixed(0)}% Precise` : 'New Logic'}
+                                </span>
                              </div>
-                             <ArrowRight size={16} className="text-[var(--text-muted)]" />
+                             <div className="flex items-center gap-2 text-[var(--text-muted)]">
+                                <Brain size={12} />
+                                <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] opacity-60">Insight</span>
+                             </div>
                         </div>
                     </div>
                 </div>

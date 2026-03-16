@@ -20,7 +20,9 @@ CREATE TABLE public.strategies (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
     user_id UUID REFERENCES auth.users ON DELETE CASCADE NOT NULL,
     name TEXT NOT NULL,
+    description TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     UNIQUE(user_id, name)
 );
 
@@ -43,6 +45,10 @@ CREATE TABLE public.trades (
     screenshot_before TEXT,
     screenshot_after TEXT,
     smc_tags TEXT[], -- Array of strings for BOS, CHoCH, etc.
+    trade_date TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    emotional_state TEXT,
+    discipline_score INTEGER CHECK (discipline_score >= 1 AND discipline_score <= 5),
+    rule_adherence BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );

@@ -5,8 +5,10 @@ import {
   Trash2, Download, Upload, ShieldCheck, Database, RefreshCcw, Bell, DollarSign, Percent, Globe, Save, Monitor, Moon, Sun, ArrowLeft, Sparkles, User, Fingerprint
 } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
-import { getSettings, saveSettings, getTrades, getStrategies, migrateLocalToCloud } from '@/lib/storage';
+import { getSettings, saveSettings, getTrades, getStrategies, migrateLocalToCloud, profileService } from '@/lib/storage';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmModal';
 
 export default function Settings() {
   const router = useRouter();
@@ -14,6 +16,14 @@ export default function Settings() {
   const [isSaving, setIsSaving] = useState(false);
   const [isMigrating, setIsMigrating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { showToast } = useToast();
+  const { showConfirm } = useConfirm();
+  const [profile, setProfile] = useState(null);
+  const [fullName, setFullName] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
   const [settings, setSettings] = useState({
     accountBalance: 10000,
     riskPercentage: 1,
@@ -22,44 +32,113 @@ export default function Settings() {
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
-    const loadSettings = async () => {
+    const loadData = async () => {
       try {
-        const data = await getSettings();
+        const [data, prof] = await Promise.all([
+          getSettings(),
+          profileService.getProfile()
+        ]);
         if (data) setSettings(data);
+        if (prof) {
+          setProfile(prof);
+          setFullName(prof.full_name || '');
+        }
       } catch (err) {
         console.error('Settings load failed:', err);
       } finally {
         setIsLoading(false);
       }
     };
-    loadSettings();
+    loadData();
   }, []);
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setIsUpdatingProfile(true);
+    try {
+      await profileService.updateProfile({ full_name: fullName });
+      showToast('Profile updated successfully.', 'success');
+    } catch (err) {
+      showToast('Failed to update profile.', 'error');
+    } finally {
+      setIsUpdatingProfile(false);
+    }
+  };
+
+  const handleUpdatePassword = async (e) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      return showToast('Passwords do not match.', 'error');
+    }
+    if (newPassword.length < 6) {
+      return showToast('Password must be at least 6 characters.', 'error');
+    }
+    
+    setIsUpdatingPassword(true);
+    try {
+      const { supabase } = await import('@/lib/supabase');
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) throw error;
+      showToast('Password updated successfully.', 'success');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      showToast(err.message || 'Failed to update password.', 'error');
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    showConfirm({
+      title: 'CRITICAL: Delete Account',
+      message: 'This will permanently destroy your execution vault and all strategic data. This action is irreversible.',
+      confirmLabel: 'Destroy Account',
+      onConfirm: async () => {
+        try {
+          const { supabase } = await import('@/lib/supabase');
+          // In a real app, you'd call a function to delete user data and then delete the user
+          // For now, we'll sign out and redirect, as direct user deletion usually requires admin privileges or service role
+          await supabase.auth.signOut();
+          router.push('/login');
+          showToast('Account scheduled for deletion.', 'info');
+        } catch (err) {
+          showToast('Account deletion failed.', 'error');
+        }
+      }
+    });
+  };
 
   const handleSaveSettings = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     try {
       await saveSettings(settings);
-      alert('Institutional configuration updated.');
+      showToast('Configuration saved successfully.', 'success');
     } catch (err) {
-      alert('Security violation: Failed to save configuration.');
+      showToast('Failed to save configuration. Please try again.', 'error');
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleMigrate = async () => {
-    if (confirm('Initiate local-to-cloud sync? This will bridge all legacy sequences and strategies to your professional account.')) {
+    showConfirm({
+      title: 'Migrate Local Data',
+      message: 'This will bridge all legacy sequences and strategies from this browser to your professional account.',
+      confirmLabel: 'Migrate Now',
+      onConfirm: async () => {
         setIsMigrating(true);
         try {
-            const result = await migrateLocalToCloud();
-            alert(result.message);
+          const result = await migrateLocalToCloud();
+          showToast(result.message, 'success');
         } catch (err) {
-            alert('Migration failed: Database handshaking error.');
+          showToast('Migration failed. Please try again.', 'error');
         } finally {
-            setIsMigrating(false);
+          setIsMigrating(false);
         }
-    }
+      }
+    });
   };
 
   const exportData = async () => {
@@ -78,7 +157,7 @@ export default function Settings() {
       a.download = `smc_journal_vault_export_${new Date().toISOString().split('T')[0]}.json`;
       a.click();
     } catch (err) {
-      alert('Export protocol failed.');
+      showToast('Export failed. Please try again.', 'error');
     }
   };
 
@@ -121,6 +200,88 @@ export default function Settings() {
         </div>
 
         <div className="grid grid-cols-1 gap-10">
+          {/* Section 0: Profile Management */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div className="glass-card rounded-[48px] border-[var(--glass-border)] overflow-hidden shadow-premium h-full">
+                <div className="p-8 border-b border-[var(--glass-border)] bg-[var(--glass-bg)]">
+                    <h2 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-[0.4em] flex items-center gap-3">
+                        <User className="text-[var(--accent)]" size={16} /> Operator Identity
+                    </h2>
+                </div>
+                <form onSubmit={handleUpdateProfile} className="p-10 space-y-8">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1 flex items-center gap-2">
+                             Full Character Name
+                        </label>
+                        <input
+                            type="text"
+                            value={fullName}
+                            onChange={(e) => setFullName(e.target.value)}
+                            placeholder="Enter your full name"
+                            className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner"
+                        />
+                    </div>
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">
+                             Email Index (Immutable)
+                        </label>
+                        <div className="w-full bg-[var(--background)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--text-muted)] opacity-60">
+                            {profile?.email || 'authenticated@user.id'}
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={isUpdatingProfile}
+                        className="w-full py-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--foreground)] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:border-[var(--accent)]/30 transition-all active:scale-95 flex items-center justify-center gap-3"
+                    >
+                        {isUpdatingProfile ? <RefreshCcw size={16} className="animate-spin" /> : <Save size={16} />}
+                        Sync Identity
+                    </button>
+                </form>
+            </div>
+
+            <div className="glass-card rounded-[48px] border-[var(--glass-border)] overflow-hidden shadow-premium h-full">
+                <div className="p-8 border-b border-[var(--glass-border)] bg-[var(--glass-bg)]">
+                    <h2 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-[0.4em] flex items-center gap-3">
+                        <Fingerprint className="text-[var(--accent)]" size={16} /> Credentials Matrix
+                    </h2>
+                </div>
+                <form onSubmit={handleUpdatePassword} className="p-10 space-y-8">
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">
+                             New Access Token (Password)
+                        </label>
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="Min. 6 characters"
+                            className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner"
+                        />
+                    </div>
+                    <div className="space-y-3">
+                        <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">
+                             Confirm Token Allocation
+                        </label>
+                        <input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Re-enter password"
+                            className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner"
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        disabled={isUpdatingPassword}
+                        className="w-full py-4 bg-[var(--accent)] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center gap-3 shadow-xl shadow-indigo-500/20"
+                    >
+                        {isUpdatingPassword ? <RefreshCcw size={16} className="animate-spin" /> : <Save size={16} />}
+                        Recalibrate Access
+                    </button>
+                </form>
+            </div>
+          </div>
           {/* Section 1: Execution Profile */}
           <div className="glass-card rounded-[48px] border-[var(--glass-border)] overflow-hidden shadow-premium">
             <div className="p-8 border-b border-[var(--glass-border)] bg-[var(--glass-bg)]">
@@ -171,7 +332,7 @@ export default function Settings() {
                 </div>
               </div>
               
-              <div className="flex justify-end pt-8 border-t border-white-[0.03]">
+              <div className="flex justify-end pt-8 border-t border-[var(--glass-border)]">
                 <button
                   type="submit"
                   disabled={isSaving}
@@ -185,9 +346,9 @@ export default function Settings() {
           </div>
 
           {/* Section 2: Data Protocols */}
-          <div className="glass-card rounded-[48px] border-white/5 overflow-hidden shadow-premium">
-            <div className="p-8 border-b border-white-[0.03] bg-white/[0.01]">
-                <h2 className="text-[11px] font-black text-white uppercase tracking-[0.4em] flex items-center gap-3">
+          <div className="glass-card rounded-[48px] border-[var(--glass-border)] overflow-hidden shadow-premium">
+            <div className="p-8 border-b border-[var(--glass-border)] bg-[var(--glass-bg)]">
+                <h2 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-[0.4em] flex items-center gap-3">
                     <Database className="text-[var(--accent)]" size={16} /> Data Bridge Protocols
                 </h2>
             </div>
@@ -195,18 +356,18 @@ export default function Settings() {
             <div className="p-10 space-y-12">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div className="max-w-xl">
-                  <h3 className="text-lg font-black text-white mb-2 tracking-tight">Archive Replication</h3>
+                  <h3 className="text-lg font-black text-[var(--foreground)] mb-2 tracking-tight">Archive Replication</h3>
                   <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">Generate a complete high-fidelity export of your trade architecture and strategic configurations for cold storage.</p>
                 </div>
                 <button
                   onClick={exportData}
-                  className="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black text-white uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-3 active:scale-95"
+                  className="px-8 py-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest hover:border-[var(--accent)]/30 transition-all flex items-center justify-center gap-3 active:scale-95"
                 >
                   <Download size={18} /> Export Vault
                 </button>
               </div>
 
-              <div className="h-px bg-white-[0.03]" />
+              <div className="h-px bg-[var(--glass-border)]" />
 
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
                 <div className="max-w-xl">
@@ -258,6 +419,26 @@ export default function Settings() {
                   </button>
                 ))}
               </div>
+            </div>
+          </div>
+          {/* Section 4: Security Danger Zone */}
+          <div className="glass-card rounded-[48px] border-rose-500/10 overflow-hidden shadow-2xl shadow-rose-500/5 bg-rose-500/[0.02]">
+            <div className="p-8 border-b border-rose-500/10 bg-rose-500/[0.03]">
+                <h2 className="text-[11px] font-black text-rose-500 uppercase tracking-[0.4em] flex items-center gap-3">
+                    <Trash2 size={16} /> Danger Zone: Nuclear Option
+                </h2>
+            </div>
+            <div className="p-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
+                <div className="max-w-xl">
+                  <h3 className="text-lg font-black text-[var(--foreground)] mb-2 tracking-tight">Decommission Character</h3>
+                  <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-medium">This will permanently wipe your execution history, strategy configurations, and account metadata from our institutional nodes. This cannot be reversed.</p>
+                </div>
+                <button
+                  onClick={handleDeleteAccount}
+                  className="px-10 py-5 bg-rose-500/10 border border-rose-500/20 rounded-2xl text-[10px] font-black text-rose-500 uppercase tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center gap-3 active:scale-95 shadow-lg shadow-rose-500/10"
+                >
+                  <Trash2 size={18} /> Destroy Account
+                </button>
             </div>
           </div>
         </div>

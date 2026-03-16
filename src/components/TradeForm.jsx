@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  Plus, Camera, Check, Target, TrendingUp, Binary, BarChart3, AlertCircle 
+  Plus, Camera, Check, Target, TrendingUp, Binary, BarChart3, AlertCircle, Calendar, Brain, Shield, Smile, Frown, Zap, RefreshCcw
 } from 'lucide-react';
 import { 
   INSTRUMENTS, SESSIONS, SMC_TAGS, 
-  calculateRR, calculatePips 
+  calculateRR, calculatePips, calculateRiskAmount
 } from '@/lib/storage';
 
 export default function TradeForm({ initialData = null, onSubmit, isSubmitting, submitLabel = 'Log Sequence', strategies = [] }) {
@@ -24,6 +24,10 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     notes: '',
     screenshotBefore: null,
     screenshotAfter: null,
+    tradeDate: new Date().toISOString().slice(0, 16), // YYYY-MM-DDTHH:MM
+    emotionalState: 'Neutral',
+    disciplineScore: 5,
+    ruleAdherence: true,
     ...initialData,
     // Ensure numeric values are strings for input fields if they exist
     entryPrice: initialData?.entry_price || initialData?.entryPrice || '',
@@ -33,24 +37,28 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     smcTags: initialData?.smc_tags || initialData?.smcTags || [],
     screenshotBefore: initialData?.screenshot_before || initialData?.screenshotBefore || null,
     screenshotAfter: initialData?.screenshot_after || initialData?.screenshotAfter || null,
+    tradeDate: initialData?.trade_date ? new Date(initialData.trade_date).toISOString().slice(0, 16) : initialData?.tradeDate || new Date().toISOString().slice(0, 16),
+    emotionalState: initialData?.emotional_state || initialData?.emotionalState || 'Focused',
+    disciplineScore: initialData?.discipline_score || initialData?.disciplineScore || 5,
+    ruleAdherence: initialData?.rule_adherence ?? initialData?.ruleAdherence ?? true,
   });
 
   const [errors, setErrors] = useState({});
-  const [autoCalc, setAutoCalc] = useState({ rr: 0, pips: 0 });
 
-  useEffect(() => {
+  const [prevStrategies, setPrevStrategies] = useState(strategies);
+
+  if (strategies !== prevStrategies) {
+    setPrevStrategies(strategies);
     if (strategies.length > 0 && !formData.strategy) {
       setFormData(prev => ({ ...prev, strategy: strategies[0] }));
     }
-  }, [strategies]);
+  }
 
-  useEffect(() => {
-    if (formData.entryPrice && formData.stopLoss && formData.takeProfit) {
-      const rr = calculateRR(formData.entryPrice, formData.stopLoss, formData.takeProfit, formData.direction);
-      const pips = calculatePips(formData.entryPrice, formData.stopLoss, formData.instrument);
-      setAutoCalc({ rr, pips });
-    }
-  }, [formData.entryPrice, formData.stopLoss, formData.takeProfit, formData.direction, formData.instrument]);
+  const autoCalc = (formData.entryPrice && formData.stopLoss && formData.takeProfit) ? {
+    rr: calculateRR(formData.entryPrice, formData.stopLoss, formData.takeProfit, formData.direction),
+    pips: calculatePips(formData.entryPrice, formData.stopLoss, formData.instrument),
+    riskAmount: calculateRiskAmount(formData.entryPrice, formData.stopLoss, formData.lotSize, formData.instrument)
+  } : { rr: 0, pips: 0, riskAmount: 0 };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,6 +111,11 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
       ...formData,
       rr: autoCalc.rr,
       pips: autoCalc.pips,
+      riskAmount: autoCalc.riskAmount,
+      tradeDate: formData.tradeDate,
+      emotionalState: formData.emotionalState,
+      disciplineScore: formData.disciplineScore,
+      ruleAdherence: formData.ruleAdherence,
     };
     
     onSubmit(finalData);
@@ -114,9 +127,21 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
       <div className="lg:col-span-2 space-y-8">
         {/* Section 1: Instrument & Direction */}
         <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium stagger-children">
-          <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
-            <Target size={14} /> Configuration
-          </h3>
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] flex items-center gap-2">
+              <Target size={14} /> Configuration
+            </h3>
+            <div className="flex items-center gap-2 px-4 py-2 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl">
+              <Calendar size={12} className="text-[var(--text-muted)]" />
+              <input
+                type="datetime-local"
+                name="tradeDate"
+                value={formData.tradeDate}
+                onChange={handleChange}
+                className="bg-transparent text-[10px] font-black text-[var(--foreground)] uppercase tracking-wider outline-none cursor-pointer"
+              />
+            </div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
               <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Asset Pair</label>
@@ -179,7 +204,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
           </div>
           
           {/* Real-time Analytics Panel */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-[var(--glass-bg)] rounded-3xl p-6 border border-[var(--glass-border)] group hover:border-[var(--accent)]/30 transition-all">
               <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-2">
                 <BarChart3 size={12} className="text-[var(--accent)]" /> Performance Ratio
@@ -189,15 +214,101 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
               </p>
             </div>
             <div className="bg-[var(--glass-bg)] rounded-3xl p-6 border border-[var(--glass-border)] group hover:border-[var(--accent)]/30 transition-all">
-              <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2">Total Displacement</p>
+              <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-2">
+                <Zap size={12} className="text-amber-500" /> Total Displacement
+              </p>
               <p className="text-2xl font-black text-[var(--foreground)] tracking-tighter">
                 {autoCalc.pips} <span className="text-[10px] text-[var(--text-muted)] uppercase font-black ml-1">Pips</span>
+              </p>
+            </div>
+            <div className="bg-[var(--glass-bg)] rounded-3xl p-6 border border-[var(--glass-border)] group hover:border-rose-500/30 transition-all">
+              <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-2 flex items-center gap-2">
+                <Shield size={12} className="text-rose-500" /> Risk Assessment
+              </p>
+              <p className="text-2xl font-black text-rose-500 tracking-tighter uppercase">
+                ${autoCalc.riskAmount} <span className="text-[10px] text-[var(--text-muted)] uppercase font-black ml-1">USD</span>
               </p>
             </div>
           </div>
         </div>
 
-        {/* Section 3: Visual & Journal */}
+        {/* Section 3: Psychology & Discipline */}
+        <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium">
+          <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
+            <Brain size={14} /> Psychology & Discipline
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Emotional State</label>
+                <div className="grid grid-cols-3 gap-3">
+                  {['Focused', 'Fear', 'Greed', 'FOMO', 'Neutral', 'Revenge'].map(state => (
+                    <button
+                      key={state}
+                      type="button"
+                      onClick={() => setFormData(prev => ({ ...prev, emotionalState: state }))}
+                      className={`py-3 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${
+                        formData.emotionalState === state 
+                          ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-lg' 
+                          : 'bg-[var(--glass-bg)] text-[var(--text-muted)] border-[var(--glass-border)] hover:border-[var(--accent)]/30'
+                      }`}
+                    >
+                      {state}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1 flex justify-between items-end">
+                  Discipline Score 
+                  <span className="text-[var(--accent)] font-mono text-xs">{formData.disciplineScore}/5</span>
+                </label>
+                <input
+                  type="range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  name="disciplineScore"
+                  value={formData.disciplineScore}
+                  onChange={handleChange}
+                  className="w-full accent-[var(--accent)] h-1.5 bg-[var(--glass-bg)] rounded-full appearance-none cursor-pointer border border-[var(--glass-border)]"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-6">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Protocol Adherence</label>
+                <button
+                  type="button"
+                  onClick={() => setFormData(prev => ({ ...prev, ruleAdherence: !prev.ruleAdherence }))}
+                  className={`w-full p-6 rounded-[32px] border flex items-center justify-between transition-all ${
+                    formData.ruleAdherence 
+                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500 shadow-lg shadow-emerald-500/5' 
+                      : 'bg-rose-500/10 border-rose-500/30 text-rose-500 shadow-lg shadow-rose-500/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-10 h-10 rounded-2xl flex items-center justify-center border ${
+                      formData.ruleAdherence ? 'bg-emerald-500/20 border-emerald-500/30' : 'bg-rose-500/20 border-rose-500/30'
+                    }`}>
+                      {formData.ruleAdherence ? <Smile size={20} /> : <Frown size={20} />}
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[10px] font-black uppercase tracking-widest">Rules Followed?</p>
+                      <p className="text-xs font-bold opacity-70">{formData.ruleAdherence ? 'Institutional Discipline' : 'Security Breach / Impulsive'}</p>
+                    </div>
+                  </div>
+                  <div className={`w-12 h-6 rounded-full relative transition-all ${formData.ruleAdherence ? 'bg-emerald-500' : 'bg-[var(--glass-bg)] border border-[var(--glass-border)]'}`}>
+                    <div className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${formData.ruleAdherence ? 'right-1' : 'left-1'}`} />
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section 4: Visual & Journal */}
         <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium">
           <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
             <Camera size={14} /> Intelligence Archive
@@ -268,7 +379,9 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
                 onChange={handleChange}
                 className={`w-full bg-[var(--glass-bg)] border ${errors.strategy ? 'border-rose-500/50' : 'border-[var(--glass-border)]'} rounded-2xl px-6 py-4 text-sm font-black text-[var(--foreground)] outline-none focus:border-[var(--accent)] focus:bg-[var(--card-hover)] transition-all appearance-none cursor-pointer`}
               >
+                {!formData.strategy && <option value="" disabled>SELECT STRATEGY</option>}
                 {strategies.map(s => <option key={s} value={s} className="bg-[var(--background)]">{s.toUpperCase()}</option>)}
+                {strategies.length === 0 && <option value="" disabled>LOADING ASSETS...</option>}
               </select>
             </div>
             <div className="space-y-3 font-bold">
@@ -315,8 +428,14 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
             </div>
 
             {errors.global && (
-              <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-center gap-3 text-rose-500 text-xs font-black uppercase tracking-widest animate-fade-in">
+              <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-center gap-3 text-rose-500 text-[10px] font-black uppercase tracking-widest animate-shake">
                 <AlertCircle size={14} /> {errors.global}
+              </div>
+            )}
+
+            {isSubmitting && (
+              <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center gap-3 text-blue-500 text-[10px] font-black uppercase tracking-widest">
+                <RefreshCcw size={14} className="animate-spin" /> Transmitting to Vault...
               </div>
             )}
 

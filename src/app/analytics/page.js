@@ -11,6 +11,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { ChartSkeleton } from '@/components/ui/SkeletonLoader';
 import {
   getTrades, getEquityCurve, getWinRateByGroup, getStrategyInsights, getRRDistribution,
+  getExpectancy, getDrawdownCurve, getMaxDrawdown, getMonthlyPerformance
 } from '@/lib/storage';
 
 const COLORS = ['#6366F1', '#22C55E', '#EF4444', '#F59E0B', '#8B5CF6', '#EC4899'];
@@ -85,6 +86,10 @@ export default function Analytics() {
   }
 
   const equityCurve = getEquityCurve(trades);
+  const drawdownCurve = getDrawdownCurve(trades);
+  const monthlyData = getMonthlyPerformance(trades);
+  const expectancy = getExpectancy(trades);
+  const maxDD = getMaxDrawdown(trades);
   const sessionData = getWinRateByGroup(trades, 'session');
   const strategyData = getStrategyInsights(trades);
   const instrumentData = getWinRateByGroup(trades, 'instrument');
@@ -117,7 +122,7 @@ export default function Analytics() {
         <div className="absolute bottom-[10%] left-[-5%] w-[40%] h-[40%] bg-purple-500/5 blur-[120px] rounded-full delay-1000 animate-float pointer-events-none"></div>
   
         <div className="relative z-10 w-full">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 px-2">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 px-2">
               <div className="flex-1">
                   <div className="flex items-center gap-2 mb-4">
                       <span className="flex items-center gap-2 px-3 py-1 rounded-full glass-effect border-[var(--glass-border)] text-[var(--accent)] text-[10px] font-black uppercase tracking-[0.2em] animate-pulse leading-relaxed">
@@ -129,6 +134,17 @@ export default function Analytics() {
                   </h1>
                   <p className="text-[var(--text-secondary)] font-medium max-w-lg">Quantifying technical superiority and execution variance.</p>
               </div>
+
+              <div className="flex items-center gap-4">
+                  <div className="glass-card px-8 py-5 rounded-[24px] border-[var(--glass-border)] shadow-premium flex flex-col items-center">
+                      <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Vault Expectancy</span>
+                      <span className="text-xl font-black text-[var(--foreground)]">{expectancy}R</span>
+                  </div>
+                  <div className="glass-card px-8 py-5 rounded-[24px] border-[var(--glass-border)] shadow-premium flex flex-col items-center">
+                      <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-1">Max Drawdown</span>
+                      <span className="text-xl font-black text-rose-500">{maxDD}R</span>
+                  </div>
+              </div>
           </div>
   
           <div className="space-y-8">
@@ -137,10 +153,9 @@ export default function Analytics() {
                   <ChartCard 
                       title="Equity Trajectory" 
                       subtitle="Cumulative R-multiple performance curve"
-                      className="lg:col-span-2 glass-card shadow-premium rounded-[40px] border-[var(--glass-border)] relative group"
+                      className="lg:col-span-2 glass-card shadow-premium rounded-[40px] border-[var(--glass-border)] group"
                   >
-                      {isLocked && <LockOverlay />}
-                      <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
+                      <div className="h-full w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <AreaChart data={equityCurve} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
                                 <defs>
@@ -206,10 +221,9 @@ export default function Analytics() {
                   <ChartCard 
                       title="Setup Authority" 
                       subtitle="Win rates across defined strategies"
-                      className="glass-card shadow-premium rounded-[40px] border-[var(--glass-border)] relative group"
+                      className="glass-card shadow-premium rounded-[40px] border-[var(--glass-border)] group"
                   >
-                      {isLocked && <LockOverlay />}
-                      <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
+                      <div className="h-full w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={strategyData} layout="vertical" margin={{ top: 10, right: 30, left: 30, bottom: 10 }}>
                                 <XAxis type="number" hide domain={[0, 100]} />
@@ -222,7 +236,58 @@ export default function Analytics() {
                   </ChartCard>
               </div>
   
-              {/* Row 3: Asset Intelligence */}
+              {/* Row 3: Advanced Portfolio Math (PRO) */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <ChartCard 
+                      title="Portfolio Drawdown" 
+                      subtitle="Depth of peak-to-trough R-multiple variance"
+                      className="glass-card shadow-premium rounded-[40px] border-[var(--glass-border)] relative group"
+                  >
+                      {isLocked && <LockOverlay />}
+                      <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={drawdownCurve} margin={{ top: 20, right: 20, left: -20, bottom: 0 }}>
+                                <defs>
+                                    <linearGradient id="colorDD" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#EF4444" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.1} className="text-[var(--glass-border)]" vertical={false} />
+                                <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} dy={10} />
+                                <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}R`} />
+                                <Tooltip content={<CustomTooltip suffix="R" />} />
+                                <Area type="monotone" dataKey="drawdown" stroke="#EF4444" strokeWidth={3} fillOpacity={1} fill="url(#colorDD)" animationDuration={2500} />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                      </div>
+                  </ChartCard>
+
+                  <ChartCard 
+                      title="Monthly P&L Velocity" 
+                      subtitle="Historical performance by calendar period"
+                      className="glass-card shadow-premium rounded-[40px] border-[var(--glass-border)] relative group"
+                  >
+                      {isLocked && <LockOverlay />}
+                      <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={monthlyData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="white" strokeOpacity={0.05} vertical={false} />
+                                <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} dy={10} />
+                                <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}R`} />
+                                <Tooltip cursor={{fill: 'var(--accent)', fillOpacity: 0.05}} content={<CustomTooltip suffix="R" />} />
+                                <Bar dataKey="profit" animationDuration={2000} radius={[8, 8, 8, 8]}>
+                                    {monthlyData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.profit >= 0 ? 'var(--profit)' : 'var(--loss)'} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                  </ChartCard>
+              </div>
+
+              {/* Row 4: Asset Intelligence (PRO) */}
               <ChartCard 
                   title="Instrument Dominance" 
                   subtitle="High-fidelity success rate per institutional asset"

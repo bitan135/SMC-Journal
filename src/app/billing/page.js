@@ -19,7 +19,7 @@ const plans = [
   {
     id: 'pro',
     name: 'Pro Trader',
-    price: '$10',
+    price: '$20',
     description: 'Master technical insights',
     features: ['Advanced Analytics', 'Win Rate Insights', 'Session Analysis', 'Equity Curve Chart'],
     icon: Zap,

@@ -55,6 +55,10 @@ export default function AddTrade() {
         notes: formData.notes,
         screenshot_before: screenshotBeforeUrl,
         screenshot_after: screenshotAfterUrl,
+        trade_date: new Date(formData.tradeDate).toISOString(),
+        emotional_state: formData.emotionalState,
+        discipline_score: parseInt(formData.disciplineScore),
+        rule_adherence: formData.ruleAdherence,
       };
 
       await saveTrade(tradeToSave);

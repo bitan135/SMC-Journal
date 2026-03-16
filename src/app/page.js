@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar, Cell
 } from 'recharts';
 import {
   TrendingUp, Target, BarChart3, Clock, Calendar, ArrowUpRight, ArrowDownRight, Sparkles
@@ -15,6 +15,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import {
   getTrades, getWinRate, getProfitFactor, getAverageRR,
   getEquityCurve, getWinRateByGroup, getStrategyInsights,
+  getExpectancy, getTrend, profileService
 } from '@/lib/storage';
 
 function CustomTooltip({ active, payload, label }) {
@@ -35,6 +36,7 @@ function CustomTooltip({ active, payload, label }) {
 export default function Dashboard() {
   const router = useRouter();
   const [trades, setTrades] = useState([]);
+  const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [greeting, setGreeting] = useState('');
 
@@ -46,8 +48,12 @@ export default function Dashboard() {
 
     const loadData = async () => {
       try {
-        const fetchedTrades = await getTrades();
+        const [fetchedTrades, fetchedProfile] = await Promise.all([
+          getTrades(),
+          profileService.getProfile()
+        ]);
         setTrades(fetchedTrades);
+        setProfile(fetchedProfile);
       } catch (err) {
         console.error('Dashboard load failed:', err);
       } finally {
@@ -61,6 +67,9 @@ export default function Dashboard() {
   const winRate = getWinRate(trades);
   const profitFactor = getProfitFactor(trades);
   const avgRR = getAverageRR(trades);
+  const expectancy = getExpectancy(trades);
+  const winRateTrend = getTrend(trades, 'winRate');
+  const pfTrend = getTrend(trades, 'profitFactor');
   const equityCurve = getEquityCurve(trades);
   const sessionPerf = getWinRateByGroup(trades, 'session');
   const strategyPerf = getStrategyInsights(trades);
@@ -117,7 +126,7 @@ export default function Dashboard() {
                     </span>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-black text-[var(--foreground)] tracking-tighter leading-tight mb-4 text-gradient">
-                    {greeting}, Trader
+                    {greeting}, {profile?.full_name?.split(' ')[0] || profile?.username || 'Trader'}
                 </h1>
                 <p className="text-[var(--text-secondary)] font-medium max-w-lg">
                     Analyze your execution, find your edge, and scale your strategy with institutional precision.
@@ -141,7 +150,7 @@ export default function Dashboard() {
                 label="Win Rate"
                 value={`${winRate}%`}
                 subValue="Historical Ave"
-                trend="+2.4%" 
+                trend={winRateTrend >= 0 ? `+${winRateTrend}%` : `${winRateTrend}%`} 
                 color={winRate >= 50 ? 'profit' : 'loss'}
                 icon={Target}
             />
@@ -149,16 +158,16 @@ export default function Dashboard() {
                 label="Profit Factor"
                 value={profitFactor}
                 subValue="R Efficiency"
-                trend="+0.12" 
+                trend={pfTrend >= 0 ? `+${pfTrend}` : `${pfTrend}`} 
                 color={profitFactor >= 1 ? 'profit' : 'loss'}
                 icon={TrendingUp}
             />
             <MetricCard
-                label="Average RR"
-                value={`${avgRR}R`}
-                subValue="Median Capture"
-                color="accent"
-                icon={BarChart3}
+                label="Expectancy"
+                value={`${expectancy}R`}
+                subValue="Per Execution"
+                color={expectancy > 0 ? 'accent' : 'loss'}
+                icon={Sparkles}
             />
             <MetricCard
                 label="Vault Sample"

@@ -4,6 +4,8 @@ import Sidebar from '@/components/Sidebar';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import Onboarding from '@/components/ui/Onboarding';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { ToastProvider } from '@/components/ui/Toast';
+import { ConfirmProvider } from '@/components/ui/ConfirmModal';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -11,8 +13,8 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'SMC Journal — Smart Trading Journal',
-  description: 'The modern trading journal designed for Smart Money traders to find their edge.',
+  title: 'SMC Journal — Smart Money Trading Journal',
+  description: 'The institutional-grade trading journal for Smart Money Concept traders. Track, analyze, and find your edge.',
   icons: {
     icon: [
       { url: '/favicon.png', type: 'image/png' },
@@ -49,11 +51,15 @@ export default function RootLayout({ children }) {
       </head>
       <body className="font-sans antialiased text-[var(--foreground)] bg-[var(--background)]">
         <ThemeProvider>
-          <Sidebar />
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
-          <Onboarding />
+          <ToastProvider>
+            <ConfirmProvider>
+              <Sidebar />
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+              <Onboarding />
+            </ConfirmProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  Search, SlidersHorizontal, Library, Trash2, TrendingUp, Target, Clock, Image as ImageIcon, SearchX, Sparkles, ChevronRight, BarChart3, Edit3, X
+  Search, SlidersHorizontal, Library, Trash2, TrendingUp, Target, Clock, Image as ImageIcon, SearchX, Sparkles, ChevronRight, BarChart3, Edit3, X, Brain, Smile, Frown, Shield, Zap
 } from 'lucide-react';
 import { getTrades, deleteTrade, updateTrade, getStrategies, INSTRUMENTS, SESSIONS, DEFAULT_STRATEGIES } from '@/lib/storage';
 import ResultBadge from '@/components/ui/ResultBadge';
@@ -10,6 +10,8 @@ import SessionBadge from '@/components/ui/SessionBadge';
 import ModalContainer from '@/components/ui/ModalContainer';
 import { TableRowSkeleton } from '@/components/ui/SkeletonLoader';
 import TradeForm from '@/components/TradeForm';
+import { useToast } from '@/components/ui/Toast';
+import { useConfirm } from '@/components/ui/ConfirmModal';
 
 export default function TradeLibrary() {
   const [trades, setTrades] = useState([]);
@@ -26,6 +28,10 @@ export default function TradeLibrary() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [strategies, setStrategies] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 25;
+  const { showToast } = useToast();
+  const { showConfirm } = useConfirm();
 
   useEffect(() => {
     const loadData = async () => {
@@ -34,7 +40,11 @@ export default function TradeLibrary() {
           getTrades(),
           getStrategies()
         ]);
-        setTrades(fetchedTrades.sort((a, b) => new Date(b.created_at || b.createdAt) - new Date(a.created_at || a.createdAt)));
+        setTrades(fetchedTrades.sort((a, b) => {
+          const dateA = new Date(b.trade_date || b.tradeDate || b.created_at || b.createdAt);
+          const dateB = new Date(a.trade_date || a.tradeDate || a.created_at || a.createdAt);
+          return dateA - dateB;
+        }));
         setStrategies(fetchedStrategies);
       } catch (err) {
         console.error('Library load failed:', err);
@@ -47,15 +57,21 @@ export default function TradeLibrary() {
 
   const handleDelete = async (id, e) => {
     e.stopPropagation();
-    if (confirm('Are you sure you want to delete this trade?')) {
-      try {
-        await deleteTrade(id);
-        setTrades(prev => prev.filter(t => t.id !== id));
-        setIsModalOpen(false);
-      } catch (err) {
-        alert('Failed to delete trade');
+    showConfirm({
+      title: 'Delete Trade',
+      message: 'This trade will be permanently removed from your vault. This action cannot be undone.',
+      confirmLabel: 'Delete Trade',
+      onConfirm: async () => {
+        try {
+          await deleteTrade(id);
+          setTrades(prev => prev.filter(t => t.id !== id));
+          setIsModalOpen(false);
+          showToast('Trade removed from vault.', 'success');
+        } catch (err) {
+          showToast('Failed to delete trade.', 'error');
+        }
       }
-    }
+    });
   };
 
   const handleUpdate = async (formData) => {
@@ -90,6 +106,10 @@ export default function TradeLibrary() {
         notes: formData.notes,
         screenshot_before: screenshotBeforeUrl,
         screenshot_after: screenshotAfterUrl,
+        trade_date: new Date(formData.tradeDate).toISOString(),
+        emotional_state: formData.emotionalState,
+        discipline_score: parseInt(formData.disciplineScore),
+        rule_adherence: formData.ruleAdherence,
       };
 
       const updated = await updateTrade(selectedTrade.id, updates);
@@ -104,6 +124,10 @@ export default function TradeLibrary() {
     }
   };
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filters]);
+
   const filteredTrades = trades.filter(trade => {
     const instr = (trade.instrument || '').toLowerCase();
     const strat = (trade.strategy || '').toLowerCase();
@@ -117,6 +141,9 @@ export default function TradeLibrary() {
     
     return matchesSearch && matchesInstrument && matchesStrategy && matchesSession && matchesResult;
   });
+
+  const totalPages = Math.ceil(filteredTrades.length / itemsPerPage);
+  const pagedTrades = filteredTrades.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const openTradeDetails = (trade) => {
     setSelectedTrade(trade);
@@ -175,7 +202,7 @@ export default function TradeLibrary() {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-12 glass-card p-4 rounded-[32px] border-[var(--glass-border)] shadow-premium">
             {[
                 { value: filters.instrument, options: INSTRUMENTS, label: 'Pair', key: 'instrument' },
-                { value: filters.strategy, options: DEFAULT_STRATEGIES, label: 'Setup', key: 'strategy' },
+                { value: filters.strategy, options: [...new Set([...DEFAULT_STRATEGIES, ...strategies.map(s => s.name)])], label: 'Setup', key: 'strategy' },
                 { value: filters.session, options: SESSIONS, label: 'Window', key: 'session' },
                 { value: filters.result, options: ['Win', 'Loss', 'Break Even'], label: 'Outcome', key: 'result' }
             ].map((f) => (
@@ -229,7 +256,7 @@ export default function TradeLibrary() {
                 </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--glass-border)]">
-                {filteredTrades.map((trade) => (
+                {pagedTrades.map((trade) => (
                     <tr 
                     key={trade.id} 
                     onClick={() => openTradeDetails(trade)}
@@ -261,8 +288,8 @@ export default function TradeLibrary() {
                         <ResultBadge result={trade.result} />
                     </td>
                     <td className="px-10 py-6 text-right">
-                        <p className="text-xs font-black text-[var(--foreground)] opacity-80">{new Date(trade.created_at || trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                        <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">{new Date(trade.created_at || trade.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
+                        <p className="text-xs font-black text-[var(--foreground)] opacity-80">{new Date(trade.trade_date || trade.tradeDate || trade.created_at || trade.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mt-1">{new Date(trade.trade_date || trade.tradeDate || trade.created_at || trade.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</p>
                     </td>
                     </tr>
                 ))}
@@ -271,7 +298,7 @@ export default function TradeLibrary() {
 
             {/* Mobile Cards */}
             <div className="lg:hidden divide-y divide-[var(--glass-border)]">
-                {filteredTrades.map((trade) => (
+                {pagedTrades.map((trade) => (
                 <div 
                     key={trade.id} 
                     onClick={() => openTradeDetails(trade)}
@@ -297,6 +324,41 @@ export default function TradeLibrary() {
                 </div>
                 ))}
             </div>
+            </div>
+        )}
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+            <div className="mt-12 flex items-center justify-center gap-4">
+                <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => prev - 1)}
+                    className="w-12 h-12 flex items-center justify-center rounded-2xl glass-card border-[var(--glass-border)] text-[var(--text-muted)] hover:text-[var(--foreground)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                    <ChevronRight size={20} className="rotate-180" />
+                </button>
+                <div className="flex items-center gap-2">
+                    {[...Array(totalPages)].map((_, i) => (
+                        <button
+                            key={i}
+                            onClick={() => setCurrentPage(i + 1)}
+                            className={`w-10 h-10 rounded-xl text-[10px] font-black transition-all ${
+                                currentPage === i + 1 
+                                    ? 'bg-[var(--accent)] text-white shadow-lg shadow-indigo-500/20' 
+                                    : 'glass-card border-[var(--glass-border)] text-[var(--text-muted)] hover:border-[var(--accent)]/30'
+                            }`}
+                        >
+                            {i + 1}
+                        </button>
+                    ))}
+                </div>
+                <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => prev + 1)}
+                    className="w-12 h-12 flex items-center justify-center rounded-2xl glass-card border-[var(--glass-border)] text-[var(--text-muted)] hover:text-[var(--foreground)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                    <ChevronRight size={20} />
+                </button>
             </div>
         )}
       </div>
@@ -406,13 +468,51 @@ export default function TradeLibrary() {
                     </div>
                 </div>
 
-                <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-10">
-                    <h4 className="flex items-center gap-3 text-[11px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-6">
-                        <TrendingUp size={16} /> Journal Log
-                    </h4>
-                    <p className="text-lg font-medium text-[var(--text-secondary)] leading-relaxed italic whitespace-pre-wrap">
-                        "{selectedTrade.notes || 'Institutional logic not logged.'}"
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-10 h-full">
+                        <h4 className="flex items-center gap-3 text-[11px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8">
+                            <TrendingUp size={16} /> Journal Log
+                        </h4>
+                        <p className="text-lg font-medium text-[var(--text-secondary)] leading-relaxed italic whitespace-pre-wrap">
+                            "{selectedTrade.notes || 'Institutional logic not logged.'}"
+                        </p>
+                    </div>
+                    
+                    <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-10">
+                        <h4 className="flex items-center gap-3 text-[11px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8">
+                            <Brain size={16} /> Psychological Reflection
+                        </h4>
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                                <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Emotional State</span>
+                                <span className="flex items-center gap-2 text-xs font-black text-[var(--foreground)] uppercase">
+                                    <Zap size={12} className="text-amber-500" />
+                                    {selectedTrade.emotional_state || selectedTrade.emotionalState || 'Focused'}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-between p-4 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)]">
+                                <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">Discipline Score</span>
+                                <div className="flex gap-1">
+                                    {[1,2,3,4,5].map(i => (
+                                        <div key={i} className={`w-3 h-1 rounded-full ${i <= (selectedTrade.discipline_score || selectedTrade.disciplineScore || 5) ? 'bg-[var(--accent)]' : 'bg-[var(--glass-border)]'}`} />
+                                    ))}
+                                </div>
+                            </div>
+                            <div className={`flex items-center justify-between p-6 rounded-[24px] border ${
+                                (selectedTrade.rule_adherence ?? selectedTrade.ruleAdherence ?? true)
+                                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' 
+                                    : 'bg-rose-500/10 border-rose-500/30 text-rose-500'
+                            }`}>
+                                <div className="flex items-center gap-3">
+                                    {(selectedTrade.rule_adherence ?? selectedTrade.ruleAdherence ?? true) ? <Smile size={18} /> : <Frown size={18} />}
+                                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                                        {(selectedTrade.rule_adherence ?? selectedTrade.ruleAdherence ?? true) ? 'Protocol Followed' : 'Impulsive / Rule Break'}
+                                    </span>
+                                </div>
+                                <Shield size={16} className="opacity-50" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

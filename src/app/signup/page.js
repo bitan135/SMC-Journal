@@ -47,6 +47,24 @@ export default function Signup() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const { error: googleError } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (googleError) throw googleError;
+    } catch (err) {
+      console.error("Google login error:", err);
+      setError("Failed to initialize Google login. Please check your connection.");
+      setIsLoading(false);
+    }
+  };
+
   if (success) {
     return (
       <div className="min-h-screen bg-[var(--background)] grid place-items-center p-4">
@@ -70,26 +88,30 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[var(--card)] border border-[var(--border)] rounded-3xl p-8 shadow-2xl animate-fade-in">
+    <div className="min-h-screen bg-[var(--background)] flex flex-col items-center justify-center p-4 relative overflow-hidden">
+      {/* Background Ambience */}
+      <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float"></div>
+      <div className="absolute bottom-[5%] left-[-10%] w-[35%] h-[35%] bg-indigo-500/5 blur-[100px] rounded-full delay-700 animate-float"></div>
+
+      <div className="w-full max-w-md glass-card shadow-premium p-10 animate-fade-in relative z-10">
         <div className="flex flex-col items-center text-center mb-10">
           <div className="w-16 h-16 rounded-2xl bg-[var(--accent)]/10 flex items-center justify-center mb-6 border border-[var(--accent)]/20 shadow-xl">
             <TrendingUp className="text-[var(--accent)]" size={32} />
           </div>
-          <h1 className="text-3xl font-bold text-[var(--text-primary)] tracking-tight">Create Your Account</h1>
-          <p className="text-[var(--text-muted)] mt-2">Join 1,000+ traders scaling their edge</p>
+          <h1 className="text-3xl font-bold text-[var(--foreground)] tracking-tight">Deploy Your Workspace</h1>
+          <p className="text-[var(--text-muted)] mt-2">Join the elite network of disciplined traders.</p>
         </div>
 
         {error && (
           <div className="mb-6 p-4 bg-[#EF444410] border border-[#EF444420] rounded-2xl flex items-center gap-3 text-[var(--loss)] animate-slide-up">
             <AlertCircle size={20} />
-            <p className="text-xs font-bold">{error}</p>
+            <p className="text-xs font-bold leading-tight">{error}</p>
           </div>
         )}
 
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase ml-1 tracking-widest">Full Name</label>
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-[0.2em]">Full Name</label>
             <div className="relative group">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" size={18} />
               <input
@@ -104,7 +126,7 @@ export default function Signup() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase ml-1 tracking-widest">Email Address</label>
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-[0.2em]">Email Address</label>
             <div className="relative group">
               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" size={18} />
               <input
@@ -119,7 +141,7 @@ export default function Signup() {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-[10px] font-bold text-[var(--text-muted)] uppercase ml-1 tracking-widest">Password</label>
+            <label className="text-[10px] font-black text-[var(--text-muted)] uppercase ml-1 tracking-[0.2em]">Password</label>
             <div className="relative group">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" size={18} />
               <input
@@ -133,24 +155,35 @@ export default function Signup() {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            {password && password.length < 6 && (
-              <p className="text-[10px] text-[var(--loss)] ml-1 font-medium italic animate-fade-in">Password is too short</p>
-            )}
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-4 rounded-2xl bg-[var(--accent)] text-white font-bold text-sm hover:bg-[var(--accent-hover)] transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2 shadow-xl shadow-[var(--accent)]/20 disabled:opacity-70"
+            className="w-full py-5 rounded-[24px] bg-[var(--accent)] text-white font-black text-sm tracking-[0.2em] uppercase hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all active:scale-[0.98] mt-2 flex items-center justify-center gap-2 shadow-xl shadow-[var(--accent)]/20 disabled:opacity-70"
           >
             {isLoading ? <Loader2 className="animate-spin" size={20} /> : 'Create Account'}
           </button>
         </form>
+
+        <div className="mt-10 flex items-center gap-4">
+          <div className="flex-1 h-px bg-[var(--border)]" />
+          <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">or continue with</span>
+          <div className="flex-1 h-px bg-[var(--border)]" />
+        </div>
+
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full mt-8 py-5 rounded-[24px] glass-effect border-[var(--glass-border)] text-[var(--foreground)] font-black text-sm hover:bg-[var(--card-hover)] transition-all flex items-center justify-center gap-3 tracking-[0.2em] uppercase"
+        >
+          <img src="https://www.svgrepo.com/show/355037/google.svg" className="w-5 h-5" alt="Google" />
+          Google Sync
+        </button>
 
         <p className="mt-8 text-center text-xs text-[var(--text-muted)]">
           Already have an account? <Link href="/login" className="text-[var(--accent)] font-bold hover:underline">Log in here</Link>

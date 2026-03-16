@@ -4,15 +4,23 @@ import { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 
 export default function ModalContainer({ isOpen, onClose, title, children }) {
-  const [mounted, setMounted] = useState(false);
+  const [mounted, setMounted] = useState(isOpen);
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+    if (isOpen) setMounted(true);
+  }
 
   useEffect(() => {
     if (isOpen) {
-      setMounted(true);
       document.body.style.overflow = 'hidden';
     } else {
-      setTimeout(() => setMounted(false), 300);
+      const timer = setTimeout(() => {
+        setMounted(false);
+      }, 300);
       document.body.style.overflow = 'unset';
+      return () => clearTimeout(timer);
     }
   }, [isOpen]);
 
