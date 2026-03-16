@@ -5,7 +5,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar, Cell
 } from 'recharts';
 import {
-  TrendingUp, Target, BarChart3, Clock, Calendar, ArrowUpRight, ArrowDownRight, Sparkles
+  TrendingUp, Target, BarChart3, Clock, Calendar, ArrowUpRight, ArrowDownRight, Sparkles, Zap
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import MetricCard from '@/components/MetricCard';
@@ -78,7 +78,8 @@ export default function Dashboard() {
     return (
       <div className="px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
         <div className="h-10 w-48 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl mb-8 animate-shimmer" />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+          <MetricSkeleton />
           <MetricSkeleton />
           <MetricSkeleton />
           <MetricSkeleton />
@@ -145,7 +146,7 @@ export default function Dashboard() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 stagger-children">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12 stagger-children">
             <MetricCard
                 label="Win Rate"
                 value={`${winRate}%`}
@@ -164,10 +165,10 @@ export default function Dashboard() {
             />
             <MetricCard
                 label="Expectancy"
-                value={`${expectancy}R`}
+                value={`${expectancy >= 0 ? '+' : ''}${expectancy}R`}
                 subValue="Per Execution"
-                color={expectancy > 0 ? 'accent' : 'loss'}
-                icon={Sparkles}
+                color={expectancy >= 0.3 ? 'profit' : expectancy < 0 ? 'loss' : 'accent'}
+                icon={Zap}
             />
             <MetricCard
                 label="Vault Sample"
@@ -175,6 +176,13 @@ export default function Dashboard() {
                 subValue="Total Executions"
                 icon={Clock}
                 color="neutral"
+            />
+            <MetricCard
+                label="Strategic Yield"
+                value={`${trades.reduce((sum, t) => sum + (parseFloat(t.rr) || 0), 0).toFixed(1)}R`}
+                subValue="Total Accrual"
+                icon={BarChart3}
+                color="profit"
             />
         </div>
 

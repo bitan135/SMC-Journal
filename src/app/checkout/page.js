@@ -235,8 +235,14 @@ function CheckoutContent() {
 export default function CheckoutPage() {
   return (
     <Suspense fallback={
-        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-            <Loader2 className="animate-spin text-[var(--accent)]" size={40} />
+        <div className="min-h-screen bg-[var(--background)] flex items-center justify-center flex-col gap-6">
+            <div className="relative">
+                <div className="w-16 h-16 rounded-full border-4 border-white/5 border-t-[var(--accent)] animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <ShieldCheck className="text-[var(--accent)] animate-pulse" size={24} />
+                </div>
+            </div>
+            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] animate-pulse">Initializing Security Tunnel</p>
         </div>
     }>
       <CheckoutContent />

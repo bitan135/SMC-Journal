@@ -10,6 +10,9 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // TODO: Implement rate limiting for payment initiation to prevent spam.
+  // Suggested: 5 requests per 10 minutes per user using a sliding window or bucket.
+
   try {
     const { planId } = await req.json();
     

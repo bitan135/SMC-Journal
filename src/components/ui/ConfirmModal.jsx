@@ -35,7 +35,11 @@ export const ConfirmProvider = ({ children }) => {
                     {/* Backdrop */}
                     <div 
                         className="absolute inset-0 bg-[var(--background)]/80 backdrop-blur-sm animate-fade-in" 
-                        onClick={close}
+                        onClick={() => {
+                            if (config?.type !== 'danger') {
+                                close();
+                            }
+                        }}
                     />
                     
                     {/* Modal */}

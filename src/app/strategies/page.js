@@ -196,16 +196,23 @@ export default function Strategies() {
                         </div>
 
                         <div className="mt-8 pt-8 border-t border-[var(--glass-border)] flex items-center justify-between">
-                             <div className="flex items-center gap-2">
-                                <ShieldCheck size={14} className={isWinning ? 'text-emerald-500' : 'text-rose-500'} />
-                                <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">
-                                    {insight.trades > 0 ? `${((insight.wins / insight.trades) * 100).toFixed(0)}% Precise` : 'New Logic'}
-                                </span>
+                             <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2">
+                                    <ShieldCheck size={14} className={isWinning ? 'text-emerald-500' : 'text-rose-500'} />
+                                    <span className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-tight">
+                                        {insight.wins}W — {insight.losses}L
+                                    </span>
+                                </div>
+                                <span className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">Institutional Track</span>
                              </div>
-                             <div className="flex items-center gap-2 text-[var(--text-muted)]">
-                                <Brain size={12} />
-                                <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)] opacity-60">Insight</span>
-                             </div>
+                             
+                             <button 
+                                onClick={() => window.location.href = `/trades?search=${encodeURIComponent(name)}`}
+                                className="group/btn flex items-center gap-2 px-5 py-2.5 bg-[var(--accent)]/10 hover:bg-[var(--accent)] text-[var(--accent)] hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300"
+                             >
+                                View Trades
+                                <ArrowRight size={12} className="transition-transform group-hover/btn:translate-x-1" />
+                             </button>
                         </div>
                     </div>
                 </div>

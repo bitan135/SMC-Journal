@@ -49,6 +49,11 @@
   --glass-bg: rgba(255, 255, 255, 0.85); /* Slightly more opaque for better readability */
   --glass-border: rgba(0, 0, 0, 0.12); /* More visible border */
   --sidebar-bg: #FFFFFF;
+  --profit: #059669;
+  --profit-bg: rgba(5, 150, 105, 0.08);
+  --loss: #E11D48;
+  --loss-bg: rgba(225, 29, 72, 0.08);
+  --neutral: #64748B;
 }
 
 @theme inline {
@@ -107,6 +112,26 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideRightIn {
+  from { opacity: 0; transform: translateX(-30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes progressBar {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -121,6 +146,22 @@
 
 .animate-fade-in {
   animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-right {
+  animation: slideRightIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.progress-bar-fill {
+  animation: progressBar 1.5s ease-out forwards;
 }
 
 /* Deep Shadows */
@@ -140,6 +181,10 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+[data-theme='light'] .shadow-premium {
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), 0 0 20px rgba(79, 70, 229, 0.05);
 }
 
 .accent-gradient {

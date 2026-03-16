@@ -97,13 +97,15 @@ export default function Settings() {
       onConfirm: async () => {
         try {
           const { supabase } = await import('@/lib/supabase');
-          // In a real app, you'd call a function to delete user data and then delete the user
-          // For now, we'll sign out and redirect, as direct user deletion usually requires admin privileges or service role
+          // Call the delete_user RPC which deletes the auth user (cascades to all data)
+          const { error } = await supabase.rpc('delete_user');
+          if (error) throw error;
           await supabase.auth.signOut();
-          router.push('/login');
-          showToast('Account scheduled for deletion.', 'info');
+          router.push('/signup');
         } catch (err) {
-          showToast('Account deletion failed.', 'error');
+          // If RPC not yet created, fall back to sign-out with instructions
+          console.error('Account deletion error:', err);
+          showToast('Deletion failed. Please run the Supabase migration first, or contact support.', 'error');
         }
       }
     });

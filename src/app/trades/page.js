@@ -40,11 +40,9 @@ export default function TradeLibrary() {
           getTrades(),
           getStrategies()
         ]);
-        setTrades(fetchedTrades.sort((a, b) => {
-          const dateA = new Date(b.trade_date || b.tradeDate || b.created_at || b.createdAt);
-          const dateB = new Date(a.trade_date || a.tradeDate || a.created_at || a.createdAt);
-          return dateA - dateB;
-        }));
+        setTrades(fetchedTrades.sort((a, b) => 
+          new Date(b.trade_date || b.created_at) - new Date(a.trade_date || a.created_at)
+        ));
         setStrategies(fetchedStrategies);
       } catch (err) {
         console.error('Library load failed:', err);
@@ -107,8 +105,8 @@ export default function TradeLibrary() {
         screenshot_before: screenshotBeforeUrl,
         screenshot_after: screenshotAfterUrl,
         trade_date: new Date(formData.tradeDate).toISOString(),
-        emotional_state: formData.emotionalState,
-        discipline_score: parseInt(formData.disciplineScore),
+        emotional_state: formData.emotionalState || null,
+        discipline_score: formData.disciplineScore || null,
         rule_adherence: formData.ruleAdherence,
       };
 
@@ -182,6 +180,14 @@ export default function TradeLibrary() {
                     The Vault
                 </h1>
                 <p className="text-[var(--text-secondary)] font-medium mt-3">Comprehensive records of your technical evolution on the charts.</p>
+                {!isLoading && trades.length > 0 && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest">
+                      {trades.length} Execution{trades.length !== 1 ? 's' : ''} Archived
+                    </span>
+                  </div>
+                )}
             </div>
             
             <div className="flex items-center gap-4">
@@ -445,6 +451,51 @@ export default function TradeLibrary() {
                     </div>
                 </div>
 
+                {/* Psychology Profile Section */}
+                {(selectedTrade.emotional_state || selectedTrade.discipline_score !== null || selectedTrade.rule_adherence !== null) && (
+                  <div className="space-y-6">
+                    <h4 className="flex items-center gap-3 text-[11px] font-black text-[var(--accent)] uppercase tracking-[0.3em]">
+                      <Brain size={16} /> Psychology Profile
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {selectedTrade.emotional_state && (
+                        <div className="glass-card rounded-[28px] p-5 border-[var(--glass-border)]">
+                          <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking- Brace[0.2em] mb-3">State</p>
+                          <span className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                            selectedTrade.emotional_state === 'Focused' || selectedTrade.emotional_state === 'Neutral'
+                              ? 'bg-emerald-500/10 text-emerald-500'
+                              : selectedTrade.emotional_state === 'FOMO' || selectedTrade.emotional_state === 'Greed' || selectedTrade.emotional_state === 'Revenge'
+                              ? 'bg-rose-500/10 text-rose-500'
+                              : 'bg-[var(--accent)]/10 text-[var(--accent)]'
+                          }`}>
+                            {selectedTrade.emotional_state}
+                          </span>
+                        </div>
+                      )}
+                      {selectedTrade.discipline_score !== null && selectedTrade.discipline_score !== undefined && (
+                        <div className="glass-card rounded-[28px] p-5 border-[var(--glass-border)]">
+                          <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-3">Discipline</p>
+                          <p className="text-xl font-black text-[var(--foreground)]">
+                            {selectedTrade.discipline_score}<span className="text-[10px] text-[var(--text-muted)] font-bold">/5</span>
+                          </p>
+                        </div>
+                      )}
+                      {selectedTrade.rule_adherence !== null && selectedTrade.rule_adherence !== undefined && (
+                        <div className="glass-card rounded-[28px] p-5 border-[var(--glass-border)]">
+                          <p className="text-[9px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em] mb-3">Rules</p>
+                          <span className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider ${
+                            selectedTrade.rule_adherence
+                              ? 'bg-emerald-500/10 text-emerald-500'
+                              : 'bg-rose-500/10 text-rose-500'
+                          }`}>
+                            {selectedTrade.rule_adherence ? 'Followed' : 'Broken'}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-6">
                     <h4 className="flex items-center gap-3 text-[11px] font-black text-[var(--accent)] uppercase tracking-[0.3em]">
                         <ImageIcon size={16} /> High-Fidelity Capture
@@ -526,7 +577,7 @@ export default function TradeLibrary() {
                         onClick={(e) => handleDelete(selectedTrade.id, e)}
                         className="w-full py-6 rounded-[32px] bg-rose-500/5 text-rose-500 border border-rose-500/10 text-[11px] font-black uppercase tracking-[0.3em] hover:bg-rose-500/10 hover:border-rose-500/20 transition-all active:scale-[0.98] flex items-center justify-center gap-4"
                     >
-                        <Trash2 size={20} /> Purge This Sequence
+                        <Trash2 size={20} /> Delete Trade
                     </button>
                 </div>
               </>

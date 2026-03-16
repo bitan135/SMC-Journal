@@ -23,18 +23,26 @@ export async function POST(req) {
 
   // 1. Verify IPN signature
   const ipnSecret = process.env.NOWPAYMENTS_IPN_SECRET;
-  if (ipnSecret && signature) {
-    const isValid = nowPaymentsService.verifySignature(payload, signature, ipnSecret);
-    if (!isValid) {
-      console.warn('Invalid NOWPayments IPN Signature');
-      return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
-    }
+  if (!ipnSecret || !signature) {
+    console.error('NOWPayments Security: Missing secret or signature');
+    return NextResponse.json({ error: 'Security credentials missing' }, { status: 403 });
+  }
+
+  const isValid = nowPaymentsService.verifySignature(payload, signature, ipnSecret);
+  if (!isValid) {
+    console.warn('Invalid NOWPayments IPN Signature detected');
+    return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
   }
 
   const { payment_status, payment_id, order_id } = payload;
   
-  if (!payment_id || !order_id) {
-    return NextResponse.json({ error: 'Missing payment details' }, { status: 400 });
+  if (!payment_id || !order_id || typeof order_id !== 'string') {
+    return NextResponse.json({ error: 'Incomplete payload' }, { status: 400 });
+  }
+
+  // Validate order_id format (expected: userId_uuid)
+  if (!order_id.includes('_')) {
+    return NextResponse.json({ error: 'Malformed order identifier' }, { status: 400 });
   }
 
   const userId = order_id.split('_')[0];

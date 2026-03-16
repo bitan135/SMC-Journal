@@ -24,23 +24,26 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     notes: '',
     screenshotBefore: null,
     screenshotAfter: null,
-    tradeDate: new Date().toISOString().slice(0, 16), // YYYY-MM-DDTHH:MM
-    emotionalState: 'Neutral',
+    tradeDate: new Date().toISOString().slice(0, 16),
+    emotionalState: 'Neutral',  // consistent default
     disciplineScore: 5,
     ruleAdherence: true,
-    ...initialData,
-    // Ensure numeric values are strings for input fields if they exist
-    entryPrice: initialData?.entry_price || initialData?.entryPrice || '',
-    stopLoss: initialData?.stop_loss || initialData?.stopLoss || '',
-    takeProfit: initialData?.take_profit || initialData?.takeProfit || '',
-    lotSize: initialData?.lot_size || initialData?.lotSize || '0.01',
-    smcTags: initialData?.smc_tags || initialData?.smcTags || [],
-    screenshotBefore: initialData?.screenshot_before || initialData?.screenshotBefore || null,
-    screenshotAfter: initialData?.screenshot_after || initialData?.screenshotAfter || null,
-    tradeDate: initialData?.trade_date ? new Date(initialData.trade_date).toISOString().slice(0, 16) : initialData?.tradeDate || new Date().toISOString().slice(0, 16),
-    emotionalState: initialData?.emotional_state || initialData?.emotionalState || 'Focused',
-    disciplineScore: initialData?.discipline_score || initialData?.disciplineScore || 5,
-    ruleAdherence: initialData?.rule_adherence ?? initialData?.ruleAdherence ?? true,
+    // Overrides for edit mode — all come from initialData
+    ...initialData ? {
+      entryPrice: initialData?.entry_price || initialData?.entryPrice || '',
+      stopLoss: initialData?.stop_loss || initialData?.stopLoss || '',
+      takeProfit: initialData?.take_profit || initialData?.takeProfit || '',
+      lotSize: initialData?.lot_size || initialData?.lotSize || '0.01',
+      smcTags: initialData?.smc_tags || initialData?.smcTags || [],
+      screenshotBefore: initialData?.screenshot_before || initialData?.screenshotBefore || null,
+      screenshotAfter: initialData?.screenshot_after || initialData?.screenshotAfter || null,
+      tradeDate: initialData?.trade_date
+        ? new Date(initialData.trade_date).toISOString().slice(0, 16)
+        : initialData?.tradeDate || new Date().toISOString().slice(0, 16),
+      emotionalState: initialData?.emotional_state || initialData?.emotionalState || 'Neutral',
+      disciplineScore: initialData?.discipline_score || initialData?.disciplineScore || 5,
+      ruleAdherence: initialData?.rule_adherence ?? initialData?.ruleAdherence ?? true,
+    } : {},
   });
 
   const [errors, setErrors] = useState({});
