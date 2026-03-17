@@ -123,9 +123,8 @@ export default function BillingPage() {
                   ))}
                 </div>
 
-                <button
-                  disabled={isCurrent || loading}
-                  onClick={() => handleUpgrade(plan.id)}
+                <Link
+                  href={isCurrent ? '#' : `/billing/checkout?plan=${plan.id}`}
                   className={`w-full py-5 rounded-[24px] font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 active:scale-95 ${
                     isCurrent 
                       ? 'bg-[var(--glass-bg)] text-[var(--text-muted)] border border-[var(--glass-border)] cursor-default'
@@ -133,6 +132,9 @@ export default function BillingPage() {
                         ? 'bg-[var(--accent)] text-white hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] border border-white/20'
                         : 'bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 hover:shadow-xl'
                   }`}
+                  onClick={(e) => {
+                    if (isCurrent || plan.id === 'free') e.preventDefault();
+                  }}
                 >
                   {loading === plan.id ? (
                     <Loader2 className="animate-spin" size={20} />
@@ -144,7 +146,7 @@ export default function BillingPage() {
                       <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                     </>
                   )}
-                </button>
+                </Link>
               </div>
             );
           })}

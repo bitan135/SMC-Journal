@@ -8,8 +8,8 @@ export async function updateSession(request) {
   });
 
   const supabase = createServerClient(
-    ENV.url,
-    ENV.anonKey,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
     {
       cookies: {
         getAll() {

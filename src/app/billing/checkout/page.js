@@ -73,7 +73,8 @@ function CheckoutFormContent() {
       
       const payment = await res.json();
       if (payment.payment_id) {
-        router.push(`/checkout?id=${payment.payment_id}`);
+        // Correcting use of checkout vs billing/checkout based on consolidated route
+        router.push(`/billing/checkout?id=${payment.payment_id}`);
       } else {
         throw new Error(payment.error || 'Initiation failed');
       }

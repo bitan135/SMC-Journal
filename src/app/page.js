@@ -133,16 +133,16 @@ export default function Dashboard() {
                     Analyze your execution, find your edge, and scale your strategy with institutional precision.
                 </p>
             </div>
-            <button 
-                onClick={() => router.push('/add-trade')}
-                className="group relative px-10 py-5 rounded-[24px] bg-[var(--accent)] text-white font-black text-sm tracking-widest uppercase overflow-hidden shadow-2xl shadow-indigo-500/40 hover:scale-[1.03] transition-all active:scale-95"
+            <Link 
+                href="/add-trade"
+                className="group relative px-10 py-5 rounded-[24px] bg-[var(--accent)] text-white font-black text-sm tracking-widest uppercase overflow-hidden shadow-2xl shadow-indigo-500/40 hover:scale-[1.03] transition-all active:scale-95 flex items-center justify-center gap-3"
             >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                 <div className="flex items-center justify-center gap-3 relative z-10">
                     <ArrowUpRight size={20} />
                     Log New Trade
                 </div>
-            </button>
+            </Link>
         </div>
 
         {/* Metrics Grid */}

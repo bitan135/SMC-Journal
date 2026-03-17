@@ -11,8 +11,8 @@ export async function createClient() {
                  host.includes('127.0.0.1');
 
   return createServerClient(
-    ENV.url,
-    ENV.anonKey,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
     {
       cookies: {
         getAll() {
