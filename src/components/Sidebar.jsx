@@ -160,11 +160,6 @@ export default function Sidebar() {
                     <Plus size={14} className="text-[var(--accent)]" />
                   </div>
                 )}
-                {item.href === '/strategies' && (subscription?.plan_id || 'free') === 'free' && (
-                  <div className="ml-auto flex items-center justify-center w-6 h-6 rounded-lg bg-amber-500/10 border border-amber-500/20">
-                    <Lock size={12} className="text-amber-500" />
-                  </div>
-                )}
               </Link>
             );
           })}
