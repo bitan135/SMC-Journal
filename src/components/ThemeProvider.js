@@ -5,18 +5,16 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || 'auto';
-    }
-    return 'auto';
-  });
-  const [isSidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sidebar-collapsed') === 'true';
-    }
-    return false;
-  });
+  const [theme, setTheme] = useState('auto');
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) setTheme(savedTheme);
+    
+    const savedCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+    setSidebarCollapsed(savedCollapsed);
+  }, []);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

@@ -58,7 +58,7 @@ function CheckoutContent() {
         </div>
       </div>
       <div className="text-center">
-        <p className="text-white text-xl font-bold tracking-tight mb-2">Securing Transaction...</p>
+        <p className="text-[var(--foreground)] text-xl font-bold tracking-tight mb-2">Securing Transaction...</p>
         <p className="text-[var(--text-muted)] text-sm font-medium animate-pulse">Establishing tunnel via Arbitrum Network</p>
       </div>
     </div>
@@ -70,12 +70,12 @@ function CheckoutContent() {
         <AlertCircle className="text-[var(--loss)]" size={40} />
       </div>
       <div className="space-y-2">
-        <h2 className="text-2xl font-black text-white">Security Halt</h2>
+        <h2 className="text-2xl font-black text-[var(--foreground)]">Security Halt</h2>
         <p className="text-[var(--text-secondary)] max-w-sm font-medium">{error || 'Transaction context lost'}</p>
       </div>
       <button 
         onClick={() => router.push('/billing')} 
-        className="mt-4 px-8 py-3 glass-card text-white rounded-2xl font-bold hover:scale-105 transition-all active:scale-95"
+        className="mt-4 px-8 py-3 glass-card text-[var(--foreground)] rounded-2xl font-bold hover:scale-105 transition-all active:scale-95"
       >
         Return to Billing
       </button>
@@ -93,7 +93,7 @@ function CheckoutContent() {
       <div className="max-w-2xl mx-auto relative z-10 animate-fade-in">
         <button 
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-[var(--text-muted)] hover:text-white transition-colors mb-8 font-bold text-xs uppercase tracking-widest group"
+            className="flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors mb-8 font-bold text-xs uppercase tracking-widest group"
         >
             <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" /> Back
         </button>
@@ -112,7 +112,7 @@ function CheckoutContent() {
                 ) : (
                     <div className="w-16 h-16 rounded-full border-4 border-white/10 border-t-white animate-spin mx-auto mb-6 shadow-xl" />
                 )}
-                <h1 className="text-4xl font-black mb-3 tracking-tighter text-white">
+                <h1 className="text-4xl font-black mb-3 tracking-tighter text-[var(--foreground)]">
                     {isFinished ? 'Elevated.' : 'Awaiting Settlement'}
                 </h1>
                 <p className="text-indigo-200/80 font-black uppercase text-[10px] tracking-[0.2em]">
@@ -146,11 +146,11 @@ function CheckoutContent() {
                         <span className="text-[var(--accent)]">USDT-ARB</span>
                     </p>
                     <div className="flex items-center justify-between gap-4">
-                      <p className="text-2xl font-black text-white">{payment.pay_amount}</p>
+                      <p className="text-2xl font-black text-[var(--foreground)]">{payment.pay_amount}</p>
                       <button 
                         onClick={() => copyToClipboard(payment.pay_amount, 'amount')}
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-xs transition-all active:scale-90 ${
-                            copiedAmount ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-[var(--accent)] hover:bg-white/10'
+                            copiedAmount ? 'bg-emerald-500/10 text-emerald-400' : 'bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--accent)] hover:bg-[var(--accent)]/10'
                         }`}
                       >
                         {copiedAmount ? <><Check size={14} /> COPIED</> : <><Copy size={14} /> COPY AMOUNT</>}
@@ -172,11 +172,11 @@ function CheckoutContent() {
                     </div>
                     <p className="text-[10px] font-black text-[var(--text-muted)] uppercase mb-3 tracking-[0.2em]">Execution Address</p>
                     <div className="flex items-center justify-between gap-4">
-                      <p className="text-sm font-mono text-white/80 break-all leading-relaxed max-w-[70%]">{payment.pay_address}</p>
+                      <p className="text-sm font-mono text-[var(--foreground)]/80 break-all leading-relaxed max-w-[70%]">{payment.pay_address}</p>
                       <button 
                         onClick={() => copyToClipboard(payment.pay_address, 'addr')}
                         className={`p-4 rounded-2xl transition-all active:scale-90 ${
-                            copiedAddr ? 'bg-emerald-500/10 text-emerald-400' : 'bg-white/5 text-[var(--accent)] hover:bg-white/10'
+                            copiedAddr ? 'bg-emerald-500/10 text-emerald-400' : 'bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--accent)] hover:bg-[var(--accent)]/10'
                         }`}
                       >
                         {copiedAddr ? <Check size={20} /> : <Copy size={20} />}
@@ -187,8 +187,8 @@ function CheckoutContent() {
 
                 <div className="flex items-center justify-center gap-6 p-6 px-8 rounded-[24px] bg-white/[0.02] border border-white/5 shadow-inner">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full border-2 border-white/5 border-t-[var(--accent)] animate-spin" />
-                    <span className="text-sm font-black text-white uppercase tracking-tighter">Syncing Node...</span>
+                    <div className="w-8 h-8 rounded-full border-2 border-[var(--glass-border)] border-t-[var(--accent)] animate-spin" />
+                    <span className="text-sm font-black text-[var(--foreground)] uppercase tracking-tighter">Syncing Node...</span>
                   </div>
                   <div className="w-px h-6 bg-white/10"></div>
                   <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.2em]">{payment.payment_status}</span>
@@ -212,7 +212,7 @@ function CheckoutContent() {
                <a 
                 href={`https://nowpayments.io/payment/?payment_id=${payment.payment_id}`}
                 target="_blank"
-                className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest flex items-center gap-3 hover:text-white transition-colors"
+                className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-widest flex items-center gap-3 hover:text-[var(--foreground)] transition-colors"
                >
                  Verify Transaction on Explorer <ExternalLink size={14} />
                </a>

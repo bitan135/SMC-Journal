@@ -272,7 +272,7 @@ export default function Dashboard() {
         <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-10 overflow-hidden shadow-premium mb-12 stagger-children">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
-                    <h3 className="text-lg font-black text-[var(--foreground)] uppercase tracking-[0.2em] mb-2 flex items-center gap-3">
+                    <h3 className="text-lg font-black text-[var(--text-secondary)] uppercase tracking-[0.2em] mb-2 flex items-center gap-3">
                         <Target className="text-[var(--accent)]" size={20} /> SMC Performance Ledger
                     </h3>
                     <p className="text-sm text-[var(--text-muted)] font-medium">Quantifying your most consistent technical bread-and-butter setups.</p>
@@ -286,11 +286,11 @@ export default function Dashboard() {
                 <table className="w-full text-left">
                     <thead>
                         <tr className="border-b border-[var(--glass-border)]">
-                            <th className="pb-6 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] leading-relaxed">Strategy Configuration</th>
-                            <th className="pb-6 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-center leading-relaxed">Volume</th>
-                            <th className="pb-6 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-center leading-relaxed">Precision</th>
-                            <th className="pb-6 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-center leading-relaxed">Yield</th>
-                            <th className="pb-6 text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] text-right leading-relaxed">Momentum</th>
+                            <th className="pb-6 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] leading-relaxed">Strategy Configuration</th>
+                            <th className="pb-6 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] text-center leading-relaxed">Volume</th>
+                            <th className="pb-6 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] text-center leading-relaxed">Precision</th>
+                            <th className="pb-6 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] text-center leading-relaxed">Yield</th>
+                            <th className="pb-6 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] text-right leading-relaxed">Momentum</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-[var(--glass-border)]">

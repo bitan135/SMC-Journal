@@ -176,15 +176,23 @@
   -webkit-text-fill-color: transparent;
 }
 
-[data-theme='dark'] .text-gradient {
-  background: linear-gradient(135deg, #FFF 0%, rgba(255, 255, 255, 0.6) 100%);
+[data-theme='light'] .text-gradient {
+  background: linear-gradient(135deg, var(--foreground) 0%, var(--text-secondary) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 [data-theme='light'] .shadow-premium {
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), 0 0 20px rgba(79, 70, 229, 0.05);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.grey-invert {
+  filter: grayscale(1) invert(1);
+}
+
+[data-theme='light'] .grey-invert {
+  filter: grayscale(1) invert(0) brightness(0.2);
 }
 
 .accent-gradient {

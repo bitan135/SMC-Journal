@@ -2,6 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/ui/SkeletonLoader';
+import PlanGuard from '@/components/PlanGuard';
 
 const AnalyticsContent = dynamic(() => import('@/components/AnalyticsContent'), {
   ssr: false,
@@ -29,5 +30,9 @@ const AnalyticsContent = dynamic(() => import('@/components/AnalyticsContent'), 
 });
 
 export default function AnalyticsPage() {
-  return <AnalyticsContent />;
+  return (
+    <PlanGuard requiredPlan="pro" featureName="Quantitative Analytics">
+      <AnalyticsContent />
+    </PlanGuard>
+  );
 }

@@ -5,7 +5,7 @@ import {
   Plus, Camera, Check, Target, TrendingUp, Binary, BarChart3, AlertCircle, Calendar, Brain, Shield, Smile, Frown, Zap, RefreshCcw
 } from 'lucide-react';
 import { 
-  INSTRUMENTS, SESSIONS, SMC_TAGS, 
+  INSTRUMENTS, SESSIONS, SMC_TAGS, LIQUIDITY_ZONES,
   calculateRR, calculatePips, calculateRiskAmount
 } from '@/lib/storage';
 
@@ -22,6 +22,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     strategy: '',
     smcTags: [],
     notes: '',
+    liquiditySweep: [],
     screenshotBefore: null,
     screenshotAfter: null,
     tradeDate: new Date().toISOString().slice(0, 16),
@@ -35,6 +36,8 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
       takeProfit: initialData?.take_profit || initialData?.takeProfit || '',
       lotSize: initialData?.lot_size || initialData?.lotSize || '0.01',
       smcTags: initialData?.smc_tags || initialData?.smcTags || [],
+      notes: initialData?.notes || '',
+      liquiditySweep: initialData?.liquidity_sweep || initialData?.liquiditySweep || [],
       screenshotBefore: initialData?.screenshot_before || initialData?.screenshotBefore || null,
       screenshotAfter: initialData?.screenshot_after || initialData?.screenshotAfter || null,
       tradeDate: initialData?.trade_date
@@ -75,11 +78,20 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     }
   };
 
+  const handleSweepToggle = (zone) => {
+    setFormData(prev => {
+      const newZones = (prev.liquiditySweep || []).includes(zone)
+        ? prev.liquiditySweep.filter(z => z !== zone)
+        : [...(prev.liquiditySweep || []), zone];
+      return { ...prev, liquiditySweep: newZones };
+    });
+  };
+
   const handleTagToggle = (tag) => {
     setFormData(prev => {
-      const newTags = prev.smcTags.includes(tag)
+      const newTags = (prev.smcTags || []).includes(tag)
         ? prev.smcTags.filter(t => t !== tag)
-        : [...prev.smcTags, tag];
+        : [...(prev.smcTags || []), tag];
       return { ...prev, smcTags: newTags };
     });
   };
@@ -408,6 +420,26 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
                 onChange={handleChange}
                 className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-black text-[var(--foreground)] outline-none focus:border-[var(--accent)] focus:bg-[var(--card-hover)] transition-all"
               />
+            </div>
+
+            <div className="pt-4 border-t border-[var(--glass-border)]">
+              <p className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.2em] mb-4">Liquidity Sweep Zones</p>
+              <div className="flex flex-wrap gap-2">
+                {LIQUIDITY_ZONES.map(zone => (
+                  <button
+                    key={zone}
+                    type="button"
+                    onClick={() => handleSweepToggle(zone)}
+                    className={`px-3 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
+                      (formData.liquiditySweep || []).includes(zone) 
+                        ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20 border border-amber-500/50' 
+                        : 'bg-[var(--glass-bg)] text-[var(--text-muted)] border border-[var(--glass-border)] hover:border-amber-500/30'
+                    }`}
+                  >
+                    {zone}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="pt-4 border-t border-[var(--glass-border)]">

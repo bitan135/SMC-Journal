@@ -52,6 +52,7 @@ export default function AddTrade() {
         session: formData.session,
         strategy: formData.strategy,
         smc_tags: formData.smcTags,
+        liquidity_sweep: formData.liquiditySweep,
         notes: formData.notes,
         screenshot_before: screenshotBeforeUrl,
         screenshot_after: screenshotAfterUrl,

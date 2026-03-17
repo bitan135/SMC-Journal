@@ -55,29 +55,9 @@ export default function BillingPage() {
     }
     loadSub();
   }, []);
-
-  const handleUpgrade = async (planId) => {
+  const handleUpgrade = (planId) => {
     if (planId === 'free' || planId === currentPlan) return;
-    
-    setLoading(planId);
-    try {
-      const res = await fetch('/api/payments/create', {
-        method: 'POST',
-        body: JSON.stringify({ planId }),
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      const payment = await res.json();
-      if (payment.payment_id) {
-        router.push(`/checkout?id=${payment.payment_id}`);
-      } else {
-        throw new Error(payment.error || 'Initiation failed');
-      }
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      setLoading(null);
-    }
+    router.push(`/billing/checkout?plan=${planId}`);
   };
 
   return (
@@ -182,7 +162,7 @@ export default function BillingPage() {
                 <div className="flex items-center gap-6 saturate-50 hover:saturate-100 transition-all">
                     <img 
                         src="https://nowpayments.io/images/nowpayments-logo-white.svg" 
-                        className="h-7 grey-invert opacity-60 dark:invert-0"
+                        className="h-7 grey-invert opacity-80"
                         alt="NOWPayments" 
                     />
                     <div className="w-px h-6 bg-[var(--glass-border)]"></div>

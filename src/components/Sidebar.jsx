@@ -125,8 +125,8 @@ export default function Sidebar() {
             <span className="text-xl font-black text-[var(--foreground)] tracking-tighter text-gradient leading-tight">
               SMC Journal
             </span>
-            <span className="text-[8px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mt-1 opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500 leading-relaxed">
-              Edge · Ledger
+            <span className="text-[7px] font-black text-[var(--accent)] uppercase tracking-[0.2em] mt-1.5 opacity-0 group-hover/logo:opacity-100 transition-opacity duration-500 leading-relaxed max-w-[140px]">
+              Performance Analysis Tool for SMC Traders
             </span>
           </div>
           {/* Collapse Indicator Dot */}
@@ -217,7 +217,7 @@ export default function Sidebar() {
                             </p>
                             <div className="flex items-center gap-1.5 mt-0.5">
                                 <Sparkles size={10} className={`${subscription?.plan_id === 'free' ? 'text-[var(--text-muted)]' : 'text-[var(--accent)] animate-pulse'}`} />
-                                <span className={`text-[10px] font-black uppercase tracking-widest leading-relaxed ${subscription?.plan_id === 'free' ? 'text-[var(--text-muted)]' : 'text-[var(--accent)]'}`}>
+                                <span className={`text-[10px] font-black uppercase tracking-widest leading-relaxed ${subscription?.plan_id === 'free' ? 'text-[var(--text-secondary)]' : 'text-[var(--accent)]'}`}>
                                     {getPlanBadge()}
                                 </span>
                             </div>

@@ -14,7 +14,7 @@ export async function POST(req) {
   // Suggested: 5 requests per 10 minutes per user using a sliding window or bucket.
 
   try {
-    const { planId } = await req.json();
+    const { planId, billingDetails, coupon } = await req.json();
     
     // Define prices
     const prices = {
@@ -39,13 +39,20 @@ export async function POST(req) {
     // Ensure no trailing slash
     baseUrl = baseUrl.replace(/\/$/, '');
 
+    // Apply Coupon Discount
+    let finalPrice = prices[planId];
+    const isPromo = coupon?.toUpperCase() === 'SMC2026';
+    if (isPromo) {
+      finalPrice = finalPrice * 0.8; // 20% off
+    }
+
     const payload = {
-      price_amount: prices[planId],
+      price_amount: finalPrice,
       price_currency: 'usd',
       pay_currency: 'usdtarb', // USDT on Arbitrum (High speed, Low fee)
       ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: `${user.id}_${Date.now()}`,
-      order_description: `SMC Journal ${planId.replace('_', ' ').toUpperCase()} Plan`
+      order_description: `SMC Journal ${planId.replace('_', ' ').toUpperCase()} Plan${isPromo ? ' (PROMO: SMC2026)' : ''}`
     };
 
     console.log('--- Payment Request Started ---');
@@ -73,7 +80,9 @@ export async function POST(req) {
       pay_address: payment.pay_address,
       pay_amount: payment.pay_amount,
       pay_currency: payment.pay_currency,
-      plan_id: planId
+      plan_id: planId,
+      billing_details: billingDetails,
+      coupon_code: isPromo ? coupon : null
     });
 
     if (dbError) throw dbError;

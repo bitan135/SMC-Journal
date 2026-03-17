@@ -17,9 +17,19 @@ const INSTRUMENTS = [
 const SESSIONS = ['London', 'New York', 'Asia'];
 
 const SMC_TAGS = [
-  'Liquidity Sweep', 'BOS', 'CHoCH', 'FVG', 'Order Block', 
+  'BOS', 'CHoCH', 'FVG', 'Order Block', 
   'Inducement', 'SMT Divergence', 'Internal Structure', 'Swing Structure',
   'Premium/Discount', 'OTE', 'IFVG', 'BPR'
+];
+
+const LIQUIDITY_ZONES = [
+  'Asia High/Low',
+  'London High/Low',
+  'New York High/Low',
+  'Daily High/Low',
+  'Weekly High/Low',
+  'Monthly High/Low',
+  'Structure High/Low'
 ];
 
 const DEFAULT_STRATEGIES = [
@@ -444,4 +454,4 @@ export async function migrateLocalToCloud() {
 }
 
 // Exports
-export { INSTRUMENTS, SESSIONS, SMC_TAGS, DEFAULT_STRATEGIES };
+export { INSTRUMENTS, SESSIONS, SMC_TAGS, LIQUIDITY_ZONES, DEFAULT_STRATEGIES };
