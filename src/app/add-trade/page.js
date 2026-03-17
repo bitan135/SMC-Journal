@@ -51,7 +51,6 @@ export default function AddTrade() {
         pips: formData.pips,
         session: formData.session,
         strategy: formData.strategy,
-        setup_zone: formData.setup_zone,
         smc_tags: formData.smcTags,
         notes: formData.notes,
         screenshot_before: screenshotBeforeUrl,

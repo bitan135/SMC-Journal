@@ -33,7 +33,9 @@ const DEFAULT_STRATEGIES = [
   'AMD (Power of 3)',
   'London Open Expansion',
   'NY Killzone Sweep',
-  'Unicorn Setup'
+  'Unicorn Setup',
+  'Supply Zone',
+  'Demand Zone'
 ];
 
 const DEFAULT_SETTINGS = {
