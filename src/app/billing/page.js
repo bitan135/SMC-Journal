@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Check, Zap, Crown, Rocket, Loader2, ArrowRight, ShieldCheck, Sparkles, ArrowLeft } from 'lucide-react';
+import { Check, Zap, Crown, Rocket, Loader2, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { profileService } from '@/lib/storage';
 
 const plans = [
@@ -68,12 +67,6 @@ export default function BillingPage() {
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-full delay-1000 animate-float pointer-events-none"></div>
 
       <div className="max-w-6xl mx-auto relative z-10 w-full pt-10">
-        <Link 
-          href="/"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-12 hover:text-[var(--foreground)] transition-all group w-fit"
-        >
-          <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
-        </Link>
 
         <div className="text-center mb-24 animate-fade-in px-2">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-effect border-[var(--glass-border)] text-[var(--accent)] text-xs font-black uppercase tracking-[0.2em] mb-8">
