@@ -6,6 +6,7 @@ import {
   ArrowLeft, ShieldCheck, Sparkles, CreditCard, Tag, User, MapPin, 
   ArrowRight, Loader2, Check, AlertCircle, Zap, Crown
 } from 'lucide-react';
+import Link from 'next/link';
 import { profileService } from '@/lib/storage';
 
 const planDetails = {
@@ -89,12 +90,12 @@ function CheckoutFormContent() {
       {/* Background Ambience */}
       <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float"></div>
       
-      <button 
-        onClick={() => router.push('/billing')}
+      <Link 
+        href="/billing"
         className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-12 hover:text-[var(--foreground)] transition-all group w-fit"
       >
         <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Change Plan
-      </button>
+      </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
         {/* Left: Billing Form */}
