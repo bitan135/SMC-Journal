@@ -147,7 +147,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-3">
               <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Asset Pair</label>
                 <select
@@ -175,25 +175,6 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
                   >
                     <TrendingUp size={14} className={d === 'Sell' ? 'rotate-180' : ''} />
                     {d.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="space-y-3">
-              <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Setup Type</label>
-              <div className="flex p-1.5 bg-[var(--glass-bg)] rounded-2xl border border-[var(--glass-border)] h-[58px]">
-                {['Supply', 'Demand'].map(z => (
-                  <button
-                    key={z}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, setup_zone: z }))}
-                    className={`flex-1 flex items-center justify-center gap-2 text-[11px] font-black rounded-xl transition-all ${
-                      formData.setup_zone === z 
-                        ? 'bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/20'
-                        : 'text-[var(--text-muted)] hover:text-[var(--foreground)]'
-                    }`}
-                  >
-                    {z.toUpperCase()}
                   </button>
                 ))}
               </div>
@@ -396,7 +377,28 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
               </select>
             </div>
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Setup Type</label>
+              <label className="text-[10px] font-black text-[var(--accent)] uppercase tracking-widest ml-1 flex items-center gap-2">
+                <Target size={12} /> Setup Type
+              </label>
+              <div className="flex p-1.5 bg-[var(--glass-bg)] rounded-2xl border border-[var(--glass-border)] h-[58px]">
+                {['Supply', 'Demand'].map(z => (
+                  <button
+                    key={z}
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, setup_zone: z }))}
+                    className={`flex-1 flex items-center justify-center gap-2 text-[11px] font-black rounded-xl transition-all ${
+                      formData.setup_zone === z 
+                        ? 'bg-[var(--accent)] text-white shadow-lg shadow-[var(--accent)]/20'
+                        : 'text-[var(--text-muted)] hover:text-[var(--foreground)]'
+                    }`}
+                  >
+                    {z.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Institutional Strategy</label>
               <select
                 name="strategy"
                 value={formData.strategy}
