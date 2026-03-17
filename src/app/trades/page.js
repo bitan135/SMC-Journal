@@ -208,7 +208,7 @@ export default function TradeLibrary() {
         <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-12 glass-card p-4 rounded-[32px] border-[var(--glass-border)] shadow-premium">
             {[
                 { value: filters.instrument, options: INSTRUMENTS, label: 'Pair', key: 'instrument' },
-                { value: filters.strategy, options: [...new Set([...DEFAULT_STRATEGIES, ...strategies.map(s => s.name)])], label: 'Setup', key: 'strategy' },
+                { value: filters.strategy, options: [...new Set([...DEFAULT_STRATEGIES, ...strategies])], label: 'Setup', key: 'strategy' },
                 { value: filters.session, options: SESSIONS, label: 'Window', key: 'session' },
                 { value: filters.result, options: ['Win', 'Loss', 'Break Even'], label: 'Outcome', key: 'result' }
             ].map((f) => (
@@ -218,7 +218,7 @@ export default function TradeLibrary() {
                         onChange={(e) => setFilters({...filters, [f.key]: e.target.value})}
                         className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-5 py-3 text-[11px] font-black text-[var(--text-secondary)] uppercase tracking-wider outline-none focus:border-[var(--accent)] hover:bg-[var(--card-hover)] cursor-pointer transition-all appearance-none"
                     >
-                        <option value="All" className="bg-[var(--background)]">All {f.label}s</option>
+                        <option key="all" value="All" className="bg-[var(--background)]">All {f.label}s</option>
                         {f.options.map(opt => <option key={opt} value={opt} className="bg-[var(--background)]">{opt}</option>)}
                     </select>
                     <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none opacity-40 group-hover:opacity-100 transition-opacity">
