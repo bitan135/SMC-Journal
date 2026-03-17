@@ -164,7 +164,7 @@ export default function TradeLibrary() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
         <div className="flex items-center justify-between mb-12">
           <div className="h-10 w-64 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl animate-shimmer" />
           <div className="h-12 w-48 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl animate-shimmer" />

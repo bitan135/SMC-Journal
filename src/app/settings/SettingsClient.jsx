@@ -168,7 +168,7 @@ export default function Settings() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
         <div className="h-10 w-48 bg-[var(--glass-border)] rounded-2xl mb-12 animate-shimmer" />
         <div className="space-y-8">
           <div className="h-64 glass-card border-[var(--glass-border)] rounded-[40px] animate-shimmer" />

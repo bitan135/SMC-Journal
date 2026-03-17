@@ -80,7 +80,7 @@ export default function AnalyticsContent() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
+      <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 px-2">
             <div className="flex-1">
                 <div className="h-4 w-32 bg-white/5 rounded-full mb-4 animate-shimmer" />
