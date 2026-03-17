@@ -147,7 +147,7 @@ export default function Login() {
         </button>
 
         <p className="mt-8 text-center text-xs text-[var(--text-muted)]">
-          Don't have an account? <Link href="/signup" className="text-[var(--accent)] font-bold hover:underline">Create for free</Link>
+          Don&apos;t have an account? <Link href="/signup" className="text-[var(--accent)] font-bold hover:underline">Create for free</Link>
         </p>
       </div>
     </div>

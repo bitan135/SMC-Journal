@@ -74,7 +74,7 @@ export default function Signup() {
           </div>
           <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-2">Check your email</h2>
           <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-8">
-            We've sent a verification link to <span className="text-[var(--text-primary)] font-bold">{email}</span>. Click it to activate your cockpit.
+            We&apos;ve sent a verification link to <span className="text-[var(--text-primary)] font-bold">{email}</span>. Click it to activate your cockpit.
           </p>
           <Link 
             href="/login" 

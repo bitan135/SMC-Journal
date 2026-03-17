@@ -525,7 +525,7 @@ export default function TradeLibrary() {
                             <TrendingUp size={16} /> Journal Log
                         </h4>
                         <p className="text-lg font-medium text-[var(--text-secondary)] leading-relaxed italic whitespace-pre-wrap">
-                            "{selectedTrade.notes || 'Institutional logic not logged.'}"
+                            &ldquo;{selectedTrade.notes || 'Institutional logic not logged.'}&rdquo;
                         </p>
                     </div>
                     

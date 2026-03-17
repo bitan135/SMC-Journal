@@ -20,7 +20,10 @@ export function ThemeProvider({ children }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    const handle = requestAnimationFrame(() => {
+      setMounted(true);
+    });
+    return () => cancelAnimationFrame(handle);
   }, []);
 
   useEffect(() => {
@@ -37,18 +40,12 @@ export function ThemeProvider({ children }) {
         root.setAttribute('data-theme', currentTheme);
       }
       
-      // Only set if we have a real value to avoid overwriting during transitions
       if (currentTheme && currentTheme !== 'undefined') {
         localStorage.setItem('theme', currentTheme);
       }
     };
 
     applyTheme(theme);
-
-    // Persist sidebar state
-    if (mounted) {
-      localStorage.setItem('sidebar-collapsed', isSidebarCollapsed);
-    }
 
     const handleChange = () => {
       if (theme === 'auto') applyTheme('auto');
@@ -57,6 +54,12 @@ export function ThemeProvider({ children }) {
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, [theme, mounted]);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem('sidebar-collapsed', isSidebarCollapsed);
+    }
+  }, [isSidebarCollapsed, mounted]);
 
   // Prevent hydration mismatch by not rendering theme-dependent content until mounted
   // or using a strategy that ensures client/server sync.

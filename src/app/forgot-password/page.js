@@ -51,7 +51,7 @@ export default function ForgotPassword() {
             </div>
             <h2 className="text-xl font-bold text-[var(--foreground)] mb-3">Transmission Successful</h2>
             <p className="text-sm text-[var(--text-muted)] mb-8 leading-relaxed">
-              Check your inbox — we've sent a password reset link to <span className="text-[var(--accent)] font-bold">{email}</span>
+              Check your inbox — we&apos;ve sent a password reset link to <span className="text-[var(--accent)] font-bold">{email}</span>
             </p>
             <Link 
               href="/login"

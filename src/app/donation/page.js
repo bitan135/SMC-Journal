@@ -132,7 +132,7 @@ export default function DonationPage() {
                 <div className="mt-20 flex flex-col items-center text-center max-w-lg mx-auto">
                     <p className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-[0.4em] mb-4">SMC Journal Protocol</p>
                     <p className="text-xs text-[var(--text-secondary)] font-medium leading-relaxed italic">
-                        "Your support is the catalyst for technical evolution. Every contribution is reinvested into building superior execution analytics."
+                        &ldquo;Your support is the catalyst for technical evolution. Every contribution is reinvested into building superior execution analytics.&rdquo;
                     </p>
                 </div>
             </div>
