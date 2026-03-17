@@ -76,6 +76,16 @@ export default function ResetPassword() {
           </div>
         ) : (
           <>
+            {(!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) && (
+              <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col gap-2 text-amber-500 animate-slide-up">
+                <div className="flex items-center gap-3">
+                  <AlertCircle size={20} />
+                  <p className="text-xs font-bold leading-tight uppercase tracking-widest">Configuration Required</p>
+                </div>
+                <p className="text-[10px] opacity-80 font-medium">Please add your Supabase credentials to the Vercel dashboard to enable reset.</p>
+              </div>
+            )}
+
             {error && (
               <div className="mb-6 p-4 bg-[#EF444410] border border-[#EF444420] rounded-2xl flex items-center gap-3 text-[var(--loss)] animate-slide-up">
                 <AlertCircle size={20} />

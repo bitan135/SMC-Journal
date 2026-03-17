@@ -48,6 +48,13 @@ export default function Signup() {
   };
 
   const handleGoogleLogin = async () => {
+    const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+    if (!isConfigured) {
+      setError("Configuration missing. Please add Supabase credentials to Vercel.");
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
     try {
@@ -101,6 +108,16 @@ export default function Signup() {
           <h1 className="text-3xl font-bold text-[var(--foreground)] tracking-tight">Deploy Your Workspace</h1>
           <p className="text-[var(--text-muted)] mt-2">Join the elite network of disciplined traders.</p>
         </div>
+
+        {(!process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder')) && (
+          <div className="mb-6 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex flex-col gap-2 text-amber-500 animate-slide-up">
+            <div className="flex items-center gap-3">
+              <AlertCircle size={20} />
+              <p className="text-xs font-bold leading-tight uppercase tracking-widest">Configuration Required</p>
+            </div>
+            <p className="text-[10px] opacity-80 font-medium">Please add your Supabase credentials to the Vercel dashboard to enable registration.</p>
+          </div>
+        )}
 
         {error && (
           <div className="mb-6 p-4 bg-[#EF444410] border border-[#EF444420] rounded-2xl flex items-center gap-3 text-[var(--loss)] animate-slide-up">

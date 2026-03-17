@@ -44,7 +44,13 @@ export default function Sidebar() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
+    
     const getUser = async () => {
+      if (!isConfigured) {
+        setIsLoading(false);
+        return;
+      }
       const { data: { user: authUser } } = await supabase.auth.getUser();
       setUser(authUser);
       

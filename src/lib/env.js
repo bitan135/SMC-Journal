@@ -13,8 +13,9 @@ export function requireEnv(name) {
 }
 
 export const ENV = {
-  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://smcjournal.com',
+  SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
   NOWPAYMENTS_API_KEY: process.env.NOWPAYMENTS_API_KEY,
   NOWPAYMENTS_IPN_SECRET: process.env.NOWPAYMENTS_IPN_SECRET,
   SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  IS_SUPABASE_CONFIGURED: !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
 };
