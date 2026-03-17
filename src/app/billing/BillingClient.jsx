@@ -58,7 +58,7 @@ export default function BillingPage() {
     loadSub();
   }, []);
   const handleUpgrade = (planId) => {
-    if (planId === 'free' || planId === currentPlan) return;
+    if (planId === 'free') return;
     posthog.capture('upgrade_clicked', { plan_id: planId });
     router.push(`/billing/checkout?plan=${planId}`);
   };
@@ -127,25 +127,25 @@ export default function BillingPage() {
                 </div>
 
                 <Link
-                  href={isCurrent ? '#' : `/billing/checkout?plan=${plan.id}`}
+                  href={plan.id === 'free' ? '#' : `/billing/checkout?plan=${plan.id}`}
                   className={`w-full py-5 rounded-[24px] font-black text-sm tracking-[0.2em] uppercase transition-all flex items-center justify-center gap-3 active:scale-95 ${
-                    isCurrent 
+                    plan.id === 'free' 
                       ? 'bg-[var(--glass-bg)] text-[var(--text-muted)] border border-[var(--glass-border)] cursor-default'
                       : plan.popular
                         ? 'bg-[var(--accent)] text-white hover:shadow-[0_0_30px_rgba(99,102,241,0.5)] border border-white/20'
                         : 'bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 hover:shadow-xl'
                   }`}
                   onClick={(e) => {
-                    if (isCurrent || plan.id === 'free') e.preventDefault();
+                    if (plan.id === 'free') e.preventDefault();
                   }}
                 >
                   {loading === plan.id ? (
                     <Loader2 className="animate-spin" size={20} />
-                  ) : isCurrent ? (
-                    'ACTIVE'
+                  ) : plan.id === 'free' ? (
+                    'SELECTED'
                   ) : (
                     <>
-                      {plan.id === 'free' ? 'SELECTED' : 'UPGRADE NOW'}
+                      UPGRADE NOW
                       <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                     </>
                   )}

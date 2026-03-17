@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 
-const API_KEY = 'ZPWQACE-J8KMGVZ-P4BT565-BENNE9G';
+const API_KEY = process.env.NOWPAYMENTS_API_KEY || '';
 const API_URL = 'https://api.nowpayments.io/v1';
 
 export interface CreatePaymentRequest {
