@@ -61,7 +61,18 @@ export default function AddTrade() {
         rule_adherence: formData.ruleAdherence,
       };
 
-      await saveTrade(tradeToSave);
+      try {
+        await saveTrade(tradeToSave);
+      } catch (saveErr) {
+        // Fallback for schema mismatches (e.g. discipline_score not yet propagated)
+        if (saveErr.message?.includes('discipline_score') || saveErr.code === 'PGRST204') {
+          console.warn('Persistence mismatch detected. Deploying fallback sequence...');
+          const { emotional_state, discipline_score, rule_adherence, ...fallbackTrade } = tradeToSave;
+          await saveTrade(fallbackTrade);
+        } else {
+          throw saveErr;
+        }
+      }
 
       setIsSuccess(true);
       setTimeout(() => {

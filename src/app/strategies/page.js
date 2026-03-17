@@ -16,7 +16,7 @@ export default function Strategies() {
   const [strategies, setStrategies] = useState([]);
   const [insights, setInsights] = useState([]);
   const [newStrategy, setNewStrategy] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   const { showToast } = useToast();
   const { showConfirm } = useConfirm();
 
@@ -40,16 +40,26 @@ export default function Strategies() {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    if (newStrategy && !strategies.includes(newStrategy)) {
-      try {
-        await addStrategy(newStrategy);
-        const updated = await getStrategies();
-        setStrategies(updated);
-        setNewStrategy('');
-        showToast(`Strategy "${newStrategy}" added.`, 'success');
-      } catch (err) {
-        showToast('Failed to add strategy. Please try again.', 'error');
-      }
+    if (!newStrategy.trim()) return;
+    
+    if (strategies.some(s => s.toLowerCase() === newStrategy.trim().toLowerCase())) {
+      showToast('This strategy already exists.', 'error');
+      return;
+    }
+
+    setIsAdding(true);
+    try {
+      const added = await addStrategy(newStrategy.trim());
+      // Re-fetch to ensure sync including defaults
+      const updated = await getStrategies();
+      setStrategies(updated);
+      setNewStrategy('');
+      showToast(`Strategy "${newStrategy}" added successfully.`, 'success');
+    } catch (err) {
+      console.error('Add strategy failed:', err);
+      showToast('Failed to archive logic in vault.', 'error');
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -118,9 +128,15 @@ export default function Strategies() {
                 </div>
                 <button
                     type="submit"
-                    className="px-8 py-4 bg-[var(--accent)] text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.03] transition-all active:scale-95 flex items-center gap-3 shadow-2xl shadow-indigo-500/30"
+                    disabled={isAdding || !newStrategy.trim()}
+                    className={`px-8 py-4 bg-[var(--accent)] text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-3 shadow-2xl shadow-indigo-500/30 ${isAdding ? 'opacity-50 cursor-not-allowed' : 'hover:scale-[1.03] active:scale-95'}`}
                 >
-                    <Plus size={18} /> Add Logic
+                    {isAdding ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Plus size={18} />
+                    )}
+                    {isAdding ? 'PROCESSING...' : 'Add Logic'}
                 </button>
             </form>
         </div>
