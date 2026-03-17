@@ -16,6 +16,7 @@ export default function Strategies() {
   const [strategies, setStrategies] = useState([]);
   const [insights, setInsights] = useState([]);
   const [newStrategy, setNewStrategy] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   const { showToast } = useToast();
   const { showConfirm } = useConfirm();
