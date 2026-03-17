@@ -20,6 +20,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     result: 'Win',
     session: 'London',
     strategy: '',
+    setup_zone: 'None',
     smcTags: [],
     notes: '',
     screenshotBefore: null,
@@ -43,6 +44,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
       emotionalState: initialData?.emotional_state || initialData?.emotionalState || 'Neutral',
       disciplineScore: initialData?.discipline_score || initialData?.disciplineScore || 5,
       ruleAdherence: initialData?.rule_adherence ?? initialData?.ruleAdherence ?? true,
+      setup_zone: initialData?.setup_zone || 'None',
     } : {},
   });
 
@@ -375,24 +377,30 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
               </select>
             </div>
             <div className="space-y-3">
-              <label className="text-[10px] font-black text-[var(--accent)] uppercase tracking-widest ml-1">Setup Type</label>
-              <div className="grid grid-cols-2 gap-2">
-                {strategies.map(s => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setFormData(prev => ({ ...prev, strategy: s }))}
-                    className={`px-4 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest border transition-all ${
-                      formData.strategy === s 
-                        ? 'bg-[var(--accent)] text-white border-[var(--accent)] shadow-lg shadow-[var(--accent)]/20' 
-                        : 'bg-[var(--glass-bg)] text-[var(--text-muted)] border-[var(--glass-border)] hover:border-[var(--accent)]/30'
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-              {errors.strategy && <p className="text-[10px] text-rose-500 font-black uppercase tracking-widest ml-1">{errors.strategy}</p>}
+              <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Setup Type</label>
+              <select
+                name="strategy"
+                value={formData.strategy}
+                onChange={handleChange}
+                className={`w-full bg-[var(--glass-bg)] border ${errors.strategy ? 'border-rose-500/50' : 'border-[var(--glass-border)]'} rounded-2xl px-6 py-4 text-sm font-black text-[var(--foreground)] outline-none focus:border-[var(--accent)] focus:bg-[var(--card-hover)] transition-all appearance-none cursor-pointer`}
+              >
+                {!formData.strategy && <option value="" disabled>SELECT STRATEGY</option>}
+                {strategies.map(s => <option key={s} value={s} className="bg-[var(--background)]">{s.toUpperCase()}</option>)}
+                {strategies.length === 0 && <option value="" disabled>LOADING ASSETS...</option>}
+              </select>
+            </div>
+            <div className="space-y-3">
+              <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Zone Selection</label>
+              <select
+                name="setup_zone"
+                value={formData.setup_zone}
+                onChange={handleChange}
+                className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-black text-[var(--foreground)] outline-none focus:border-[var(--accent)] focus:bg-[var(--card-hover)] transition-all appearance-none cursor-pointer"
+              >
+                <option value="None" className="bg-[var(--background)]">NO ZONE</option>
+                <option value="Supply" className="bg-[var(--background)]">SUPPLY ZONE</option>
+                <option value="Demand" className="bg-[var(--background)]">DEMAND ZONE</option>
+              </select>
             </div>
             <div className="space-y-3 font-bold">
               <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Market Window</label>
