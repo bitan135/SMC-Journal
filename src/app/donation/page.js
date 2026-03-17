@@ -28,7 +28,7 @@ export default function DonationPage() {
                         Fueling the <span className="text-gradient">SMC Ecosystem</span>
                     </h1>
                     <p className="text-lg text-[var(--text-secondary)] font-medium max-w-2xl mx-auto leading-relaxed">
-                        Your contributions ensure the sustained development of high-performance tools for the global Smart Money community.
+                        SMC Journal is an independent passion project engineered by a solo developer. Your support is the cornerstone of its evolution, directly powering the innovation and infrastructure required to maintain an elite professional edge for the community.
                     </p>
                 </div>
 
@@ -132,7 +132,7 @@ export default function DonationPage() {
                 <div className="mt-20 flex flex-col items-center text-center max-w-lg mx-auto">
                     <p className="text-[11px] font-black text-[var(--text-muted)] uppercase tracking-[0.4em] mb-4">SMC Journal Protocol</p>
                     <p className="text-xs text-[var(--text-secondary)] font-medium leading-relaxed italic">
-                        &ldquo;Your support is the catalyst for technical evolution. Every contribution is reinvested into building superior execution analytics.&rdquo;
+                        &ldquo;As a solo developer, your support is the ultimate catalyst for this project&apos;s evolution. Every contribution is directly reinvested into engineering superior execution analytics and maintaining the institutional-grade reliability you depend on.&rdquo;
                     </p>
                 </div>
             </div>
