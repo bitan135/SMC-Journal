@@ -84,7 +84,7 @@ export default function AddTrade() {
         // Fallback for schema mismatches — strips all optional psychology/new columns on any schema error
         if (saveErr.code === 'PGRST204' || saveErr.code === '42703' || saveErr.message?.includes('column') || saveErr.message?.includes('schema')) {
           console.warn('Schema mismatch — retrying with core fields only');
-          const { emotional_state, discipline_score, rule_adherence, setup_zone, liquidity_sweep, ...fallbackTrade } = tradeToSave;
+          const { emotional_state, discipline_score, rule_adherence, setup_zone, liquidity_sweep, trade_date, ...fallbackTrade } = tradeToSave;
           await saveTrade(fallbackTrade);
         } else {
           throw saveErr;
