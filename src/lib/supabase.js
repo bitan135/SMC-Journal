@@ -11,6 +11,8 @@ export const tradeService = {
    */
   async getTrades() {
     const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+    
     const { data, error } = await supabase
       .from('trades')
       .select('*')
