@@ -225,8 +225,8 @@ export default function Dashboard() {
                 </ResponsiveContainer>
             </ChartCard>
 
-            <ChartCard title="Session Liquidity" subtitle="Win Rates via Window" className="glass-card">
-                <ResponsiveContainer width="100%" height="100%">
+            <ChartCard title="Session Liquidity" subtitle="Win Rates via Window" className="glass-card overflow-hidden">
+                <ResponsiveContainer width="100%" height={260}>
                     <BarChart data={sessionPerf} layout="vertical" margin={{ top: 10, right: 30, left: -10, bottom: 10 }}>
                         <XAxis type="number" hide domain={[0, 100]} />
                         <YAxis 
@@ -257,9 +257,9 @@ export default function Dashboard() {
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
-                <div className="mt-8 flex justify-between px-4">
+                <div className="flex justify-between px-4 pb-2">
                     {sessionPerf.map(s => (
-                        <div key={s.name} className="flex flex-col items-center">
+                        <div key={s.name} className="flex flex-col items-center justify-center">
                             <p className="text-[9px] text-[var(--text-muted)] font-black uppercase tracking-widest mb-1">{s.name}</p>
                             <p className={`text-sm font-black ${s.winRate >= 50 ? 'text-[var(--profit)]' : 'text-[var(--loss)]'}`}>{s.winRate}%</p>
                         </div>
