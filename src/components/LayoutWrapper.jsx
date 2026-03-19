@@ -1,25 +1,15 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 import { PanelLeftOpen } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { isPublicRoute } from '@/lib/routes';
 
 export default function LayoutWrapper({ children }) {
   const { isSidebarCollapsed, setSidebarCollapsed } = useTheme();
   const pathname = usePathname();
   
-  const isPublicRoute =
-    pathname === '/' ||
-    pathname === '/login' ||
-    pathname === '/signup' ||
-    pathname === '/features' ||
-    pathname === '/pricing' ||
-    pathname === '/privacy' ||
-    pathname === '/terms' ||
-    pathname === '/forgot-password' ||
-    pathname === '/reset-password' ||
-    pathname === '/auth/callback' ||
-    pathname.startsWith('/affiliate');
+  const isPublic = isPublicRoute(pathname);
 
   return (
     <div className="flex min-h-screen relative">
@@ -27,7 +17,7 @@ export default function LayoutWrapper({ children }) {
       <button
         onClick={() => setSidebarCollapsed(false)}
         className={`fixed left-6 top-6 z-50 p-3 rounded-2xl glass-card border-[var(--glass-border)] text-[var(--accent)] shadow-2xl transition-all duration-700 hover:scale-110 active:scale-95 ${
-          isSidebarCollapsed && !isPublicRoute ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0 pointer-events-none'
+          isSidebarCollapsed && !isPublic ? 'translate-x-0 opacity-100' : '-translate-x-20 opacity-0 pointer-events-none'
         }`}
         title="Restore Sidebar"
       >
@@ -37,7 +27,7 @@ export default function LayoutWrapper({ children }) {
       {/* Main Content Area */}
       <main 
         className={`flex-1 w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
-          isSidebarCollapsed || isPublicRoute ? 'lg:pl-0' : 'lg:pl-[260px]'
+          isSidebarCollapsed || isPublic ? 'lg:pl-0' : 'lg:pl-[260px]'
         }`}
       >
         {children}

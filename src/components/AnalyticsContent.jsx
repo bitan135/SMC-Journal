@@ -6,6 +6,7 @@ import {
   BarChart, Bar, PieChart, Pie, Cell,
 } from 'recharts';
 import { Target, TrendingUp, BarChart3, Clock, PieChart as PieIcon, Activity, Sparkles, Zap, ShieldCheck } from 'lucide-react';
+import { useAuth } from './AuthProvider';
 import ChartCard from '@/components/ChartCard';
 import EmptyState from '@/components/ui/EmptyState';
 import { ChartSkeleton } from '@/components/ui/SkeletonLoader';
@@ -52,24 +53,20 @@ const LockOverlay = () => (
 );
 
 export default function AnalyticsContent() {
+  const { subscription, isLoading: authLoading } = useAuth();
   const [trades, setTrades] = useState([]);
-  const [subscription, setSubscription] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
     const loadData = async () => {
       try {
-        const { getTrades, profileService } = await import('@/lib/storage');
-        const [fetchedTrades, sub] = await Promise.all([
-          getTrades(),
-          profileService.getSubscription()
-        ]);
+        const { getTrades } = await import('@/lib/storage');
+        const fetchedTrades = await getTrades();
         if (!isMounted) return;
-        setTrades(fetchedTrades);
-        setSubscription(sub);
+        setTrades(fetchedTrades || []);
       } catch (err) {
-        console.error('Analytics load failed:', err?.message || err?.details || err?.code || err);
+        console.error('Analytics load failed:', err);
       } finally {
         if (isMounted) setIsLoading(false);
       }

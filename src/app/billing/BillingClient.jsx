@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Check, Zap, Crown, Rocket, Loader2, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { profileService } from '@/lib/storage';
+import { useAuth } from '@/components/AuthProvider';
 import { posthog } from '@/lib/posthog';
 
 const plans = [
@@ -42,21 +42,12 @@ const plans = [
 ];
 
 export default function BillingPage() {
+  const { subscription, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(null);
-  const [currentPlan, setCurrentPlan] = useState('free');
   const router = useRouter();
 
-  useEffect(() => {
-    async function loadSub() {
-      try {
-        const sub = await profileService.getSubscription();
-        setCurrentPlan(sub.plan_id);
-      } catch (e) {
-        console.error('Failed to load sub', e);
-      }
-    }
-    loadSub();
-  }, []);
+  const currentPlan = subscription?.plan_id || 'free';
+
   const handleUpgrade = (planId) => {
     if (planId === 'free') return;
     posthog.capture('upgrade_clicked', { plan_id: planId });

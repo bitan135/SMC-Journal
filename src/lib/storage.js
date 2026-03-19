@@ -306,34 +306,6 @@ export function getRRDistribution(trades) {
 
 // -------------- Supabase Bridged Operations --------------------
 
-// Profile & Subscription Service Wrapper
-export const profileService = {
-  async getProfile() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
-    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    return data;
-  },
-  async updateProfile(updates) {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return null;
-    const { data } = await supabase.from('profiles').update(updates).eq('id', user.id).select().single();
-    return data;
-  },
-  async getSubscription() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return { plan_id: 'free', status: 'none' };
-    
-    const { data } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('user_id', user.id)
-      .single();
-      
-    return data || { plan_id: 'free', status: 'active' };
-  }
-};
-
 // Trades
 export async function getTrades() {
   try {
@@ -390,39 +362,10 @@ export async function deleteStrategy(name) {
   return await strategyService.deleteStrategy(name);
 }
 
-// Settings / Profile
-export async function getSettings() {
-  const profile = await profileService.getProfile();
-  if (!profile) return DEFAULT_SETTINGS;
-  return {
-    accountBalance: profile.account_balance,
-    riskPercentage: profile.risk_percentage,
-    currency: profile.currency,
-  };
-}
-
-export async function saveSettings(settings) {
-  return await profileService.updateProfile({
-    account_balance: settings.accountBalance,
-    risk_percentage: settings.riskPercentage,
-    currency: settings.currency,
-  });
-}
-
-// Onboarding
-export async function hasOnboarded() {
-  const profile = await profileService.getProfile();
-  return profile?.has_completed_onboarding === true;
-}
-
-export async function setOnboarded() {
-  return await profileService.updateProfile({ has_completed_onboarding: true });
-}
-
 // Data Bridge: Local Storage to Cloud Migration
 export async function migrateLocalToCloud() {
-  const localTrades = JSON.parse(localStorage.getItem('edge_ledger_trades') || '[]');
-  const localStrategies = JSON.parse(localStorage.getItem('edge_ledger_strategies') || '[]');
+  const localTrades = JSON.parse(localStorage.getItem('smc_journal_trades') || localStorage.getItem('edge_ledger_trades') || '[]');
+  const localStrategies = JSON.parse(localStorage.getItem('smc_journal_strategies') || localStorage.getItem('edge_ledger_strategies') || '[]');
   
   if (localTrades.length === 0 && localStrategies.length === 0) {
     return { success: true, message: 'No local data found to migrate.' };
@@ -451,6 +394,8 @@ export async function migrateLocalToCloud() {
   }
 
   // 3. Clear Local Storage
+  localStorage.removeItem('smc_journal_trades');
+  localStorage.removeItem('smc_journal_strategies');
   localStorage.removeItem('edge_ledger_trades');
   localStorage.removeItem('edge_ledger_strategies');
   

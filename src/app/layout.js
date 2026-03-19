@@ -4,6 +4,8 @@ import Sidebar from '@/components/Sidebar';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import Onboarding from '@/components/ui/Onboarding';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { AuthProvider } from '@/components/AuthProvider';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { ToastProvider } from '@/components/ui/Toast';
 import { ConfirmProvider } from '@/components/ui/ConfirmModal';
 import PostHogProvider from '@/components/PostHogProvider';
@@ -87,16 +89,20 @@ export default function RootLayout({ children }) {
       <body className="font-sans antialiased text-[var(--foreground)] bg-[var(--background)]">
         <PostHogProvider>
           <ThemeProvider>
-            <ToastProvider>
-              <ConfirmProvider>
-                <ReferralTracker />
-                <Sidebar />
-                <LayoutWrapper>
-                  {children}
-                </LayoutWrapper>
-                <Onboarding />
-              </ConfirmProvider>
-            </ToastProvider>
+            <AuthProvider>
+              <ErrorBoundary>
+                <ToastProvider>
+                  <ConfirmProvider>
+                    <ReferralTracker />
+                    <Sidebar />
+                    <LayoutWrapper>
+                      {children}
+                    </LayoutWrapper>
+                    <Onboarding />
+                  </ConfirmProvider>
+                </ToastProvider>
+              </ErrorBoundary>
+            </AuthProvider>
           </ThemeProvider>
         </PostHogProvider>
       </body>

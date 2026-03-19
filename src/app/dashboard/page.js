@@ -13,10 +13,11 @@ import MetricCard from '@/components/MetricCard';
 import ChartCard from '@/components/ChartCard';
 import { MetricSkeleton } from '@/components/ui/SkeletonLoader';
 import EmptyState from '@/components/ui/EmptyState';
+import { useAuth } from '@/components/AuthProvider';
 import {
   getTrades, getWinRate, getProfitFactor, getAverageRR,
   getEquityCurve, getWinRateByGroup, getStrategyInsights,
-  getExpectancy, getTrend, profileService
+  getExpectancy, getTrend
 } from '@/lib/storage';
 
 function CustomTooltip({ active, payload, label }) {
@@ -36,14 +37,13 @@ function CustomTooltip({ active, payload, label }) {
 
 export default function Dashboard() {
   const router = useRouter();
+  const { profile, isLoading: authLoading } = useAuth();
   const [trades, setTrades] = useState([]);
-  const [profile, setProfile] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [greeting, setGreeting] = useState('');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -56,19 +56,11 @@ export default function Dashboard() {
 
     const loadData = async () => {
       try {
-        const [fetchedTrades, fetchedProfile] = await Promise.all([
-          getTrades(),
-          profileService.getProfile()
-        ]);
+        const fetchedTrades = await getTrades();
         if (!isMounted) return;
-        
-        // Final safety check: if profile is null and we are on dashboard, it means session is gone
-        if (!fetchedProfile && !isMounted) return;
-        
         setTrades(fetchedTrades || []);
-        setProfile(fetchedProfile);
       } catch (err) {
-        console.error('Dashboard load failed:', err?.message || err?.details || err?.code || err);
+        console.error('Dashboard load failed:', err);
       } finally {
         if (isMounted) setIsLoading(false);
       }

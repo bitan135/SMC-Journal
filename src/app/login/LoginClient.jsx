@@ -15,21 +15,6 @@ export default function Login() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const next = searchParams.get('next') || '/dashboard';
-  const [mounted, setMounted] = useState(false);
-  const [host, setHost] = useState('');
-  const [isLocal, setIsLocal] = useState(false);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-    const currentHost = window.location.host;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHost(currentHost);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsLocal(currentHost.includes('localhost') || currentHost.includes('127.0.0.1'));
-  }, []);
-
-  if (!mounted) return null;
 
   const getErrorMessage = (err) => {
     if (!err) return null;
@@ -68,7 +53,7 @@ export default function Login() {
       const { error: googleError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: isLocal ? `${window.location.origin}/auth/callback` : 'https://www.smcjournal.app/auth/callback',
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (googleError) throw googleError;

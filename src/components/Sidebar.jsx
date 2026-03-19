@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useAuth } from './AuthProvider';
 import { useTheme } from './ThemeProvider';
+import { isPublicRoute } from '@/lib/routes';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { supabase } from '@/lib/supabase';
+import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard,
   Plus,
@@ -35,77 +35,8 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
+  const { user, profile, subscription, isLoading, signOut } = useAuth();
   const { isSidebarCollapsed, setSidebarCollapsed } = useTheme();
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [subscription, setSubscription] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const isPublicRoute =
-    pathname === '/' ||
-    pathname === '/login' ||
-    pathname === '/signup' ||
-    pathname === '/features' ||
-    pathname === '/pricing' ||
-    pathname === '/privacy' ||
-    pathname === '/terms' ||
-    pathname === '/forgot-password' ||
-    pathname === '/reset-password' ||
-    pathname.startsWith('/affiliate');
-
-  useEffect(() => {
-    const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
-    
-    const getUser = async () => {
-      if (!isConfigured) {
-        setIsLoading(false);
-        return;
-      }
-      const { data: { user: authUser } } = await supabase.auth.getUser();
-      setUser(authUser);
-      
-      if (authUser) {
-        // Fetch profile
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', authUser.id)
-          .single();
-        setProfile(profileData);
-
-        // Fetch subscription
-        const { data: subData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('user_id', authUser.id)
-          .single();
-        setSubscription(subData || { plan_id: 'free' });
-      }
-      setIsLoading(false);
-    };
-
-    getUser();
-
-    const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange((_event, session) => {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUser(session?.user ?? null);
-      if (!session) {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setProfile(null);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setSubscription(null);
-      }
-    });
-
-    return () => authSub.unsubscribe();
-  }, []);
-
-  const handleLogout = async () => {
-    // Navigate to the server-side logout route to ensure .smcjournal.app cookies are cleared
-    window.location.href = '/api/auth/logout';
-  };
-
 
   if (pathname === '/login' || pathname === '/signup' || pathname === '/auth/callback') return null;
 
@@ -116,7 +47,7 @@ export default function Sidebar() {
     return 'Free Plan';
   };
 
-  if (isPublicRoute) return null;
+  if (isPublicRoute(pathname)) return null;
 
   return (
     <>
@@ -235,7 +166,7 @@ export default function Sidebar() {
                         </div>
                     </div>
                     <button 
-                        onClick={handleLogout}
+                        onClick={signOut}
                         className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[var(--glass-bg)] text-[var(--text-muted)] hover:text-[var(--loss)] hover:bg-[var(--loss)]/10 border border-[var(--glass-border)] hover:border-[var(--loss)]/20 transition-all font-bold text-[10px] uppercase tracking-widest"
                     >
                         <LogOut size={14} /> Log Out

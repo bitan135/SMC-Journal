@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Target, TrendingUp, BarChart3, X } from 'lucide-react';
-import { hasOnboarded, setOnboarded } from '@/lib/storage';
+import { useAuth } from '../AuthProvider';
 
 const steps = [
   {
@@ -27,33 +27,34 @@ const steps = [
 ];
 
 export default function Onboarding() {
+  const { profile, updateProfile, isLoading: authLoading } = useAuth();
   const [show, setShow] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
   const pathname = usePathname();
 
   useEffect(() => {
-    const checkOnboarding = async () => {
-      // Don't show Onboarding on auth pages
-      if (pathname === '/login' || pathname === '/signup' || pathname === '/auth/callback') {
-        setShow(false);
-        return;
-      }
+    if (authLoading) return;
 
-      // Check local storage first for instant feedback during auth transitions
-      const localOnboarded = localStorage.getItem('edge_onboarded');
-      if (localOnboarded === 'true') {
-        setShow(false);
-        return;
-      }
+    // Don't show Onboarding on auth pages
+    if (pathname === '/login' || pathname === '/signup' || pathname === '/auth/callback') {
+      setShow(false);
+      return;
+    }
 
-      const onboarded = await hasOnboarded();
-      if (!onboarded) {
-        setShow(true);
-      }
-    };
-    checkOnboarding();
-  }, [pathname]);
+    // Check local storage first for instant feedback during auth transitions
+    const localOnboarded = localStorage.getItem('smc_onboarded');
+    if (localOnboarded === 'true') {
+      setShow(false);
+      return;
+    }
+
+    if (profile && !profile.has_completed_onboarding) {
+      setShow(true);
+    } else {
+      setShow(false);
+    }
+  }, [pathname, profile, authLoading]);
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
@@ -64,8 +65,12 @@ export default function Onboarding() {
   };
 
   const handleComplete = async () => {
-    localStorage.setItem('edge_onboarded', 'true');
-    await setOnboarded();
+    localStorage.setItem('smc_onboarded', 'true');
+    try {
+      await updateProfile({ has_completed_onboarding: true });
+    } catch (err) {
+      console.error('Failed to set onboarded status:', err);
+    }
     setShow(false);
   };
 

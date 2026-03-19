@@ -7,7 +7,7 @@ import {
   ArrowRight, Loader2, Check, AlertCircle, Zap, Crown
 } from 'lucide-react';
 import Link from 'next/link';
-import { profileService } from '@/lib/storage';
+import { useAuth } from '@/components/AuthProvider';
 
 const planDetails = {
   pro: { name: 'Pro Trader', price: 20, icon: Zap, color: '#6366F1' },
@@ -33,19 +33,17 @@ function CheckoutFormContent() {
     country: 'United States',
   });
 
+  const { profile, isLoading: authLoading } = useAuth();
+
   useEffect(() => {
-    async function loadUser() {
-      const profile = await profileService.getProfile();
-      if (profile) {
-        setFormData(prev => ({
-          ...prev,
-          fullName: profile.full_name || '',
-          email: profile.email || '',
-        }));
-      }
+    if (profile) {
+      setFormData(prev => ({
+        ...prev,
+        fullName: profile.full_name || '',
+        email: profile.email || '',
+      }));
     }
-    loadUser();
-  }, []);
+  }, [profile]);
 
   const handleApplyCoupon = () => {
     setCouponError('');

@@ -1,6 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import { ENV } from '@/lib/env';
+import { isPublicRoute, isProtectedRoute } from '@/lib/routes';
 
 export async function updateSession(request) {
   const host = request.headers.get('host') || '';
@@ -50,34 +51,24 @@ export async function updateSession(request) {
 
   try {
     const { data: { user } } = await supabase.auth.getUser();
+    const isPublic = isPublicRoute(pathname);
+    const isProtected = isProtectedRoute(pathname);
     
-    const isAuthOrLanding = pathname === '/' || pathname === '/login' || pathname === '/signup';
-    
-    // Protected paths list
-    const protectedPaths = [
-      '/dashboard',
-      '/trades',
-      '/add-trade',
-      '/analytics',
-      '/strategies',
-      '/billing',
-      '/settings',
-      '/donation'
-    ];
-    
-    const isProtectedRoute = protectedPaths.some(path => pathname.startsWith(path));
-
     // 1. Auth Guard: Unauthenticated users -> /login
-    if (!user && isProtectedRoute) {
+    if (!user && isProtected) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
+      url.searchParams.set('next', pathname);
       return NextResponse.redirect(url);
     }
 
     // 2. Redirect Loop Prevention: Authenticated users -> /dashboard
-    // Skip IF we are on landing page AND 'logout=true' is present
+    // If they are on /login or /, and they HAVE a session, send to dashboard
+    const isLoginPage = pathname === '/login' || pathname === '/signup';
+    const isLandingPage = pathname === '/';
     const isLogoutSignal = pathname === '/' && request.nextUrl.searchParams.get('logout') === 'true';
-    if (user && isAuthOrLanding && !isLogoutSignal) {
+
+    if (user && (isLoginPage || isLandingPage) && !isLogoutSignal) {
       const url = request.nextUrl.clone();
       url.pathname = '/dashboard';
       return NextResponse.redirect(url);

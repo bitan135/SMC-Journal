@@ -5,7 +5,8 @@ import {
   Trash2, Download, Upload, ShieldCheck, Database, RefreshCcw, Bell, DollarSign, Percent, Globe, Save, Monitor, Moon, Sun, ArrowLeft, Sparkles, User, Fingerprint
 } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
-import { getSettings, saveSettings, getTrades, getStrategies, migrateLocalToCloud, profileService } from '@/lib/storage';
+import { getTrades, getStrategies, migrateLocalToCloud } from '@/lib/storage';
+import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ui/ConfirmModal';
@@ -30,33 +31,26 @@ export default function Settings() {
     currency: 'USD'
   });
   const { theme, setTheme } = useTheme();
+  const { profile: authProfile, updateProfile, isLoading: authLoading } = useAuth();
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [data, prof] = await Promise.all([
-          getSettings(),
-          profileService.getProfile()
-        ]);
-        if (data) setSettings(data);
-        if (prof) {
-          setProfile(prof);
-          setFullName(prof.full_name || '');
-        }
-      } catch (err) {
-        console.error('Settings load failed:', err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadData();
-  }, []);
+    if (authProfile) {
+      setProfile(authProfile);
+      setFullName(authProfile.full_name || '');
+      setSettings({
+        accountBalance: authProfile.account_balance || 10000,
+        riskPercentage: authProfile.risk_percentage || 1,
+        currency: authProfile.currency || 'USD'
+      });
+      setIsLoading(false);
+    }
+  }, [authProfile]);
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setIsUpdatingProfile(true);
     try {
-      await profileService.updateProfile({ full_name: fullName });
+      await updateProfile({ full_name: fullName });
       showToast('Profile updated successfully.', 'success');
     } catch (err) {
       showToast('Failed to update profile.', 'error');
@@ -97,13 +91,11 @@ export default function Settings() {
       onConfirm: async () => {
         try {
           const { supabase } = await import('@/lib/supabase');
-          // Call the delete_user RPC which deletes the auth user (cascades to all data)
           const { error } = await supabase.rpc('delete_user');
           if (error) throw error;
           await supabase.auth.signOut();
           router.push('/signup');
         } catch (err) {
-          // If RPC not yet created, fall back to sign-out with instructions
           console.error('Account deletion error:', err);
           showToast('Deletion failed. Please run the Supabase migration first, or contact support.', 'error');
         }
@@ -115,10 +107,14 @@ export default function Settings() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      await saveSettings(settings);
+      await updateProfile({
+        account_balance: settings.accountBalance,
+        risk_percentage: settings.riskPercentage,
+        currency: settings.currency,
+      });
       showToast('Configuration saved successfully.', 'success');
     } catch (err) {
-      showToast('Failed to save configuration. Please try again.', 'error');
+      showToast('Failed to save configuration.', 'error');
     } finally {
       setIsSaving(false);
     }
