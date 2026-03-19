@@ -67,25 +67,10 @@ export async function GET(request) {
       }
       // --- END: Affiliate Referral Logic ---
 
-      const response = NextResponse.redirect(new URL(next, origin));
+      // The Supabase client in server.js handles cookie setting via setAll during exchange
+      // We don't need manual bridging anymore.
       
-      // Expert Hard-Link: Manually bridge all cookies with sanitized attributes
-      const host = request.headers.get('host') || '';
-      const isLocal = process.env.NODE_ENV === 'development' || 
-                     host.includes('localhost') || 
-                     host.includes('127.0.0.1');
-
-      const cookieStoreActual = await cookies();
-      cookieStoreActual.getAll().forEach((cookie) => {
-        response.cookies.set(cookie.name, cookie.value, {
-          ...cookie.options,
-          secure: isLocal ? false : true,
-          sameSite: isLocal ? 'lax' : 'none',
-          path: '/',
-        });
-      });
-      
-      return response;
+      return NextResponse.redirect(new URL(next, origin));
     }
     console.error('OAuth Code Exchange Error:', error);
   } else {
