@@ -6,6 +6,9 @@ export async function proxy(request) {
 
 export const config = {
   matcher: [
+    '/',
+    '/login',
+    '/signup',
     '/dashboard/:path*',
     '/trades/:path*',
     '/add-trade/:path*',

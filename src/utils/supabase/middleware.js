@@ -39,26 +39,42 @@ export async function updateSession(request) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     
-    // Auth guard: redirect unauthenticated users to login
-    // Note: This only runs for routes matched in proxy.js
-    if (!user) {
+    const pathname = request.nextUrl.pathname;
+    const isAuthOrLanding = pathname === '/' || pathname === '/login' || pathname === '/signup';
+    
+    // Protected paths list
+    const protectedPaths = [
+      '/dashboard',
+      '/trades',
+      '/add-trade',
+      '/analytics',
+      '/strategies',
+      '/billing',
+      '/settings',
+      '/donation'
+    ];
+    
+    const isProtectedRoute = protectedPaths.some(path => pathname.startsWith(path));
+
+    // 1. Auth Guard: Unauthenticated users -> /login
+    if (!user && isProtectedRoute) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       return NextResponse.redirect(url);
     }
 
-    // Redirect authenticated users away from login/signup
-    // Note: These routes must be in proxy.js matcher for this to fire
-    if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
+    // 2. Redirect Loop Prevention: Authenticated users -> /dashboard
+    if (user && isAuthOrLanding) {
       const url = request.nextUrl.clone();
       url.pathname = '/dashboard';
       return NextResponse.redirect(url);
     }
+
   } catch (e) {
     // Auth failure
   }
 
-  // Final safety sync of all cookies with sanitization
+  // Final safety sync
   const host = request.headers.get('host') || '';
   const isLocal = process.env.NODE_ENV === 'development' || host.includes('localhost') || host.includes('127.0.0.1');
 
