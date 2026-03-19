@@ -51,7 +51,7 @@ export default function Sidebar() {
 
   return (
     <>
-      <aside className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[260px] bg-[var(--sidebar-bg)] border-r border-[var(--border)] z-40 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+      <aside className={`hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-[260px] bg-[var(--sidebar-bg)] border-r border-[var(--border)] z-40 transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] overflow-y-auto scrollbar-hide ${
         isSidebarCollapsed ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
       }`}>
         {/* Decorative Ambience */}
@@ -180,28 +180,36 @@ export default function Sidebar() {
       <nav className="lg:hidden fixed bottom-4 left-4 right-4 h-16 md:h-20 glass-card rounded-[32px] border-[var(--glass-border)] z-50 flex items-center justify-around px-2 shadow-2xl">
         {navItems
           .filter(item => ['Dashboard', 'Trades', 'Add Trade', 'Analytics', 'Settings'].includes(item.label))
+          .concat([{ href: '#', label: 'Logout', icon: LogOut, onClick: signOut }])
           .map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
             return (
-              <Link
-                key={item.href}
-                href={item.href}
+              <button
+                key={item.label}
+                onClick={item.onClick || null}
+                {...(item.href !== '#' ? { as: Link, href: item.href } : {})}
                 className={`relative flex flex-col items-center justify-center transition-all duration-300 ${
                   isActive ? 'text-[var(--accent)] scale-110' : 'text-[var(--text-muted)]'
-                }`}
+                } ${item.label === 'Logout' ? 'hover:text-[var(--loss)]' : ''}`}
               >
                 {item.href === '/add-trade' ? (
-                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center -mt-12 shadow-2xl shadow-[var(--accent)]/40 border-4 border-[var(--sidebar-bg)]">
-                    <Icon size={24} className="text-white" />
-                  </div>
-                ) : (
-                  <>
+                  <Link href="/add-trade">
+                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center -mt-12 shadow-2xl shadow-[var(--accent)]/40 border-4 border-[var(--sidebar-bg)]">
+                      <Icon size={24} className="text-white" />
+                    </div>
+                  </Link>
+                ) : item.href !== '#' ? (
+                  <Link href={item.href} className="flex flex-col items-center">
                       <Icon size={22} />
                       {isActive && <div className="absolute -bottom-1 w-1 h-1 rounded-full bg-[var(--accent)]" />}
-                  </>
+                  </Link>
+                ) : (
+                  <div className="flex flex-col items-center" onClick={item.onClick}>
+                      <Icon size={22} />
+                  </div>
                 )}
-              </Link>
+              </button>
             );
           })}
       </nav>

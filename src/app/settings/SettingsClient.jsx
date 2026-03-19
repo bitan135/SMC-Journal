@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { 
-  Trash2, Download, Upload, ShieldCheck, Database, RefreshCcw, Bell, DollarSign, Percent, Globe, Save, Monitor, Moon, Sun, ArrowLeft, Sparkles, User, Fingerprint
+  Trash2, Download, Upload, ShieldCheck, Database, RefreshCcw, Bell, DollarSign, Percent, Globe, Save, Monitor, Moon, Sun, ArrowLeft, Sparkles, User, Fingerprint, LogOut
 } from 'lucide-react';
 import { useTheme } from '@/components/ThemeProvider';
 import { getTrades, getStrategies, migrateLocalToCloud } from '@/lib/storage';
@@ -302,6 +302,25 @@ export default function Settings() {
                             Recalibrate Access
                         </button>
                     </form>
+                </div>
+
+                <div className="glass-card rounded-[48px] border-[var(--glass-border)] overflow-hidden shadow-premium">
+                    <div className="p-8 border-b border-[var(--glass-border)] bg-[var(--glass-bg)]">
+                        <h2 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-[0.4em] flex items-center gap-3">
+                            <LogOut className="text-[var(--accent)]" size={16} /> Session Protocol
+                        </h2>
+                    </div>
+                    <div className="p-10">
+                        <p className="text-sm text-[var(--text-secondary)] font-medium mb-8 leading-relaxed">
+                            Terminate your current encrypted session across all localized subnodes. This will safely bridge you back to the public domain.
+                        </p>
+                        <button
+                            onClick={signOut}
+                            className="w-full py-5 bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--foreground)] rounded-2xl text-[10px] font-black uppercase tracking-widest hover:text-[var(--loss)] hover:border-[var(--loss)]/20 transition-all active:scale-95 flex items-center justify-center gap-3"
+                        >
+                            <LogOut size={16} /> Terminate Session
+                        </button>
+                    </div>
                 </div>
               </div>
             )}
