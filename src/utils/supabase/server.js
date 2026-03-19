@@ -24,7 +24,7 @@ export async function createClient() {
               const cookieOptions = {
                 ...options,
                 secure: isLocal ? false : true,
-                sameSite: isLocal ? 'lax' : 'none',
+                sameSite: isLocal ? 'lax' : 'lax',
                 path: '/',
                 domain: isLocal ? undefined : '.smcjournal.app',
               };

@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
-import { isProtectedRoute } from '@/lib/routes';
+import { isProtectedRoute, isPublicRoute } from '@/lib/routes';
 
 const AuthContext = createContext({
   user: null,
@@ -81,6 +81,16 @@ export function AuthProvider({ children }) {
       authListener.unsubscribe();
     };
   }, []);
+
+  useEffect(() => {
+    // Client-side session sync guard
+    // If the client hydrates and sees a user, but we are on a public route (like / or /login),
+    // we should immediately push them to the dashboard to handle "middleware misses".
+    if (!isLoading && user && isPublicRoute(pathname)) {
+      // Use window.location.href for a clean reset across potential domain boundaries
+      window.location.href = '/dashboard';
+    }
+  }, [user, isLoading, pathname]);
 
   const updateProfile = async (updates) => {
     if (!user) return null;

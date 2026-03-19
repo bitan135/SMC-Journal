@@ -50,10 +50,15 @@ export default function Login() {
     }
 
     try {
+      const isProd = !window.location.host.includes('localhost');
+      const redirectTo = isProd 
+        ? 'https://www.smcjournal.app/auth/callback'
+        : `${window.location.origin}/auth/callback`;
+
       const { error: googleError } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo,
         },
       });
       if (googleError) throw googleError;

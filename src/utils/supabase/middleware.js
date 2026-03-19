@@ -36,7 +36,7 @@ export async function updateSession(request) {
             const cookieOptions = {
               ...options,
               secure: isLocal ? false : true,
-              sameSite: isLocal ? 'lax' : 'none',
+              sameSite: isLocal ? 'lax' : 'lax',
               path: '/',
               domain: isLocal ? undefined : '.smcjournal.app',
             };
@@ -83,7 +83,7 @@ export async function updateSession(request) {
     supabaseResponse.cookies.set(cookie.name, cookie.value, {
       ...cookie.options,
       secure: isLocal ? false : true,
-      sameSite: isLocal ? 'lax' : 'none',
+      sameSite: isLocal ? 'lax' : 'lax',
       path: '/',
       domain: isLocal ? undefined : '.smcjournal.app',
     });
