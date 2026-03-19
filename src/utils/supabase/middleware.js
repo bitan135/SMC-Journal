@@ -1,7 +1,25 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
+import { ENV } from '@/lib/env';
 
 export async function updateSession(request) {
+  const host = request.headers.get('host') || '';
+  const pathname = request.nextUrl.pathname;
+  const isLocal = process.env.NODE_ENV === 'development' || 
+                 host.includes('localhost') || 
+                 host.includes('127.0.0.1');
+
+  // 0. Canonical Domain Enforcement (Production only)
+  // Ensures session cookies match the intended domain (Apex vs WWW)
+  if (!isLocal && ENV.SITE_URL.includes('https://www.')) {
+    if (host === 'smcjournal.app') {
+      const url = request.nextUrl.clone();
+      url.host = 'www.smcjournal.app';
+      url.protocol = 'https';
+      return NextResponse.redirect(url);
+    }
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -15,11 +33,6 @@ export async function updateSession(request) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          const host = request.headers.get('host') || '';
-          const isLocal = process.env.NODE_ENV === 'development' || 
-                         host.includes('localhost') || 
-                         host.includes('127.0.0.1');
-          
           cookiesToSet.forEach(({ name, value, options }) => {
             const cookieOptions = {
               ...options,
@@ -39,7 +52,6 @@ export async function updateSession(request) {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     
-    const pathname = request.nextUrl.pathname;
     const isAuthOrLanding = pathname === '/' || pathname === '/login' || pathname === '/signup';
     
     // Protected paths list
@@ -77,9 +89,6 @@ export async function updateSession(request) {
   }
 
   // Final safety sync
-  const host = request.headers.get('host') || '';
-  const isLocal = process.env.NODE_ENV === 'development' || host.includes('localhost') || host.includes('127.0.0.1');
-
   supabaseResponse.cookies.getAll().forEach(cookie => {
     supabaseResponse.cookies.set(cookie.name, cookie.value, {
       ...cookie.options,
