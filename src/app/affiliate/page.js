@@ -10,9 +10,10 @@ import {
   CheckCircle2,
   PieChart
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function AffiliatePublicPage() {
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -20,6 +21,10 @@ export default function AffiliatePublicPage() {
     audience: ''
   });
   const [status, setStatus] = useState('idle');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,149 +44,155 @@ export default function AffiliatePublicPage() {
     }
   };
 
+  if (!mounted) return <div className="min-h-screen bg-background" />;
+
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-indigo-500/30 font-inter">
+    <div className="min-h-screen bg-background text-foreground selection:bg-accent/30 font-sans relative overflow-hidden">
+      {/* Subtle Technical Grid Background */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
+           style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+
       {/* Navigation */}
-      <nav className="absolute top-0 left-0 right-0 z-50 py-8">
+      <nav className="absolute top-0 left-0 right-0 z-50 py-10">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
               <TrendingUp size={22} className="text-white" />
             </div>
-            <span className="text-xl font-black tracking-tighter">SMC JOURNAL</span>
+            <span className="text-xl font-black tracking-tighter text-text-primary">SMC JOURNAL</span>
           </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/affiliate/login" className="text-sm font-bold text-white/70 hover:text-white transition-colors">Partner Login</Link>
-            <Link href="/" className="text-sm font-bold py-3 px-6 glass-card border-white/20 rounded-xl hover:bg-white/5 transition-all text-white">Back to Site</Link>
+          <div className="flex items-center gap-6">
+            <Link href="/affiliate/login" className="text-xs font-black uppercase tracking-widest text-text-secondary hover:text-text-primary transition-colors">Partner Login</Link>
+            <Link href="/" className="text-xs font-black uppercase tracking-widest py-3 px-6 glass-card border-border-custom hover:border-accent/40 rounded-xl transition-all text-text-primary">Back to Site</Link>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-48 pb-32 px-6 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
+      <section className="relative pt-56 pb-32 px-6">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
         
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-black uppercase tracking-[0.2em] mb-8">
+        <div className="max-w-5xl mx-auto text-center relative z-10 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-black uppercase tracking-[0.3em] mb-10">
             <DollarSign size={14} />
             Partner Program Open
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tight text-white">
-            Partner with the #1 <br /> <span className="text-gradient">SMC Journaling Tool.</span>
+          <h1 className="text-5xl md:text-8xl font-black mb-10 leading-[0.9] tracking-tightest text-text-primary">
+            Scale With The <br /> <span className="text-gradient">SMC Standard.</span>
           </h1>
           
-          <p className="text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-12 font-medium">
-            Earn 30% lifetime recurring commissions by helping your audience quantify their edge with institutional-grade data. High transparency, no friction.
+          <p className="text-lg md:text-2xl text-text-secondary max-w-2xl mx-auto mb-16 font-medium leading-relaxed">
+            Earn 30% lifetime recurring commissions by helping your community quantify their edge. High transparency, institutional reporting, zero friction.
           </p>
 
-          <button onClick={() => document.getElementById('apply').scrollIntoView({ behavior: 'smooth' })} className="px-10 py-5 bg-white text-black rounded-2xl font-black text-lg hover:bg-white/90 transition-all flex items-center justify-center gap-3 mx-auto shadow-2xl shadow-white/10 border-0">
+          <button onClick={() => document.getElementById('apply').scrollIntoView({ behavior: 'smooth' })} className="px-12 py-6 bg-accent text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-accent-hover transition-all flex items-center justify-center gap-3 mx-auto shadow-2xl shadow-accent/20 border-none group">
             Secure Your Referral Code
-            <ArrowRight size={20} />
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
       </section>
 
       {/* Benefits Grid */}
-      <section className="py-32 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+      <section className="py-32 px-6 bg-card/10 backdrop-blur-sm border-y border-border-custom">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
           {[
             {
-              icon: <PieChart size={28} className="text-indigo-400" />,
+              icon: <PieChart size={32} className="text-accent" />,
               title: "30% Lifetime Share",
-              desc: "Earn every month as long as your referred trader remains a subscriber. No caps, no unreadable fine print."
+              desc: "Earn every month as long as your referred trader remains a subscriber. No caps, no hidden fine print."
             },
             {
-              icon: <Zap size={28} className="text-yellow-400" />,
-              title: "Best-in-Class CR",
-              desc: "High converting trial-to-subscription funnel designed specifically for the SMC and forex community."
+              icon: <Zap size={32} className="text-accent" />,
+              title: "Institutional CR",
+              desc: "High converting trial-to-subscription funnel designed specifically for professional SMC traders."
             },
             {
-              icon: <BarChart size={28} className="text-emerald-400" />,
+              icon: <BarChart size={32} className="text-accent" />,
               title: "Real-time Metrics",
-              desc: "Dedicated partner dashboard with high-visibility click-tracking and conversion data reporting."
+              desc: "Dedicated internal dashboard with live click-tracking and conversion transparency reporting."
             }
           ].map((benefit, i) => (
-            <div key={i} className="p-10 rounded-[40px] glass-card border-white/10 hover:border-white/20 transition-all">
-              <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 border border-white/10">
+            <div key={i} className="p-12 rounded-[48px] glass-card border-border-custom hover:border-accent/40 transition-all group hover:-translate-y-2 duration-500 shadow-premium">
+              <div className="w-16 h-16 rounded-2xl bg-accent/5 flex items-center justify-center mb-10 border border-border-custom group-hover:bg-accent group-hover:text-white transition-all duration-500 shadow-xl">
                 {benefit.icon}
               </div>
-              <h3 className="text-2xl font-black mb-4 text-white uppercase tracking-tight">{benefit.title}</h3>
-              <p className="text-white/70 leading-relaxed font-medium">{benefit.desc}</p>
+              <h3 className="text-2xl font-black mb-4 text-text-primary tracking-tightest uppercase">{benefit.title}</h3>
+              <p className="text-text-secondary leading-relaxed font-medium">{benefit.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Application Form */}
-      <section id="apply" className="py-40 px-6">
+      <section id="apply" className="py-48 px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-black mb-4 text-white">Start Growing with Us.</h2>
-            <p className="text-white/40 font-medium">Join the partner program and start earning today.</p>
+          <div className="text-center mb-20 animate-slide-up">
+            <h2 className="text-4xl md:text-6xl font-black mb-6 text-text-primary tracking-tightest">Start Growing.</h2>
+            <p className="text-lg text-text-muted font-medium uppercase tracking-[0.2em]">Partner Application</p>
           </div>
 
-          <div className="glass-card border-white/10 p-8 md:p-12 rounded-[48px] shadow-2xl">
+          <div className="glass-card border-border-custom p-10 md:p-16 rounded-[64px] shadow-premium animate-fade-in">
             {status === 'success' ? (
               <div className="text-center py-12">
-                <div className="w-20 h-20 rounded-full bg-emerald-500/10 flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
-                  <CheckCircle2 size={40} className="text-emerald-500" />
+                <div className="w-24 h-24 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-8 border border-accent/20">
+                  <CheckCircle2 size={48} className="text-accent" />
                 </div>
-                <h3 className="text-2xl font-black mb-3 text-white">Application Received!</h3>
-                <p className="text-white/50 mb-8">We'll review your platform and get back to you via email shortly.</p>
+                <h3 className="text-3xl font-black mb-4 text-text-primary tracking-tightest">Application Received!</h3>
+                <p className="text-text-secondary mb-10 font-medium">We'll review your platform and get back to you shortly.</p>
                 <button 
                   onClick={() => setStatus('idle')}
-                  className="px-8 py-4 bg-white/5 hover:bg-white/10 rounded-2xl font-black transition-all text-white border-0"
+                  className="px-10 py-5 bg-accent text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all border-none shadow-xl shadow-accent/20"
                 >
                   Apply Again
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 ml-2">Full Name</label>
+              <form onSubmit={handleSubmit} className="space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted ml-2">Full Name</label>
                     <input 
                       required
                       type="text" 
-                      placeholder="Your Name"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all font-bold placeholder:text-white/20 text-white"
+                      placeholder="Institutional Name"
+                      className="w-full bg-background/50 border border-border-custom rounded-2xl px-6 py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                     />
                   </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 ml-2">Email Address</label>
+                  <div className="space-y-4">
+                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted ml-2">Email Address</label>
                     <input 
                       required
                       type="email" 
-                      placeholder="partner@example.com"
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all font-bold placeholder:text-white/20 text-white"
+                      placeholder="partner@vault.com"
+                      className="w-full bg-background/50 border border-border-custom rounded-2xl px-6 py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 ml-2">Primary Platform (Link)</label>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted ml-2">Primary Platform (Link)</label>
                   <input 
                     required
                     type="text" 
-                    placeholder="YouTube / Instagram / X / Discord Link"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 outline-none focus:border-indigo-500 transition-all font-bold placeholder:text-white/20 text-white"
+                    placeholder="YouTube / X / Discord / Trading Community"
+                    className="w-full bg-background/50 border border-border-custom rounded-2xl px-6 py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
                     value={formData.platform}
                     onChange={(e) => setFormData({...formData, platform: e.target.value})}
                   />
                 </div>
 
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50 ml-2">Audience Description</label>
+                <div className="space-y-4">
+                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-text-muted ml-2">Audience Description</label>
                   <textarea 
                     required
-                    placeholder="Tell us about your audience size and how you plan to promote SMC Journal to traders..."
+                    placeholder="Audience size, strategy focus, and promotion plan..."
                     rows={4}
-                    className="w-full bg-white/5 border border-white/10 rounded-3xl px-6 py-4 outline-none focus:border-indigo-500 transition-all font-bold placeholder:text-white/20 resize-none text-white text-base"
+                    className="w-full bg-background/50 border border-border-custom rounded-3xl px-6 py-6 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 resize-none text-text-primary text-base"
                     value={formData.audience}
                     onChange={(e) => setFormData({...formData, audience: e.target.value})}
                   />
@@ -190,9 +201,9 @@ export default function AffiliatePublicPage() {
                 <button 
                   disabled={status === 'loading'}
                   type="submit" 
-                  className="w-full py-6 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-3xl font-black text-xl transition-all shadow-xl shadow-indigo-600/20 active:scale-[0.98] border-0"
+                  className="w-full py-8 bg-accent hover:bg-accent-hover disabled:opacity-50 text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] transition-all shadow-premium shadow-accent/30 active:scale-[0.98] border-none"
                 >
-                  {status === 'loading' ? 'Submitting...' : 'Apply for Program'}
+                  {status === 'loading' ? 'Transmitting...' : 'Initialize Program Membership'}
                 </button>
               </form>
             )}
@@ -201,27 +212,38 @@ export default function AffiliatePublicPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-24 px-6 border-t border-white/5 opacity-50">
+      <footer className="py-32 px-6 border-t border-border-custom bg-card/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
-          <div className="flex items-center gap-3">
-            <TrendingUp size={24} className="text-indigo-500" />
-            <span className="text-xl font-black tracking-tighter text-white">SMC JOURNAL</span>
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
+              <TrendingUp size={24} className="text-white" />
+            </div>
+            <span className="text-2xl font-black tracking-tightest text-text-primary">SMC JOURNAL</span>
           </div>
-          <div className="flex gap-12 text-xs font-black uppercase tracking-widest text-white/40">
-            <Link href="/" className="hover:text-white transition-all">Main Site</Link>
-            <Link href="/privacy" className="hover:text-white transition-all">Privacy</Link>
-            <Link href="/terms" className="hover:text-white transition-all">Terms</Link>
+          <div className="flex gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-text-muted">
+            <Link href="/" className="hover:text-text-primary transition-all">Main Portal</Link>
+            <Link href="/privacy" className="hover:text-text-primary transition-all">Privacy</Link>
+            <Link href="/terms" className="hover:text-text-primary transition-all">Terms</Link>
           </div>
         </div>
       </footer>
 
       <style jsx global>{`
         .text-gradient {
-          background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+          background: linear-gradient(135deg, var(--accent) 0%, #a855f7 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
         }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); }
+        .tracking-tightest { letter-spacing: -0.06em; }
+        .glass-card { background: var(--card); backdrop-filter: blur(20px); }
+        
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in { animation: fade-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-slide-up { animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>
     </div>
   );

@@ -56,6 +56,7 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-10">
             <button onClick={() => scrollToSection('features')} className="text-sm font-black text-text-secondary hover:text-text-primary transition-colors uppercase tracking-widest">Features</button>
             <Link href="/pricing" className="text-sm font-black text-text-secondary hover:text-text-primary transition-colors uppercase tracking-widest">Pricing</Link>
+            <Link href="/affiliate" className="text-sm font-black text-text-secondary hover:text-text-primary transition-colors uppercase tracking-widest">Affiliate</Link>
           </div>
 
           <div className="flex items-center gap-4">
