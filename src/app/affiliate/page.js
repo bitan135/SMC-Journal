@@ -83,7 +83,7 @@ export default function AffiliatePublicPage() {
           </h1>
           
           <p className="text-lg md:text-2xl text-text-secondary max-w-2xl mx-auto mb-16 font-medium leading-relaxed">
-            Earn 30% lifetime recurring commissions by helping your community quantify their edge. High transparency, institutional reporting, zero friction.
+            Earn 10% negotiable recurring commissions by helping your community quantify their edge. High transparency, institutional reporting, zero friction.
           </p>
 
           <button onClick={() => document.getElementById('apply').scrollIntoView({ behavior: 'smooth' })} className="px-12 py-6 bg-accent text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:bg-accent-hover transition-all flex items-center justify-center gap-3 mx-auto shadow-2xl shadow-accent/20 border-none group">
@@ -98,23 +98,23 @@ export default function AffiliatePublicPage() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
           {[
             {
-              icon: <PieChart size={32} className="text-accent" />,
-              title: "30% Lifetime Share",
-              desc: "Earn every month as long as your referred trader remains a subscriber. No caps, no hidden fine print."
+              icon: <PieChart size={32} />,
+              title: "10% Negotiable Share",
+              desc: "Earn every month as long as your referred trader remains a subscriber. Transparent and scalable."
             },
             {
-              icon: <Zap size={32} className="text-accent" />,
+              icon: <Zap size={32} />,
               title: "Institutional CR",
               desc: "High converting trial-to-subscription funnel designed specifically for professional SMC traders."
             },
             {
-              icon: <BarChart size={32} className="text-accent" />,
+              icon: <BarChart size={32} />,
               title: "Real-time Metrics",
               desc: "Dedicated internal dashboard with live click-tracking and conversion transparency reporting."
             }
           ].map((benefit, i) => (
             <div key={i} className="p-12 rounded-[48px] glass-card border-border-custom hover:border-accent/40 transition-all group hover:-translate-y-2 duration-500 shadow-premium">
-              <div className="w-16 h-16 rounded-2xl bg-accent/5 flex items-center justify-center mb-10 border border-border-custom group-hover:bg-accent group-hover:text-white transition-all duration-500 shadow-xl">
+              <div className="w-16 h-16 rounded-2xl bg-accent/5 flex items-center justify-center mb-10 border border-border-custom text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500 shadow-xl">
                 {benefit.icon}
               </div>
               <h3 className="text-2xl font-black mb-4 text-text-primary tracking-tightest uppercase">{benefit.title}</h3>
