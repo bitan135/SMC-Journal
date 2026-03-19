@@ -140,9 +140,9 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <form onSubmit={handleFormSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
       {/* Left Column: Core Data */}
-      <div className="lg:col-span-2 space-y-8">
+      <div className="lg:col-span-2 space-y-6 md:space-y-8">
         {/* Section 1: Instrument & Direction */}
         <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium stagger-children">
           <div className="flex justify-between items-center mb-8">
@@ -160,7 +160,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
               />
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             <div className="space-y-3">
               <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Asset Pair</label>
                 <select
@@ -370,7 +370,7 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
 
       {/* Right Column: Meta & Meta-logic */}
       <div className="space-y-8">
-        <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium sticky top-10">
+        <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-6 md:p-8 shadow-premium sticky top-10">
           <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
             <Binary size={14} /> Sequence Data
           </h3>

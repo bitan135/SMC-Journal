@@ -48,7 +48,7 @@ export default function MetricCard({
             {label}
           </p>
           <div className="flex items-baseline gap-2">
-            <h3 className="text-4xl font-black text-[var(--foreground)] tracking-tighter leading-tight">
+            <h3 className="text-2xl md:text-4xl font-black text-[var(--foreground)] tracking-tighter leading-tight">
               {value}
             </h3>
             {subValue && (

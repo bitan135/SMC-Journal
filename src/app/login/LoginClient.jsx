@@ -35,7 +35,7 @@ export default function Login() {
       setError(getErrorMessage(loginError.message));
       setIsLoading(false);
     } else {
-      router.push('/');
+      router.push('/dashboard');
       router.refresh();
     }
   };

@@ -80,7 +80,7 @@ export default function AnalyticsContent() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
+      <div className="px-4 sm:px-6 lg:px-10 py-6 md:py-10 animate-fade-in">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 px-2">
             <div className="flex-1">
                 <div className="h-4 w-32 bg-white/5 rounded-full mb-4 animate-shimmer" />
@@ -129,7 +129,7 @@ export default function AnalyticsContent() {
   const isLocked = checkIsLocked(subscription);
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-[1440px] mx-auto animate-fade-in pb-32 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-24 md:pb-32 relative overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-[20%] right-[-10%] w-[50%] h-[50%] bg-[var(--accent)]/5 blur-[150px] rounded-full animate-float pointer-events-none"></div>
       <div className="absolute bottom-[10%] left-[-5%] w-[40%] h-[40%] bg-purple-500/5 blur-[120px] rounded-full delay-1000 animate-float pointer-events-none"></div>
@@ -142,7 +142,7 @@ export default function AnalyticsContent() {
                         <Sparkles size={12} /> Institutional Intelligence
                     </span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-tight text-gradient mb-4">
+                <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-tight text-gradient mb-4">
                     Execution Analytics
                 </h1>
                 <p className="text-[var(--text-secondary)] font-medium max-w-lg">Quantifying technical superiority and execution variance.</p>

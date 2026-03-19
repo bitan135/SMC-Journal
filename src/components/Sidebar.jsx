@@ -15,6 +15,7 @@ import {
   TrendingUp,
   LogOut,
   User as UserIcon,
+  Users,
   Crown,
   Loader2,
   Sparkles,
@@ -23,7 +24,7 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/trades', label: 'Trades', icon: Library },
   { href: '/add-trade', label: 'Add Trade', icon: Plus },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
@@ -31,6 +32,7 @@ const navItems = [
   { href: '/billing', label: 'Billing', icon: Crown },
   { href: '/donation', label: 'Donation', icon: Heart },
   { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/dashboard/affiliate', label: 'Affiliate', icon: Users },
 ];
 
 export default function Sidebar() {
@@ -230,9 +232,9 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-4 left-4 right-4 h-20 glass-card rounded-[32px] border-[var(--glass-border)] z-50 flex items-center justify-around px-2 shadow-2xl">
+      <nav className="lg:hidden fixed bottom-4 left-4 right-4 h-16 md:h-20 glass-card rounded-[32px] border-[var(--glass-border)] z-50 flex items-center justify-around px-2 shadow-2xl">
         {navItems
-          .filter(item => ['Dashboard', 'Trades', 'Add Trade', 'Analytics', 'Settings'].includes(item.label))
+          .filter(item => ['Dashboard', 'Trades', 'Add Trade', 'Analytics', 'Affiliate'].includes(item.label))
           .map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -245,7 +247,7 @@ export default function Sidebar() {
                 }`}
               >
                 {item.href === '/add-trade' ? (
-                  <div className="w-14 h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center -mt-12 shadow-2xl shadow-[var(--accent)]/40 border-4 border-[var(--sidebar-bg)]">
+                  <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-[var(--accent)] flex items-center justify-center -mt-12 shadow-2xl shadow-[var(--accent)]/40 border-4 border-[var(--sidebar-bg)]">
                     <Icon size={24} className="text-white" />
                   </div>
                 ) : (

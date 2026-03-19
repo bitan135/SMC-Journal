@@ -20,7 +20,7 @@ export default function NotFound() {
           This page doesn't exist or has been moved.
         </p>
         <Link
-          href="/"
+          href="/dashboard"
           className="inline-flex items-center gap-3 px-8 py-4 bg-[var(--accent)] text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
         >
           <Home size={16} /> Back to Dashboard

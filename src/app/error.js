@@ -31,7 +31,7 @@ export default function Error({ error, reset }) {
             <RotateCcw size={16} /> Try Again
           </button>
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/dashboard')}
             className="flex items-center justify-center gap-3 px-8 py-4 glass-card border-[var(--glass-border)] text-[var(--foreground)] rounded-2xl font-black text-sm uppercase tracking-widest hover:border-[var(--accent)]/30 transition-all active:scale-95"
           >
             <Home size={16} /> Back to Dashboard

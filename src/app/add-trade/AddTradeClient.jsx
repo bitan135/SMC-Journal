@@ -93,7 +93,7 @@ export default function AddTrade() {
 
       setIsSuccess(true);
       setTimeout(() => {
-        router.push('/');
+        router.push('/dashboard');
       }, 1500);
     } catch (err) {
       console.error('Submission error:', err?.message || err?.details || err?.code || err);
@@ -104,12 +104,12 @@ export default function AddTrade() {
   };
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-[1440px] mx-auto animate-fade-in pb-32 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-24 md:pb-32 relative overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float"></div>
       
       <div className="relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 px-2">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-16 px-2">
             <div className="flex-1">
                 <button 
                   onClick={() => router.back()}
@@ -122,7 +122,7 @@ export default function AddTrade() {
                         <Sparkles size={12} /> Execution Profile
                     </span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none text-gradient mb-4">
+                <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none text-gradient mb-4">
                     New Entry Log
                 </h1>
                 <p className="text-[var(--text-secondary)] font-medium max-w-lg">Log your institutional setups with millisecond precision.</p>

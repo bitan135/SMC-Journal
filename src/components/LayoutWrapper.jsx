@@ -7,7 +7,17 @@ import { usePathname } from 'next/navigation';
 export default function LayoutWrapper({ children }) {
   const { isSidebarCollapsed, setSidebarCollapsed } = useTheme();
   const pathname = usePathname();
-  const isAuthPage = pathname === '/login' || pathname === '/signup' || pathname === '/auth/callback';
+  const isAuthPage =
+    pathname === '/login' ||
+    pathname === '/signup' ||
+    pathname === '/auth/callback' ||
+    pathname === '/' ||
+    pathname === '/features' ||
+    pathname === '/pricing' ||
+    pathname === '/privacy' ||
+    pathname === '/terms' ||
+    pathname.startsWith('/affiliate');
+
 
   return (
     <div className="flex min-h-screen relative">

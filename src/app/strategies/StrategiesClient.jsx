@@ -85,8 +85,8 @@ export default function Strategies() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
-        <div className="flex items-center justify-between mb-12">
+      <div className="px-4 sm:px-6 lg:px-10 py-6 md:py-10 animate-fade-in">
+        <div className="flex items-center justify-between mb-8 md:mb-12">
           <div className="h-10 w-48 bg-white/5 rounded-2xl animate-shimmer" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -98,12 +98,12 @@ export default function Strategies() {
 
   return (
     <PlanGuard requiredPlan="pro" featureName="Execution Vault">
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-[1440px] mx-auto animate-fade-in pb-32 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-24 md:pb-32 relative overflow-hidden">
         {/* Background Ambience */}
         <div className="absolute top-[25%] left-[-10%] w-[50%] h-[50%] bg-[var(--accent)]/5 blur-[150px] rounded-full animate-float pointer-events-none"></div>
         
         <div className="relative z-10 w-full">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 px-2">
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-16 px-2">
               <div>
                   <div className="flex items-center gap-2 mb-3">
                       <span className="flex items-center gap-2 px-3 py-1 rounded-full glass-effect border-[var(--glass-border)] text-[var(--accent)] text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed">
@@ -113,7 +113,7 @@ export default function Strategies() {
                           <Zap size={12} /> Multi-Edge Sync
                       </span>
                   </div>
-                  <h1 className="text-4xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-tight text-gradient mb-4">
+                  <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-tight text-gradient mb-4">
                       Execution Vault
                   </h1>
                   <p className="text-[var(--text-secondary)] font-medium">Archiving institutional-grade technical setups.</p>

@@ -168,8 +168,8 @@ export default function Settings() {
 
   if (isLoading) {
     return (
-      <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
-        <div className="h-10 w-48 bg-[var(--glass-border)] rounded-2xl mb-12 animate-shimmer" />
+      <div className="px-4 sm:px-6 lg:px-10 py-6 md:py-10 animate-fade-in">
+        <div className="h-10 w-48 bg-[var(--glass-border)] rounded-2xl mb-8 md:mb-12 animate-shimmer" />
         <div className="space-y-8">
           <div className="h-64 glass-card border-[var(--glass-border)] rounded-[40px] animate-shimmer" />
           <div className="h-64 glass-card border-[var(--glass-border)] rounded-[40px] animate-shimmer" />
@@ -187,15 +187,15 @@ export default function Settings() {
   ];
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-[1440px] mx-auto animate-fade-in pb-32 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-24 md:pb-32 relative overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-[-5%] right-[-10%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float pointer-events-none"></div>
       
       <div className="relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16 px-2">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-16 px-2">
             <div className="flex-1">
                 <button 
-                  onClick={() => router.push('/')}
+                  onClick={() => router.push('/dashboard')}
                   className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-8 hover:text-[var(--foreground)] hover:border-[var(--accent)]/30 transition-all group w-fit"
                 >
                   <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Dashboard
@@ -205,7 +205,7 @@ export default function Settings() {
                         <Sparkles size={12} /> Console Configuration
                     </span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none text-gradient mb-4">
+                <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none text-gradient mb-4">
                     Settings Console
                 </h1>
                 <p className="text-[var(--text-secondary)] font-medium max-w-lg">Fine-tune your institutional workspace and data protocols.</p>

@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import { ToastProvider } from '@/components/ui/Toast';
 import { ConfirmProvider } from '@/components/ui/ConfirmModal';
 import PostHogProvider from '@/components/PostHogProvider';
+import ReferralTracker from '@/components/ReferralTracker';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -87,6 +88,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <ToastProvider>
               <ConfirmProvider>
+                <ReferralTracker />
                 <Sidebar />
                 <LayoutWrapper>
                   {children}

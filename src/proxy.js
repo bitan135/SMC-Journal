@@ -18,6 +18,6 @@ export const config = {
      * - billing/checkout (payments)
      * - .png, .jpg, .jpeg, .gif, .svg (images)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|auth|forgot-password|reset-password|billing/checkout|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|auth|forgot-password|reset-password|billing/checkout|features|pricing|privacy|terms|affiliate|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$)(?!$).*)',
   ],
 };

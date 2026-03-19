@@ -2,7 +2,7 @@
 
 import { ChartSkeleton } from './ui/SkeletonLoader';
 
-export default function ChartCard({ title, subtitle, children, className = '', height = 'h-[350px]', isLoading, isEmpty }) {
+export default function ChartCard({ title, subtitle, children, className = '', height = 'h-[250px] md:h-[350px]', isLoading, isEmpty }) {
   if (isLoading) return <ChartSkeleton />;
 
   return (

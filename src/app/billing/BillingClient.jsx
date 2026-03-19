@@ -64,18 +64,18 @@ export default function BillingPage() {
   };
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-[1440px] mx-auto animate-fade-in pb-32 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-24 md:pb-32 relative overflow-hidden">
       {/* Background Orbs */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[var(--accent)]/10 blur-[120px] rounded-full animate-float pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-emerald-500/5 blur-[100px] rounded-full delay-1000 animate-float pointer-events-none"></div>
 
       <div className="max-w-6xl mx-auto relative z-10 w-full pt-10">
 
-        <div className="text-center mb-24 animate-fade-in px-2">
+        <div className="text-center mb-12 md:mb-24 animate-fade-in px-2">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-effect border-[var(--glass-border)] text-[var(--accent)] text-xs font-black uppercase tracking-[0.2em] mb-8">
             <Sparkles size={14} className="animate-pulse" /> Precision Pricing
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter mb-8 text-gradient">
+          <h1 className="text-3xl md:text-7xl font-black tracking-tighter mb-8 text-gradient">
             Evolve Your <br />Trading Edge
           </h1>
           <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto font-medium">

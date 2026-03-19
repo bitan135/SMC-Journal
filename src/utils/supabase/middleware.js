@@ -49,7 +49,15 @@ export async function updateSession(request) {
                       request.nextUrl.pathname.startsWith('/signup') ||
                       request.nextUrl.pathname.startsWith('/auth');
 
-    if (!user && !isAuthPage) {
+    const isPublicPage =
+      request.nextUrl.pathname === '/' ||
+      request.nextUrl.pathname === '/features' ||
+      request.nextUrl.pathname === '/pricing' ||
+      request.nextUrl.pathname === '/privacy' ||
+      request.nextUrl.pathname === '/terms' ||
+      request.nextUrl.pathname.startsWith('/affiliate');
+
+    if (!user && !isAuthPage && !isPublicPage) {
       const url = request.nextUrl.clone();
       url.pathname = '/login';
       const response = NextResponse.redirect(url);
@@ -72,7 +80,7 @@ export async function updateSession(request) {
     // Redirect authenticated users away from login/signup to dashboard
     if (user && (request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup')) {
       const url = request.nextUrl.clone();
-      url.pathname = '/';
+      url.pathname = '/dashboard';
       const response = NextResponse.redirect(url);
       
       // Sanitized Transfer: Ensure attributes are host-safe
