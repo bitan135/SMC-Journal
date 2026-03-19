@@ -55,7 +55,11 @@ export default function Dashboard() {
           profileService.getProfile()
         ]);
         if (!isMounted) return;
-        setTrades(fetchedTrades);
+        
+        // Final safety check: if profile is null and we are on dashboard, it means session is gone
+        if (!fetchedProfile && !isMounted) return;
+        
+        setTrades(fetchedTrades || []);
         setProfile(fetchedProfile);
       } catch (err) {
         console.error('Dashboard load failed:', err?.message || err?.details || err?.code || err);

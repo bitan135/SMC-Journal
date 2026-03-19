@@ -35,8 +35,7 @@ export default function Login() {
       setError(getErrorMessage(loginError.message));
       setIsLoading(false);
     } else {
-      router.push('/dashboard');
-      router.refresh();
+      window.location.href = '/dashboard';
     }
   };
 

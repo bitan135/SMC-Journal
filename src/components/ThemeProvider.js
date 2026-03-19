@@ -68,7 +68,7 @@ export function ThemeProvider({ children }) {
       isSidebarCollapsed, 
       setSidebarCollapsed 
     }}>
-      {mounted ? children : <div style={{ visibility: 'hidden' }}>{children}</div>}
+      {children}
     </ThemeContext.Provider>
   );
 }
