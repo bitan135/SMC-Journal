@@ -111,16 +111,24 @@ export function AuthProvider({ children }) {
     window.location.href = '/api/auth/logout'; // Using our reliable server-side termination
   };
 
-  if (isLoading && isProtectedRoute(pathname)) {
+  // Deterministic Gate: Block ALL rendering until auth state is resolved.
+  // This prevents UI flicker and unauthorized page flashes.
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-6 text-center">
         <div className="flex flex-col items-center gap-6 animate-pulse">
-          <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center shadow-2xl shadow-[var(--accent)]/20">
-            <div className="w-8 h-8 rounded-full border-4 border-white/20 border-t-white animate-spin" />
+          <div className="w-16 h-16 rounded-[22px] bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center shadow-2xl shadow-[var(--accent)]/20 overflow-hidden relative group">
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+            <div className="w-8 h-8 rounded-full border-4 border-white/20 border-t-white animate-spin relative z-10" />
           </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)]">
-            Synchronizing Session
-          </p>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)] opacity-80">
+                SMC Journal
+            </p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-[var(--accent)] animate-pulse">
+                Synchronizing Secure Session...
+            </p>
+          </div>
         </div>
       </div>
     );

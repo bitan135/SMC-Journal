@@ -18,9 +18,15 @@ export default function Login() {
 
   const getErrorMessage = (err) => {
     if (!err) return null;
-    if (err.includes('Invalid login credentials')) return 'Incorrect email or password. Please try again.';
-    if (err.includes('Email not confirmed')) return 'Please verify your email address to continue.';
-    return err;
+    const msg = typeof err === 'string' ? err : err.message || 'An unexpected error occurred';
+    
+    if (msg.includes('Invalid login credentials')) return 'The email or password you entered is incorrect.';
+    if (msg.includes('Email not confirmed')) return 'Please check your inbox to verify your email address.';
+    if (msg.includes('User already registered')) return 'An account with this email already exists.';
+    if (msg.includes('rate limit')) return 'Too many attempts. Please try again in a few minutes.';
+    if (msg.includes('network')) return 'Connection lost. Please check your internet and try again.';
+    
+    return 'Authentication failed. Please try again.';
   };
 
   const handleLogin = async (e) => {
