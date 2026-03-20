@@ -33,6 +33,36 @@ export function AuthProvider({ children }) {
 
     const initializeAuth = async () => {
       try {
+        // 1. Handle PKCE OAuth Code Exchange (CRITICAL FIX)
+        const params = new URLSearchParams(window.location.search);
+        const code = params.get('code');
+        
+        if (code) {
+          console.log('[AuthProvider] OAuth code detected. Exchanging for session...');
+          const { data, error } = await supabase.auth.exchangeCodeForSession(window.location.href);
+          
+          if (error) {
+            console.error('[AuthProvider] Code exchange failed:', error);
+          } else if (data.session) {
+            console.log('[AuthProvider] Code exchange successful.');
+            
+            // Clean the URL immediately to prevent double-exchange on refresh
+            const newUrl = new URL(window.location.href);
+            newUrl.searchParams.delete('code');
+            newUrl.searchParams.delete('state'); // Standard OAuth state param
+            window.history.replaceState({}, document.title, newUrl.pathname);
+            
+            setSession(data.session);
+            setUser(data.session.user);
+            await fetchUserData(data.session.user.id);
+            
+            // Deterministic redirect to dashboard after success
+            window.location.href = '/dashboard';
+            return; // Exit initialization as we are redirecting
+          }
+        }
+
+        // 2. Standard Session Check
         const { data: { session: initialSession } } = await supabase.auth.getSession();
         setSession(initialSession);
         setUser(initialSession?.user ?? null);
