@@ -123,9 +123,11 @@ export function AuthProvider({ children }) {
 
   // Deterministic Gate: Block ALL rendering until auth state is resolved.
   // This prevents UI flicker and unauthorized page flashes.
+  // EXCEPTION: Allow the landing page (/) to render immediately for marketing.
   const isRedirecting = !isLoading && user && isPublicRoute(pathname);
+  const shouldShowGate = (isLoading || isRedirecting) && pathname !== '/';
 
-  if (isLoading || isRedirecting) {
+  if (shouldShowGate) {
     return (
       <div className="min-h-screen bg-[var(--background)] flex items-center justify-center p-6 text-center">
         <div className="flex flex-col items-center gap-6 animate-pulse">

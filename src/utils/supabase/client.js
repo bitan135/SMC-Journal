@@ -14,6 +14,12 @@ export function createClient() {
       path: '/',
       sameSite: 'lax',
       secure: isLocal ? false : true,
+    },
+    auth: {
+      flowType: 'pkce',
+      persistSession: true,
+      detectSessionInUrl: true,
+      storageKey: 'sb-smcjournal-auth'
     }
   });
 }
