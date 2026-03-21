@@ -35,6 +35,9 @@ export async function createClient() {
           }
         },
       },
+      auth: {
+        storageKey: 'sb-smc-auth-v5',
+      }
     }
   );
 }

@@ -29,16 +29,26 @@ export function ThemeProvider({ children }) {
 
     const root = window.document.documentElement;
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const pathname = window.location.pathname;
+
+    // List of routes that MUST be light theme
+    const forceLightRoutes = ['/', '/terms', '/privacy'];
+    const isAffiliate = pathname.startsWith('/affiliate');
+    const isForcedLight = forceLightRoutes.includes(pathname) || isAffiliate;
 
     const applyTheme = (currentTheme) => {
-      if (currentTheme === 'auto') {
+      // If the route is forced light, ignore the state and force 'light'
+      const activeTheme = isForcedLight ? 'light' : currentTheme;
+
+      if (activeTheme === 'auto') {
         const systemTheme = mediaQuery.matches ? 'dark' : 'light';
         root.setAttribute('data-theme', systemTheme);
       } else {
-        root.setAttribute('data-theme', currentTheme);
+        root.setAttribute('data-theme', activeTheme);
       }
       
-      if (currentTheme && currentTheme !== 'undefined') {
+      // Only persist if not forced
+      if (!isForcedLight && currentTheme && currentTheme !== 'undefined') {
         localStorage.setItem('theme', currentTheme);
       }
     };

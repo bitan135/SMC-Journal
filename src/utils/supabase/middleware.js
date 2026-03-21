@@ -40,6 +40,9 @@ export async function updateSession(request) {
           });
         },
       },
+      auth: {
+        storageKey: 'sb-smc-auth-v5',
+      }
     }
   );
 
