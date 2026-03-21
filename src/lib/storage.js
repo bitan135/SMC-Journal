@@ -16,6 +16,10 @@ const INSTRUMENTS = [
 
 const SESSIONS = ['London', 'New York', 'Asia'];
 
+const TIMEFRAME_BIAS = ['15M', '30M', '1H', '4H', '1D'];
+
+const BIAS_TYPES = ['Continuation', 'Reversal'];
+
 const SMC_TAGS = [
   'BOS', 'CHoCH', 'FVG', 'Order Block', 
   'Inducement', 'SMT Divergence', 'Internal Structure', 'Swing Structure',
@@ -406,4 +410,4 @@ export async function migrateLocalToCloud() {
 }
 
 // Exports
-export { INSTRUMENTS, SESSIONS, SMC_TAGS, LIQUIDITY_ZONES, DEFAULT_STRATEGIES };
+export { INSTRUMENTS, SESSIONS, SMC_TAGS, LIQUIDITY_ZONES, DEFAULT_STRATEGIES, TIMEFRAME_BIAS, BIAS_TYPES };

@@ -5,7 +5,7 @@ import {
   Plus, Camera, Check, Target, TrendingUp, Binary, BarChart3, AlertCircle, Calendar, Brain, Shield, Smile, Frown, Zap, RefreshCcw
 } from 'lucide-react';
 import { 
-  INSTRUMENTS, SESSIONS, SMC_TAGS, LIQUIDITY_ZONES,
+  INSTRUMENTS, SESSIONS, SMC_TAGS, LIQUIDITY_ZONES, TIMEFRAME_BIAS, BIAS_TYPES,
   calculateRR, calculatePips, calculateRiskAmount
 } from '@/lib/storage';
 
@@ -30,6 +30,8 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
     disciplineScore: 5,
     ruleAdherence: true,
     setupZone: null,
+    timeframeBias: '1H',
+    biasType: 'Continuation',
     // Overrides for edit mode — all come from initialData
     ...initialData ? {
       entryPrice: initialData?.entry_price || initialData?.entryPrice || '',
@@ -48,6 +50,8 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
       disciplineScore: initialData?.discipline_score || initialData?.disciplineScore || 5,
       ruleAdherence: initialData?.rule_adherence ?? initialData?.ruleAdherence ?? true,
       setupZone: initialData?.setup_zone || initialData?.setupZone || null,
+      timeframeBias: initialData?.timeframe_bias || initialData?.timeframeBias || '1H',
+      biasType: initialData?.bias_type || initialData?.biasType || 'Continuation',
     } : {},
   });
 
@@ -134,6 +138,8 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
       disciplineScore: formData.disciplineScore,
       ruleAdherence: formData.ruleAdherence,
       setupZone: formData.setupZone,
+      timeframe_bias: formData.timeframeBias,
+      bias_type: formData.biasType,
     };
     
     onSubmit(finalData);
@@ -413,6 +419,32 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
                 {SESSIONS.map(s => <option key={s} value={s} className="bg-[var(--background)]">{s.toUpperCase()} SESSION</option>)}
               </select>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Bias Timeframe</label>
+                <select
+                  name="timeframeBias"
+                  value={formData.timeframeBias}
+                  onChange={handleChange}
+                  className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-black text-[var(--foreground)] outline-none focus:border-[var(--accent)] focus:bg-[var(--card-hover)] transition-all appearance-none cursor-pointer"
+                >
+                  {TIMEFRAME_BIAS.map(t => <option key={t} value={t} className="bg-[var(--background)]">{t}</option>)}
+                </select>
+              </div>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Bias Type</label>
+                <select
+                  name="biasType"
+                  value={formData.biasType}
+                  onChange={handleChange}
+                  className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-black text-[var(--foreground)] outline-none focus:border-[var(--accent)] focus:bg-[var(--card-hover)] transition-all appearance-none cursor-pointer"
+                >
+                  {BIAS_TYPES.map(b => <option key={b} value={b} className="bg-[var(--background)]">{b.toUpperCase()}</option>)}
+                </select>
+              </div>
+            </div>
+
             <div className="space-y-3">
               <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Risk Exposure (Lots)</label>
               <input

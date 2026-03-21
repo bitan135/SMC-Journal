@@ -16,10 +16,9 @@ import {
   LogOut,
   User as UserIcon,
   Crown,
-  Loader2,
-  Sparkles,
   Heart,
-  Lock
+  Lock,
+  Sparkles
 } from 'lucide-react';
 
 const navItems = [
@@ -27,6 +26,7 @@ const navItems = [
   { href: '/trades', label: 'Trades', icon: Library },
   { href: '/add-trade', label: 'Add Trade', icon: Plus },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
+  { href: '/insights', label: 'Insights', icon: Sparkles },
   { href: '/strategies', label: 'Strategies', icon: Target },
   { href: '/billing', label: 'Billing', icon: Crown },
   { href: '/donation', label: 'Donation', icon: Heart },
