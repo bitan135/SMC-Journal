@@ -12,32 +12,7 @@ export async function updateSession(request) {
 
   const code = request.nextUrl.searchParams.get('code');
 
-  // 1. Canonical Domain Enforcement (Production only) - PRIORITY 1
-  // Ensures session cookies match the intended domain (Apex vs WWW)
-  // If a code is present, we jump DIRECTLY to the callback on the canonical domain to avoid double redirects.
-  if (!isLocal && host.includes('smcjournal.app') && !host.startsWith('www.')) {
-    const url = request.nextUrl.clone();
-    url.host = 'www.smcjournal.app';
-    url.protocol = 'https';
-    
-    // Efficiency: If there's a code, jump straight to callback on canonical domain
-    if (code && pathname !== '/auth/callback') {
-      url.pathname = '/auth/callback';
-    }
-    
-    return NextResponse.redirect(url);
-  }
-
-  // 2. OAuth Code Interceptor
-  // If a ?code= is detected on ANY path (like the root /) but we are not on the callback route,
-  // we must immediately redirect to /auth/callback to ensure the server-side exchange logic handles it.
-  if (code && pathname !== '/auth/callback') {
-    const url = request.nextUrl.clone();
-    url.pathname = '/auth/callback';
-    // Preserve all other search params (like 'next' or 'state')
-    return NextResponse.redirect(url);
-  }
-
+  // Initialize response and client FIRST so they are available to guards
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -68,7 +43,7 @@ export async function updateSession(request) {
     }
   );
 
-  // Helper to ensure ALL redirects carry the session cookies
+  // 1. Prepare Helper for Cookie-Sync across all responses
   const finalizeResponse = (res) => {
     supabaseResponse.cookies.getAll().forEach(cookie => {
       res.cookies.set(cookie.name, cookie.value, {
@@ -82,11 +57,31 @@ export async function updateSession(request) {
     return res;
   };
 
+  // 2. Canonical Domain Enforcement (Production only) - PRIORITY 1
+  if (!isLocal && host.includes('smcjournal.app') && !host.startsWith('www.')) {
+    const url = request.nextUrl.clone();
+    url.host = 'www.smcjournal.app';
+    url.protocol = 'https';
+    
+    if (code && pathname !== '/auth/callback') {
+      url.pathname = '/auth/callback';
+    }
+    
+    return finalizeResponse(NextResponse.redirect(url));
+  }
+
+  // 3. OAuth Code Interceptor
+  if (code && pathname !== '/auth/callback') {
+    const url = request.nextUrl.clone();
+    url.pathname = '/auth/callback';
+    return finalizeResponse(NextResponse.redirect(url));
+  }
+
   const { data: { user } } = await supabase.auth.getUser();
   const isPublic = isPublicRoute(pathname);
   const isProtected = isProtectedRoute(pathname);
   
-  // 1. Auth Guard: Unauthenticated users -> /login
+  // 4. Auth Guard: Unauthenticated users -> /login
   if (!user && isProtected) {
     const url = request.nextUrl.clone();
     url.pathname = '/login';
@@ -94,7 +89,7 @@ export async function updateSession(request) {
     return finalizeResponse(NextResponse.redirect(url));
   }
 
-  // 2. Redirect Loop Prevention: Authenticated users -> /dashboard
+  // 5. Redirect Loop Prevention: Authenticated users -> /dashboard
   const isLoginPage = pathname === '/login' || pathname === '/signup';
   const isLandingPage = pathname === '/';
   const isLogoutSignal = pathname === '/' && request.nextUrl.searchParams.get('logout') === 'true';
@@ -105,6 +100,6 @@ export async function updateSession(request) {
     return finalizeResponse(NextResponse.redirect(url));
   }
 
-  // Final safety sync for standard next() response
+  // Final safety sync
   return finalizeResponse(supabaseResponse);
 }

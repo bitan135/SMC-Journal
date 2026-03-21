@@ -19,7 +19,7 @@ export function createClient() {
       flowType: 'pkce',
       persistSession: true,
       detectSessionInUrl: true,
-      storageKey: 'sb-smcjournal-auth'
+      storageKey: 'sb-smcjournal-auth-v2' // Rotate storage key to ensure a fresh cookie-based state
     }
   });
 }

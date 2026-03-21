@@ -24,6 +24,16 @@ export function AuthProvider({ children }) {
   const pathname = usePathname();
 
   useEffect(() => {
+    // 1. Client-Side Canonical Domain Guard (Production Only)
+    // Ensures that the browser is ALWAYS on the www subdomain to prevent PKCE verifier loss.
+    // PKCE storage (cookies/localStorage) is origin-bound; jumping subdomains breaks the flow.
+    const host = window.location.hostname;
+    const protocol = window.location.protocol;
+    if (process.env.NODE_ENV === 'production' && host === 'smcjournal.app') {
+      window.location.href = `https://www.smcjournal.app${pathname}${window.location.search}`;
+      return;
+    }
+
     const isConfigured = process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder');
     
     if (!isConfigured) {
