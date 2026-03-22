@@ -8,6 +8,7 @@ export const PUBLIC_ROUTES = [
   '/terms',
   '/forgot-password',
   '/reset-password',
+  '/insight-engine',
   '/auth/callback'
 ];
 

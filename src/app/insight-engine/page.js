@@ -1,304 +1,223 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/components/AuthProvider';
-import { 
-  getTrades, 
-  getWinRate, 
-  getProfitFactor, 
-  getAverageRR,
-  getWinRateByGroup 
-} from '@/lib/storage';
+import Link from 'next/link';
 import { 
   Sparkles, 
-  Lock, 
   TrendingUp, 
+  Zap, 
   Target, 
   BarChart3, 
-  Zap, 
-  Terminal,
-  Clock,
-  LayoutDashboard,
-  ShieldCheck,
-  AlertCircle
+  Clock, 
+  ShieldCheck, 
+  ArrowRight,
+  Lock,
+  Search,
+  ChevronRight
 } from 'lucide-react';
-import Link from 'next/link';
 
-export default function InsightsPage() {
-  const { user } = useAuth();
-  const [trades, setTrades] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadData() {
-      if (!user) return;
-      const data = await getTrades();
-      setTrades(data);
-      setLoading(false);
-    }
-    loadData();
-  }, [user]);
-
-  const tradeCount = trades.length;
-  
-  // Access Logic
-  const hasBasicAccess = tradeCount >= 30;
-  const hasAdvancedAccess = tradeCount >= 100;
-
-  // Analytics Helpers
-  const winRate = getWinRate(trades);
-  const profitFactor = getProfitFactor(trades);
-  const avgRR = getAverageRR(trades);
-
-  // Deep Insights
-  const sessionData = getWinRateByGroup(trades, 'session');
-  const biasData = getWinRateByGroup(trades, 'bias_type');
-  const timeframeData = getWinRateByGroup(trades, 'timeframe_bias');
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-12 h-12 border-2 border-[var(--accent)] border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
-  }
-
+export default function InsightEngineLanding() {
   return (
-    <div className="max-w-7xl mx-auto space-y-10 p-4 md:p-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[var(--glass-border)]">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center shadow-lg shadow-[var(--accent)]/20">
-              <Sparkles size={20} className="text-white" />
-            </div>
-            <h1 className="text-3xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter">
-              Insight <span className="text-gradient">Engine</span>
-            </h1>
+    <div className="min-h-screen bg-white text-[#0f172a] selection:bg-indigo-100 selection:text-indigo-900">
+      {/* Premium Navbar */}
+      <nav className="p-6 md:p-10 flex items-center justify-between border-b border-slate-50 sticky top-0 bg-white/80 backdrop-blur-xl z-50">
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-indigo-600/20">
+            <TrendingUp size={18} className="text-white" />
           </div>
-          <p className="text-[var(--text-muted)] font-medium text-sm md:text-base max-w-2xl">
-            Institutional performance analysis. Unlock deeper quantitative data by maintaining your sequence discipline.
+          <span className="text-lg font-black tracking-tighter">SMC Journal</span>
+        </Link>
+        <div className="hidden md:flex items-center gap-8">
+          <Link href="/features" className="text-sm font-bold text-slate-500 hover:text-[#0f172a] transition-colors">Features</Link>
+          <Link href="/pricing" className="text-sm font-bold text-slate-500 hover:text-[#0f172a] transition-colors">Pricing</Link>
+          <Link href="/login" className="text-sm font-bold text-slate-500 hover:text-[#0f172a] transition-colors">Login</Link>
+          <Link href="/signup" className="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-black hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-600/20">
+            Get Started
+          </Link>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <main>
+        <div className="max-w-7xl mx-auto px-6 pt-24 pb-32 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-black uppercase tracking-[0.2em] mb-8 animate-fade-in">
+            <Sparkles size={14} /> Institutional Performance Modeling
+          </div>
+          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-tight mb-8">
+            Meet the <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Insight Engine.</span>
+          </h1>
+          <p className="text-xl md:text-2xl font-bold text-slate-500 max-w-2xl mx-auto mb-12 leading-relaxed">
+            Stop guessing where your edge is. Our quantitative engine analyzes your trade data to find exactly where you're profitable — and where you're bleeding.
           </p>
-        </div>
-        
-        {/* Progress Tracker */}
-        <div className="glass-card rounded-3xl p-6 border-[var(--glass-border)] min-w-[300px]">
-          <div className="flex justify-between items-end mb-4">
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)]">Sequence Status</span>
-            <span className="text-2xl font-black text-[var(--foreground)] tracking-tighter">{tradeCount} <span className="text-xs text-[var(--text-muted)] uppercase">Trades</span></span>
-          </div>
-          <div className="relative h-2 w-full bg-[var(--glass-bg)] rounded-full overflow-hidden border border-[var(--glass-border)]">
-            <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-[var(--accent)] to-purple-500 transition-all duration-1000"
-              style={{ width: `${Math.min((tradeCount / 100) * 100, 100)}%` }}
-            />
-          </div>
-          <div className="flex justify-between mt-2">
-            <span className={`text-[8px] font-black uppercase tracking-widest ${hasBasicAccess ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'}`}>Basic (30)</span>
-            <span className={`text-[8px] font-black uppercase tracking-widest ${hasAdvancedAccess ? 'text-[var(--accent)]' : 'text-[var(--text-muted)]'}`}>Advanced (100)</span>
-          </div>
-        </div>
-      </div>
-
-      {!hasBasicAccess ? (
-        /* Locked State: Needs 30 Trades */
-        <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-12 text-center space-y-8 relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-b from-[var(--accent)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
           
-          <div className="relative z-10 space-y-6">
-            <div className="w-20 h-20 rounded-[32px] bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center mx-auto shadow- premium group-hover:scale-110 transition-transform duration-500">
-              <Lock size={32} className="text-[var(--accent)]" />
-            </div>
-            <div className="space-y-2">
-                <h2 className="text-2xl font-black text-[var(--foreground)] tracking-tight">Intelligence Threshold Not Reached</h2>
-                <p className="text-[var(--text-muted)] font-medium max-w-md mx-auto">
-                    The Insight Engine requires at least <span className="text-[var(--foreground)] font-bold">30 documented trades</span> to generate statistically significant edge analysis.
-                </p>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-                <div className="px-6 py-3 rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)] font-black uppercase tracking-widest text-[10px] animate-pulse">
-                    {30 - tradeCount} trades remaining
-                </div>
-                <Link href="/add-trade" className="flex items-center gap-2 px-8 py-4 bg-[var(--foreground)] text-[var(--background)] rounded-2xl font-black uppercase tracking-widest text-[11px] hover:scale-105 transition-all">
-                    Log Next Position <TrendingUp size={16} />
-                </Link>
-            </div>
-          </div>
-
-          {/* Preview of what's coming */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12 opacity-30 grayscale pointer-events-none">
-             <div className="h-40 glass-card rounded-3xl border border-dashed border-[var(--glass-border)]" />
-             <div className="h-40 glass-card rounded-3xl border border-dashed border-[var(--glass-border)]" />
-             <div className="h-40 glass-card rounded-3xl border border-dashed border-[var(--glass-border)]" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+             <Link href="/signup" className="w-full sm:w-auto px-10 py-5 bg-[#0f172a] text-white rounded-[24px] font-black text-lg hover:scale-105 transition-all shadow-2xl flex items-center justify-center gap-3 group">
+                Start Logging Free <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+             </Link>
+             <Link href="#how-it-works" className="w-full sm:w-auto px-10 py-5 bg-white border border-slate-200 text-[#0f172a] rounded-[24px] font-black text-lg hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                See How It Works <ChevronRight />
+             </Link>
           </div>
         </div>
-      ) : (
-        /* Unlocked State */
-        <div className="space-y-8 animate-fade-in">
-          {/* Quick Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="glass-card rounded-[32px] border-[var(--glass-border)] p-8 space-y-4 hover:border-[var(--accent)]/30 transition-all">
-                <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
-                    <Zap size={14} className="text-amber-500" /> Win Rate
-                </p>
-                <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter">{winRate}%</span>
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 capitalize">Overall Edge</span>
-                </div>
+
+        {/* The Three Pillars */}
+        <section id="how-it-works" className="py-32 bg-slate-50">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-24">
+               <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-6">Data-Driven Alpha.</h2>
+               <p className="text-lg font-bold text-slate-500 max-w-xl mx-auto">
+                 The Insight Engine doesn't just show stats. It identifies patterns across sessions, biases, and timeframes.
+               </p>
             </div>
-            <div className="glass-card rounded-[32px] border-[var(--glass-border)] p-8 space-y-4 hover:border-[var(--accent)]/30 transition-all">
-                <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
-                    <BarChart3 size={14} className="text-[var(--accent)]" /> Profit Factor
-                </p>
-                <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter">{profitFactor}</span>
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 capitalize">Risk/Reward Efficiency</span>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Session Alpha */}
+              <div className="p-10 bg-white rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 group hover:border-indigo-500/20 transition-all">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-8 transform group-hover:scale-110 transition-transform">
+                  <Clock size={28} />
                 </div>
-            </div>
-            <div className="glass-card rounded-[32px] border-[var(--glass-border)] p-8 space-y-4 hover:border-[var(--accent)]/30 transition-all">
-                <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
-                    <Target size={14} className="text-emerald-500" /> Average RR
+                <h3 className="text-2xl font-black mb-4">Session Alpha</h3>
+                <p className="text-slate-500 font-bold leading-relaxed mb-6">
+                  Automatically detects London, New York, and Asia kill-zones to tell you exactly which session you actually perform best in.
                 </p>
-                <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter">{avgRR}R</span>
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 capitalize">Per Win</span>
+                <div className="pt-6 border-t border-slate-50 flex items-center gap-3">
+                   <ShieldCheck className="text-emerald-500" size={16} />
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Time-of-day Optimization</span>
                 </div>
+              </div>
+
+              {/* Bias Efficiency */}
+              <div className="p-10 bg-white rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 group hover:border-indigo-500/20 transition-all">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-8 transform group-hover:scale-110 transition-transform">
+                  <Target size={28} />
+                </div>
+                <h3 className="text-2xl font-black mb-4">Bias Efficiency</h3>
+                <p className="text-slate-500 font-bold leading-relaxed mb-6">
+                   Are you a Continuation king or a Reversal victim? The engine tracks your bias types to find your high-probability setups.
+                </p>
+                <div className="pt-6 border-t border-slate-50 flex items-center gap-3">
+                   <ShieldCheck className="text-emerald-500" size={16} />
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Behavioral Analysis</span>
+                </div>
+              </div>
+
+              {/* Quantitative Edge */}
+              <div className="p-10 bg-white rounded-[40px] border border-slate-100 shadow-xl shadow-slate-200/50 group hover:border-indigo-500/20 transition-all">
+                <div className="w-14 h-14 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 mb-8 transform group-hover:scale-110 transition-transform">
+                  <BarChart3 size={28} />
+                </div>
+                <h3 className="text-2xl font-black mb-4">Quantitative Edge</h3>
+                <p className="text-slate-500 font-bold leading-relaxed mb-6">
+                  Calculate win rates and profit factors per timeframe. Find out if your 15M entries are actually as good as they feel on Twitter.
+                </p>
+                <div className="pt-6 border-t border-slate-50 flex items-center gap-3">
+                   <ShieldCheck className="text-emerald-500" size={16} />
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Multi-Timeframe Correlation</span>
+                </div>
+              </div>
             </div>
           </div>
+        </section>
 
-          {/* Section 1: Distribution Analysis (30+ Trades) */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Session Performance */}
-            <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium">
-                <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
-                    <Clock size={16} /> Session Alpha
-                </h3>
+        {/* Threshold Section */}
+        <section className="py-32 bg-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-indigo-50/30 -skew-x-12 transform translate-x-1/2" />
+          <div className="max-w-7xl mx-auto px-6 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+             <div className="space-y-8">
+                <span className="text-indigo-600 text-xs font-black uppercase tracking-[0.3em]">THE SEQUENCE DISCIPLINE</span>
+                <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight">
+                   Unlock Hidden <br /> Intelligence.
+                </h2>
+                <p className="text-xl font-bold text-slate-500 leading-relaxed">
+                   Meaningful data requires a significant sequence. To ensure institutional-grade results, the Insight Engine unlocks in two stages:
+                </p>
                 <div className="space-y-4">
-                    {sessionData.map(item => (
-                        <div key={item.name} className="space-y-2">
-                            <div className="flex justify-between items-end">
-                                <span className="text-xs font-black uppercase tracking-wider text-[var(--foreground)]">{item.name}</span>
-                                <span className="text-xs font-bold text-[var(--accent)]">{item.winRate}% WR</span>
-                            </div>
-                            <div className="h-2 bg-[var(--glass-bg)] rounded-full overflow-hidden border border-[var(--glass-border)]">
-                                <div 
-                                    className="h-full bg-[var(--accent)] transition-all duration-1000"
-                                    style={{ width: `${item.winRate}%` }}
-                                />
-                            </div>
-                        </div>
-                    ))}
+                   <div className="flex items-start gap-4 p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm text-indigo-600">
+                         <Zap size={20} />
+                      </div>
+                      <div>
+                         <h4 className="font-black text-lg">30 Trades: Basic Engine</h4>
+                         <p className="text-sm font-bold text-slate-400">Session win rates, overall profit factor, and average RR tracking.</p>
+                      </div>
+                   </div>
+                   <div className="flex items-start gap-4 p-6 bg-[#0f172a] text-white rounded-3xl border border-slate-800 shadow-2xl">
+                      <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm">
+                         <Sparkles size={20} />
+                      </div>
+                      <div>
+                         <h4 className="font-black text-lg">100 Trades: Advanced Modeling</h4>
+                         <p className="text-sm font-bold text-white/40">Multi-timeframe optimization, bias-correlation matrix, and strategy expectancy modelling.</p>
+                      </div>
+                   </div>
                 </div>
-            </div>
-
-            {/* Bias Performance */}
-            <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium">
-                <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
-                    <LayoutDashboard size={16} /> Bias Efficiency
-                </h3>
-                <div className="space-y-4">
-                    {biasData.map(item => (
-                        <div key={item.name} className="space-y-2">
-                            <div className="flex justify-between items-end">
-                                <span className="text-xs font-black uppercase tracking-wider text-[var(--foreground)]">{item.name}</span>
-                                <span className="text-xs font-bold text-[var(--accent)]">{item.winRate}% WR</span>
-                            </div>
-                            <div className="h-2 bg-[var(--glass-bg)] rounded-full overflow-hidden border border-[var(--glass-border)]">
-                                <div 
-                                    className="h-full bg-purple-500 transition-all duration-1000"
-                                    style={{ width: `${item.winRate}%` }}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                    {biasData.length === 0 && (
-                        <div className="flex flex-col items-center justify-center h-full py-10 opacity-50">
-                            <AlertCircle size={24} className="mb-2" />
-                            <p className="text-[10px] font-black uppercase tracking-widest">No Bias Data Logged Yet</p>
-                        </div>
-                    )}
+             </div>
+             
+             <div className="relative group">
+                <div className="absolute inset-0 bg-indigo-600/20 blur-[120px] rounded-full opacity-0 group-hover:opacity-50 transition-opacity duration-1000" />
+                <div className="bg-slate-900 rounded-[48px] p-8 md:p-12 border border-slate-800 shadow-2xl transform hover:-rotate-2 transition-transform duration-500">
+                   {/* Mockup UI */}
+                   <div className="flex items-center justify-between mb-8">
+                      <div className="flex items-center gap-3">
+                         <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/40">
+                            <Sparkles size={16} className="text-white" />
+                         </div>
+                         <div className="h-4 w-32 bg-slate-700 rounded-full" />
+                      </div>
+                      <Lock size={16} className="text-slate-600" />
+                   </div>
+                   <div className="space-y-6">
+                      <div className="h-2 bg-slate-800 rounded-full w-full overflow-hidden">
+                         <div className="h-full bg-indigo-600 w-2/3" />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                         <div className="h-24 bg-slate-800/50 rounded-2xl border border-slate-700" />
+                         <div className="h-24 bg-slate-800/50 rounded-2xl border border-slate-700" />
+                      </div>
+                      <div className="h-40 bg-slate-800/50 rounded-3xl border border-slate-700 p-6 space-y-3">
+                         <div className="h-2 bg-slate-700 rounded-full w-3/4" />
+                         <div className="h-2 bg-slate-700 rounded-full w-1/2" />
+                         <div className="h-2 bg-slate-700 rounded-full w-2/3" />
+                         <div className="h-2 bg-slate-700 rounded-full w-1/4" />
+                      </div>
+                   </div>
+                   <div className="mt-8 flex justify-center">
+                      <div className="px-6 py-2 rounded-full border border-indigo-500/30 text-indigo-400 text-[10px] font-black uppercase tracking-widest animate-pulse">
+                         Analyzing Edge...
+                      </div>
+                   </div>
                 </div>
-            </div>
+             </div>
           </div>
+        </section>
 
-          {/* Section 2: Advanced Insights (100+ Trades) */}
-          <div className="pt-8">
-            <div className="flex items-center gap-4 mb-8">
-                <h2 className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.4em]">Advanced Performance Modeling</h2>
-                <div className="h-[1px] flex-1 bg-[var(--glass-border)]" />
-                {!hasAdvancedAccess && (
-                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-[8px] font-black uppercase tracking-widest">
-                        <Lock size={10} /> {100 - tradeCount} more trades
-                    </div>
-                )}
-            </div>
-
-            <div className={!hasAdvancedAccess ? 'relative' : ''}>
-                {!hasAdvancedAccess && (
-                    <div className="absolute inset-0 z-20 backdrop-blur-sm bg-black/5 rounded-[40px] flex items-center justify-center border border-[var(--glass-border)]">
-                        <div className="text-center space-y-4 p-8 glass-card rounded-3xl border-[var(--glass-border)] shadow-2xl">
-                             <div className="w-12 h-12 rounded-2xl bg-[var(--glass-bg)] flex items-center justify-center mx-auto border border-[var(--glass-border)]">
-                                <ShieldCheck size={24} className="text-[var(--accent)]" />
-                             </div>
-                             <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]">Deep Quantitative Unlock at 100 Trades</p>
-                             <div className="flex gap-2 justify-center">
-                                <div className="h-1 w-8 bg-[var(--accent)] rounded-full" />
-                                <div className="h-1 w-8 bg-[var(--glass-border)] rounded-full" />
-                                <div className="h-1 w-8 bg-[var(--glass-border)] rounded-full" />
-                             </div>
-                        </div>
-                    </div>
-                )}
-
-                <div className={`grid grid-cols-1 md:grid-cols-2 gap-8 ${!hasAdvancedAccess ? 'opacity-20 grayscale pointer-events-none' : ''}`}>
-                    {/* Timeframe Alpha */}
-                    <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium">
-                        <h3 className="text-[10px] font-black text-[var(--accent)] uppercase tracking-[0.3em] mb-8 flex items-center gap-2">
-                           <Terminal size={16} /> Timeframe Optimization
-                        </h3>
-                        <div className="space-y-6">
-                            {timeframeData.map(item => (
-                                <div key={item.name} className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-xl bg-[var(--glass-bg)] border border-[var(--glass-border)] flex items-center justify-center text-[10px] font-black text-[var(--foreground)]">
-                                        {item.name}
-                                    </div>
-                                    <div className="flex-1 space-y-1">
-                                        <div className="flex justify-between items-end">
-                                            <span className="text-[9px] font-black uppercase tracking-widest text-[var(--text-muted)]">{item.trades} Trades</span>
-                                            <span className="text-[9px] font-black text-[var(--foreground)]">{item.winRate}% WR</span>
-                                        </div>
-                                        <div className="h-1.5 bg-[var(--glass-bg)] rounded-full overflow-hidden">
-                                             <div 
-                                                className="h-full bg-emerald-500"
-                                                style={{ width: `${item.winRate}%` }}
-                                             />
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Edge Matrix */}
-                    <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 shadow-premium flex flex-col items-center justify-center text-center space-y-6">
-                         <div className="w-16 h-16 rounded-3xl bg-[var(--accent)]/10 flex items-center justify-center border border-[var(--accent)]/20 animate-pulse-glow">
-                             <Sparkles size={28} className="text-[var(--accent)]" />
-                         </div>
-                         <div className="space-y-2">
-                             <h4 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]">Quantitative Edge Matrix</h4>
-                             <p className="text-[10px] font-medium text-[var(--text-muted)] max-w-[240px]">
-                                Sophisticated correlation analysis between setup zone, session, and bias type.
-                             </p>
-                         </div>
-                         <div className="px-6 py-3 rounded-xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[9px] font-black uppercase tracking-widest text-[var(--accent)]">
-                             Computing Sequential Alpha...
-                         </div>
-                    </div>
-                </div>
-            </div>
+        {/* CTA Section */}
+        <section className="py-40 bg-indigo-600 text-white text-center">
+          <div className="max-w-4xl mx-auto px-6">
+            <h2 className="text-4xl md:text-7xl font-black mb-8 tracking-tighter">Your edge is in the data.</h2>
+            <p className="text-xl md:text-2xl font-bold text-white/70 mb-12">
+              Start logging your SMC setups today and let the Insight Engine find your true competitive advantage.
+            </p>
+            <Link href="/signup" className="inline-flex items-center gap-3 px-10 py-6 bg-white text-indigo-600 rounded-[28px] font-black text-xl hover:scale-105 transition-all shadow-2xl">
+              Get Started Free <ArrowRight size={24} />
+            </Link>
           </div>
+        </section>
+      </main>
+
+      {/* Footer */}
+      <footer className="py-20 px-6 border-t border-slate-100 bg-white text-center">
+        <Link href="/" className="flex items-center justify-center gap-2 mb-8 opacity-40 hover:opacity-100 transition-opacity">
+           <TrendingUp size={24} className="text-indigo-600" />
+           <span className="text-lg font-black tracking-tighter">SMC Journal</span>
+        </Link>
+        <p className="text-xs font-bold text-slate-400">© 2026 SMC Journal · Built for traders, by a trader.</p>
+        <div className="flex justify-center gap-8 mt-4">
+           <Link href="/" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Home</Link>
+           <Link href="/privacy" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Privacy</Link>
+           <Link href="/terms" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Terms</Link>
         </div>
-      )}
+      </footer>
     </div>
   );
 }
