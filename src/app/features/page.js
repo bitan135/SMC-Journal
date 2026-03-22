@@ -144,6 +144,10 @@ export default function FeaturesPage() {
       </main>
 
       <footer className="py-20 px-6 border-t border-white/5 mt-20 text-center">
+        <Link href="/" className="flex items-center justify-center gap-2 mb-8 opacity-20 hover:opacity-100 transition-opacity">
+           <TrendingUp size={24} className="text-indigo-500" />
+           <span className="text-lg font-black tracking-tighter">SMC Journal</span>
+        </Link>
         <p className="text-xs font-bold text-white/20">© 2026 SMC Journal · Built for traders, by a trader.</p>
         <div className="flex justify-center gap-8 mt-4">
            <Link href="/" className="text-xs font-bold text-white/20 hover:text-white transition-colors">Home</Link>

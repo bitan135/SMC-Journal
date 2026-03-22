@@ -50,8 +50,13 @@ export default function PricingPage() {
           <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg shadow-accent/20">
             <TrendingUp size={20} className="text-white" />
           </div>
-          <span className="text-xl font-black tracking-tighter text-text-primary">SMC Journal</span>
+          <span className="text-xl font-black tracking-tighter text-text-primary uppercase">SMC Journal</span>
         </Link>
+        <div className="hidden md:flex items-center gap-8 mr-8">
+            <Link href="/features" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-accent transition-colors">Features</Link>
+            <Link href="/insight-engine" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-accent transition-colors">Insight Engine</Link>
+            <Link href="/affiliate" className="text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-accent transition-colors">Affiliate</Link>
+        </div>
         <Link href="/login" className="text-sm font-black text-text-secondary hover:text-text-primary transition-colors px-6 py-2 rounded-xl hover:bg-white/5 border border-transparent hover:border-border-custom">
           Login
         </Link>
@@ -230,10 +235,10 @@ export default function PricingPage() {
       </main>
 
       <footer className="py-20 px-6 border-t border-border-custom mt-20 text-center">
-        <div className="flex items-center justify-center gap-3 mb-8 opacity-40">
+        <Link href="/" className="flex items-center justify-center gap-3 mb-8 opacity-40 hover:opacity-100 transition-opacity">
            <TrendingUp size={24} className="text-accent" />
            <span className="text-lg font-black tracking-tighter text-text-primary">SMC Journal</span>
-        </div>
+        </Link>
         <p className="text-xs font-black text-text-muted uppercase tracking-[0.2em] mb-6">Built for precision agents by a solo operator.</p>
         <div className="flex justify-center gap-12">
            <Link href="/" className="text-[10px] font-black text-text-muted hover:text-text-primary uppercase tracking-widest transition-colors">Home</Link>

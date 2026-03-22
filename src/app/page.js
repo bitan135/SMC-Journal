@@ -26,15 +26,15 @@ export default function LandingPage() {
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 backdrop-blur-md bg-[var(--background)]/80 border-b border-[var(--glass-border)]">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-2 group cursor-pointer">
+          <Link href="/" className="flex items-center gap-2 group cursor-pointer">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center shadow-lg shadow-[var(--accent)]/20 group-hover:scale-105 transition-transform duration-500">
               <TrendingUp size={22} className="text-white" />
             </div>
             <span className="font-black text-xl tracking-tighter text-gradient">SMC JOURNAL</span>
-          </div>
+          </Link>
           <div className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">Features</Link>
-            <Link href="#insights" className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">Insight Engine</Link>
+            <Link href="/features" className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">Features</Link>
+            <Link href="/insight-engine" className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">Insight Engine</Link>
             <Link href="/pricing" className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">Pricing</Link>
             <Link href="/affiliate" className="text-xs font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--foreground)] transition-colors">Affiliate</Link>
           </div>
@@ -89,7 +89,7 @@ export default function LandingPage() {
                     <div className="w-20 h-20 rounded-3xl bg-[var(--background)] flex items-center justify-center mx-auto shadow-xl">
                         <TrendingUp size={32} className="text-[var(--accent)]" />
                     </div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]" aria-label="SMC Journal Dashboard Preview - Institutional Trade Tracking">
                         [DASHBOARD_PREVIEW_SCREENSHOT]
                     </p>
                  </div>
@@ -102,7 +102,7 @@ export default function LandingPage() {
         <section id="demo" className="py-32 bg-[var(--card-hover)]/30">
           <div className="max-w-7xl mx-auto px-6 space-y-24">
             <div className="text-center space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter">See Your Trading <span className="text-gradient">Clearly</span></h2>
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter">How It Works: See Your Trading <span className="text-gradient">Clearly</span></h2>
               <p className="text-[var(--text-muted)] font-medium max-w-xl mx-auto">Proof over intuition. High-fidelity data capture for the professional SMC practitioner.</p>
             </div>
 
@@ -133,7 +133,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <div className="glass-card rounded-[32px] border-[var(--glass-border)] aspect-square flex items-center justify-center p-8 bg-[var(--background)] shadow-xl rotate-2">
-                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]">
+                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]" aria-label="Add Trade Form - Structured SMC Data Entry">
                     [ADD_TRADE_FORM_SCREENSHOT]
                  </p>
               </div>
@@ -194,7 +194,7 @@ export default function LandingPage() {
                    <div className="relative group">
                       <div className="absolute -inset-2 bg-[var(--accent)] rounded-[40px] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
                       <div className="relative glass-card rounded-[40px] border-[var(--glass-border)] bg-[var(--card-hover)] aspect-[4/5] flex items-center justify-center p-8 -rotate-3 group-hover:rotate-0 transition-transform duration-700 shadow-2xl">
-                          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]">
+                          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]" aria-label="SMC Performance Audit - Logic and Execution Analytics">
                             [PERFORMANCE_AUDIT_SCREENSHOT]
                           </p>
                       </div>
@@ -252,7 +252,7 @@ export default function LandingPage() {
                         <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto border border-white/20">
                             <TrendingUp size={28} className="text-[var(--accent)]" />
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30">
+                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30" aria-label="Trader Insight Engine - Mathematical Edge Verification">
                             [INSIGHT_ENGINE_UNLOCKED_SCREENSHOT]
                         </p>
                     </div>
@@ -295,7 +295,7 @@ export default function LandingPage() {
         <section id="features" className="py-32">
            <div className="max-w-7xl mx-auto px-6 space-y-32">
               <div className="text-center space-y-4">
-                 <h2 className="text-4xl md:text-6xl font-black tracking-tighter">Everything You Need to <span className="text-gradient">Scale</span></h2>
+                 <h2 className="text-4xl md:text-6xl font-black tracking-tighter">SMC Trading Journal <span className="text-gradient">Features</span></h2>
                  <p className="text-[var(--text-muted)] font-medium max-w-xl mx-auto">The complete operating system for the modern SMC trader.</p>
               </div>
 
@@ -340,6 +340,87 @@ export default function LandingPage() {
            </div>
         </section>
 
+        {/* SEO Phase: Educational Sections */}
+        <section className="py-24 bg-[var(--card-hover)]/20">
+           <div className="max-w-7xl mx-auto px-6 space-y-32">
+              
+              {/* Section 1: Free Trading Journal for SMC Traders */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                 <div className="space-y-8">
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tightest">Free <span className="text-gradient">Trading Journal</span> for SMC Traders</h2>
+                    <p className="text-lg text-[var(--text-muted)] font-medium leading-relaxed">
+                       SMC Journal was built from the ground up to solve the specific needs of Smart Money Concept traders. Unlike generic journals that only track entry and exit, we provide native fields for BOC (Break of Character), CHoCH (Change of Character), and FVG (Fair Value Gaps).
+                    </p>
+                    <div className="space-y-4">
+                       <p className="text-sm font-black uppercase tracking-widest flex items-center gap-3">
+                          <CheckCircle2 size={18} className="text-[var(--accent)]" /> Built for Price Action
+                       </p>
+                       <p className="text-sm font-black uppercase tracking-widest flex items-center gap-3">
+                          <CheckCircle2 size={18} className="text-[var(--accent)]" /> Institutional Narrative Tracking
+                       </p>
+                    </div>
+                 </div>
+                 <div className="glass-card rounded-[48px] border-[var(--glass-border)] p-12 bg-[var(--background)] shadow-2xl space-y-6">
+                    <div className="w-12 h-12 rounded-2xl bg-[var(--accent)]/10 flex items-center justify-center text-[var(--accent)]">
+                       <Zap size={24} />
+                    </div>
+                    <h3 className="text-2xl font-black tracking-tight">Focus on the Narrative</h3>
+                    <p className="text-sm text-[var(--text-muted)] font-medium">Identify exactly where liquidity was swept and how the institutional move was sponsored. Stop logging just prices; start logging intent.</p>
+                 </div>
+              </div>
+
+              {/* Section 2: Why Use a Trading Journal? */}
+              <div className="text-center space-y-12 max-w-4xl mx-auto">
+                 <h2 className="text-4xl md:text-5xl font-black tracking-tightest">Why Use a <span className="text-gradient">Trading Journal</span>?</h2>
+                 <p className="text-lg text-[var(--text-muted)] font-medium leading-relaxed">
+                    Most traders fail not because their strategy is bad, but because they lack the discipline to follow it. A professional trading journal acts as a mirror, reflecting your execution errors in cold, hard data. Without a log, you are simply gambling on intuition.
+                 </p>
+                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+                    <div className="p-8 glass-card border-[var(--glass-border)] rounded-3xl">
+                       <h4 className="text-sm font-black uppercase tracking-widest mb-4">Eliminate Emotions</h4>
+                       <p className="text-xs text-[var(--text-muted)] font-medium">Neutralize the impact of FOMO and revenge trading by following a systematic logging process.</p>
+                    </div>
+                    <div className="p-8 glass-card border-[var(--glass-border)] rounded-3xl">
+                       <h4 className="text-sm font-black uppercase tracking-widest mb-4">Audit Your Edge</h4>
+                       <p className="text-xs text-[var(--text-muted)] font-medium">Use quantitative data to prove your strategy works before scaling with institutional size.</p>
+                    </div>
+                    <div className="p-8 glass-card border-[var(--glass-border)] rounded-3xl">
+                       <h4 className="text-sm font-black uppercase tracking-widest mb-4">Master Discipline</h4>
+                       <p className="text-xs text-[var(--text-muted)] font-medium">Build the habit of professional documentation that separates retail gamblers from institutional traders.</p>
+                    </div>
+                 </div>
+              </div>
+
+              {/* Section 3: Best Trading Journal for Forex Traders */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+                 <div className="order-2 lg:order-1 glass-card rounded-[48px] border-[var(--glass-border)] p-12 bg-black text-white shadow-2xl space-y-6">
+                    <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-amber-400">
+                       <Sparkles size={24} />
+                    </div>
+                    <h3 className="text-2xl font-black tracking-tight">Institutional Speed</h3>
+                    <p className="text-sm text-white/50 font-medium">Log trades in under 15 seconds. Designed for active session trading where every second of focus counts.</p>
+                 </div>
+                 <div className="order-1 lg:order-2 space-y-8">
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tightest">Best <span className="text-gradient">Trading Journal</span> for Forex Traders</h2>
+                    <p className="text-lg text-[var(--text-muted)] font-medium leading-relaxed">
+                       Built by a forex trader for forex traders. We optimized SMC Journal for high-frequency session trading. Whether you scalp the 1M or swing the 4H, our interface stays clean and out of your way.
+                    </p>
+                    <ul className="space-y-4">
+                       <li className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3">
+                          <CheckCircle2 size={16} className="text-emerald-500" /> Advanced Drawdown Analytics
+                       </li>
+                       <li className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3">
+                          <CheckCircle2 size={16} className="text-emerald-500" /> Multi-Timeframe Bias Correlation
+                       </li>
+                       <li className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-3">
+                          <CheckCircle2 size={16} className="text-emerald-500" /> Secure Cloud Infrastructure
+                       </li>
+                    </ul>
+                 </div>
+              </div>
+           </div>
+        </section>
+
         {/* Phase 6: CTA Section */}
         <section className="py-32 relative">
            <div className="max-w-4xl mx-auto px-6 text-center space-y-12">
@@ -368,12 +449,12 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
             <div className="space-y-6">
-              <div className="flex items-center gap-2 group cursor-pointer">
+              <Link href="/" className="flex items-center gap-2 group cursor-pointer">
                 <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center shadow-lg shadow-[var(--accent)]/20">
                   <TrendingUp size={16} className="text-white" />
                 </div>
                 <span className="font-black text-sm tracking-tighter text-gradient">SMC JOURNAL</span>
-              </div>
+              </Link>
               <p className="text-xs text-[var(--text-muted)] font-medium leading-relaxed">
                 The institutional standard for professional trader documentation and performance analysis.
               </p>
@@ -381,9 +462,17 @@ export default function LandingPage() {
             <div className="space-y-4">
               <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]">Product</p>
               <nav className="flex flex-col gap-2">
-                <Link href="#features" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Features</Link>
-                <Link href="#insights" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Insight Engine</Link>
+                <Link href="/features" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Features</Link>
+                <Link href="/insight-engine" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Insight Engine</Link>
                 <Link href="/pricing" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Pricing</Link>
+              </nav>
+            </div>
+            <div className="space-y-4">
+              <p className="text-[10px] font-black uppercase tracking-widest text-[var(--foreground)]">SEO Hub</p>
+              <nav className="flex flex-col gap-2">
+                <Link href="/trading-journal" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Trading Journal</Link>
+                <Link href="/forex-trading-journal" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">Forex Journal</Link>
+                <Link href="/smc-trading-journal" className="text-xs text-[var(--text-muted)] hover:text-[var(--accent)] transition-colors">SMC Journal</Link>
               </nav>
             </div>
             <div className="space-y-4">

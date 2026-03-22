@@ -18,9 +18,9 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: 'SMC Journal — The Free Smart Money Trading Journal',
-  description: 'The #1 free institutional-grade trading journal for Smart Money Concept (SMC) traders. Log BOC, CHoCH, and FVG setups with deep analytics. Optimize your forex edge today.',
-  keywords: 'trading journal, SMC journal, free forex journal, smart money concepts, trading analytics, forex trade log, BOC CHoCH FVG, institutional trading tool',
+  title: 'SMC Journal – Free Trading Journal for SMC & Forex Traders',
+  description: 'Track your trades, identify mistakes, and improve your execution with SMC Journal. A free trading journal built for serious traders.',
+  keywords: 'trading journal, forex trading journal, smc trading journal, free trading journal, trading analytics tool, smart money concepts, trading log, trade tracker',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://smcjournal.com'),
   icons: {
     icon: [
@@ -32,8 +32,8 @@ export const metadata = {
     ],
   },
   openGraph: {
-    title: 'SMC Journal — The #1 SMC Trading Journal',
-    description: 'Log your SMC trades with precision. Free forever institutional-grade analytics for forex and crypto traders.',
+    title: 'SMC Journal – The Professional SMC Trading Journal',
+    description: 'Track your trades, identify mistakes, and improve your execution. Built for serious traders.',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://smcjournal.com',
     siteName: 'SMC Journal',
     images: [
@@ -50,7 +50,7 @@ export const metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'SMC Journal — Master your SMC Edge',
-    description: 'The free institutional-grade trading journal. Analytics for the serious SMC trader.',
+    description: 'The free institutional-grade trading journal for serious traders.',
     images: ['/og-image.png'],
   },
 };
@@ -77,6 +77,24 @@ export default function RootLayout({ children }) {
                 } catch (e) {}
               })();
             `,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              "name": "SMC Journal",
+              "operatingSystem": "Web",
+              "applicationCategory": "TradingApplication",
+              "offers": {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD"
+              },
+              "description": "Track your trades, identify mistakes, and improve your execution with SMC Journal. A free trading journal built for serious traders."
+            })
           }}
         />
       </head>
