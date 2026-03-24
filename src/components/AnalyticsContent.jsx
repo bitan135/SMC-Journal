@@ -80,13 +80,13 @@ export default function AnalyticsContent() {
       <div className="px-4 sm:px-6 lg:px-10 py-6 md:py-10 animate-fade-in">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-12 px-2">
             <div className="flex-1">
-                <div className="h-4 w-32 bg-white/5 rounded-full mb-4 animate-shimmer" />
-                <div className="h-12 w-64 bg-white/5 rounded-2xl mb-4 animate-shimmer" />
-                <div className="h-4 w-48 bg-white/5 rounded-full animate-shimmer" />
+                <div className="h-4 w-32 bg-slate-100 rounded-full mb-4 animate-shimmer" />
+                <div className="h-12 w-64 bg-slate-100 rounded-2xl mb-4 animate-shimmer" />
+                <div className="h-4 w-48 bg-slate-100 rounded-full animate-shimmer" />
             </div>
             <div className="flex items-center gap-4">
-                <div className="h-[76px] w-[140px] bg-white/5 rounded-[24px] animate-shimmer" />
-                <div className="h-[76px] w-[140px] bg-white/5 rounded-[24px] animate-shimmer" />
+                <div className="h-[76px] w-[140px] bg-slate-100 rounded-[24px] animate-shimmer" />
+                <div className="h-[76px] w-[140px] bg-slate-100 rounded-[24px] animate-shimmer" />
             </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -193,7 +193,7 @@ export default function AnalyticsContent() {
                       <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
                           <ResponsiveContainer width="100%" height="100%">
                               <BarChart data={rrData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
-                                  <CartesianGrid strokeDasharray="3 3" stroke="white" strokeOpacity={0.05} vertical={false} />
+                                  <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.1} className="text-[var(--glass-border)]" vertical={false} />
                                   <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} dy={10} />
                                   <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} />
                                   <Tooltip cursor={{fill: 'var(--accent)', fillOpacity: 0.05}} content={<CustomTooltip suffix="R" />} />
@@ -215,7 +215,7 @@ export default function AnalyticsContent() {
                           <BarChart data={sessionData} layout="vertical" margin={{ top: 10, right: 30, left: 20, bottom: 10 }}>
                               <XAxis type="number" hide domain={[0, 100]} />
                               <YAxis dataKey="name" type="category" tick={{ fill: 'var(--text-secondary)', fontSize: 11, fontWeight: 900 }} axisLine={false} tickLine={false} width={100} />
-                              <Tooltip cursor={{fill: 'white', fillOpacity: 0.03}} content={<CustomTooltip suffix="%" />} />
+                              <Tooltip cursor={{fill: 'var(--accent)', fillOpacity: 0.05}} content={<CustomTooltip suffix="%" />} />
                               <Bar dataKey="winRate" radius={[0, 12, 12, 0]} barSize={24} animationDuration={1800}>
                                   {sessionData.map((entry, index) => (
                                       <Cell key={`cell-${index}`} fill={entry.winRate >= 50 ? 'var(--profit)' : 'var(--loss)'} />
@@ -280,7 +280,7 @@ export default function AnalyticsContent() {
                     <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
                       <ResponsiveContainer width="100%" height="100%">
                           <BarChart data={monthlyData} margin={{ top: 20, right: 10, left: -10, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="white" strokeOpacity={0.05} vertical={false} />
+                              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.1} className="text-[var(--glass-border)]" vertical={false} />
                               <XAxis dataKey="month" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} dy={10} />
                               <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 800 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}R`} />
                               <Tooltip cursor={{fill: 'var(--accent)', fillOpacity: 0.05}} content={<CustomTooltip suffix="R" />} />
@@ -306,10 +306,10 @@ export default function AnalyticsContent() {
                 <div className={isLocked ? 'blur-md opacity-20 pointer-events-none h-full w-full' : 'h-full w-full'}>
                   <ResponsiveContainer width="100%" height="100%">
                       <BarChart data={instrumentData} margin={{ top: 30, right: 30, left: 10, bottom: 30 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="white" strokeOpacity={0.05} vertical={false} />
+                          <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.1} className="text-[var(--glass-border)]" vertical={false} />
                           <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 900 }} axisLine={false} tickLine={false} dy={15} />
                           <YAxis tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 900 }} axisLine={false} tickLine={false} tickFormatter={(v) => `${v}%`} />
-                          <Tooltip cursor={{fill: 'white', fillOpacity: 0.03}} content={<CustomTooltip suffix="%" />} />
+                          <Tooltip cursor={{fill: 'var(--accent)', fillOpacity: 0.05}} content={<CustomTooltip suffix="%" />} />
                           <Bar dataKey="winRate" radius={[10, 10, 0, 0]} barSize={50} animationDuration={2200}>
                               {instrumentData.map((entry, index) => (
                                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

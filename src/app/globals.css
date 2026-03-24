@@ -1,32 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #050505; /* Black Pearl */
-  --foreground: #F8FAFC;
-  --card: rgba(22, 24, 29, 0.7);
-  --card-hover: rgba(30, 35, 45, 0.85);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-glow: rgba(99, 102, 241, 0.2);
-  --accent: #6366f1;
-  --accent-glow: rgba(99, 102, 241, 0.4);
+  /* LIGHT FINTECH PALETTE */
+  --background: #F8FAFC; /* Premium Slate-50 */
+  --foreground: #0F172A; /* Slate-900 */
+  --card: #FFFFFF;
+  --card-hover: #F8FAFC;
+  --border: #E2E8F0; /* Slate-200 */
+  --border-glow: rgba(79, 70, 229, 0.15); /* Soft Indigo */
+  --accent: #4F46E5; /* Indigo-600 */
+  --accent-glow: rgba(79, 70, 229, 0.25);
+  --accent-hover: #4338CA;
   
   /* Institutional Alignment Tokens */
-  --card-radius: 40px;
-  --card-padding: 2.5rem;
+  --card-radius: 20px; /* Sharper, cleaner borders for 2026 */
+  --card-padding: 2rem;
   --section-gap: 3rem;
-  --glass-border: rgba(255, 255, 255, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.015);
+  --glass-border: #E2E8F0;
+  --glass-bg: #FFFFFF;
   
-  --accent-hover: #818CF8;
-  --profit: #10B981;
-  --profit-bg: rgba(16, 185, 129, 0.1);
-  --loss: #F43F5E;
-  --loss-bg: rgba(244, 63, 94, 0.1);
-  --neutral: #94A3B8;
-  --text-primary: #FFFFFF;
-  --text-secondary: #94A3B8;
-  --text-muted: #8BA1B4; /* Lightened for better contrast against #050505 */
-  --sidebar-bg: #0A0A0B;
+  /* Semantic Colors */
+  --profit: #059669; /* Emerald-600 */
+  --profit-bg: rgba(5, 150, 105, 0.1);
+  --loss: #E11D48; /* Rose-600 */
+  --loss-bg: rgba(225, 29, 72, 0.1);
+  --neutral: #64748B; /* Slate-500 */
+  
+  --text-primary: #0F172A;
+  --text-secondary: #475569;
+  --text-muted: #64748B;
+  --sidebar-bg: #FFFFFF;
 }
 
 @media (max-width: 768px) {
@@ -36,27 +39,27 @@
   }
 }
 
-[data-theme='light'] {
-  --background: #F1F3F5; /* Premium Silver/Snow */
-  --foreground: #0F172A;
-  --card: rgba(255, 255, 255, 0.95);
-  --card-hover: #FFFFFF;
-  --border: rgba(0, 0, 0, 0.12);
-  --border-glow: rgba(79, 70, 229, 0.15);
-  --accent: #4F46E5;
-  --accent-glow: rgba(79, 70, 229, 0.25);
-  --accent-hover: #4338CA;
-  --text-primary: #0F172A;
-  --text-secondary: #475569;
-  --text-muted: #64748B;
-  --glass-bg: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(0, 0, 0, 0.15);
-  --sidebar-bg: #FFFFFF;
-  --profit: #059669;
-  --profit-bg: rgba(5, 150, 105, 0.1);
-  --loss: #E11D48;
-  --loss-bg: rgba(225, 29, 72, 0.1);
-  --neutral: #64748B;
+[data-theme='dark'] {
+  --background: #050505;
+  --foreground: #F8FAFC;
+  --card: rgba(22, 24, 29, 0.7);
+  --card-hover: rgba(30, 35, 45, 0.85);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(99, 102, 241, 0.2);
+  --accent: #6366f1;
+  --accent-glow: rgba(99, 102, 241, 0.4);
+  --accent-hover: #818CF8;
+  --text-primary: #FFFFFF;
+  --text-secondary: #94A3B8;
+  --text-muted: #8BA1B4;
+  --glass-bg: rgba(255, 255, 255, 0.015);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --sidebar-bg: #0A0A0B;
+  --profit: #10B981;
+  --profit-bg: rgba(16, 185, 129, 0.1);
+  --loss: #F43F5E;
+  --loss-bg: rgba(244, 63, 94, 0.1);
+  --neutral: #94A3B8;
 }
 
 @theme inline {
@@ -74,21 +77,19 @@
   --color-text-muted: var(--text-muted);
 }
 
-/* Glassmorphism Classes */
+/* Clean 2026 Fintech Containers */
 .glass-effect {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid var(--glass-border);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .glass-card {
   background: var(--glass-bg);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
   border-radius: var(--card-radius);
   padding: var(--card-padding);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -2px rgba(0, 0, 0, 0.03);
 }
 
 /* Luxury Animations */
