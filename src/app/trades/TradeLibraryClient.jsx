@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
   TrendingUp, SearchX, Library, ChevronRight
 } from 'lucide-react';
@@ -145,22 +145,24 @@ export default function TradeLibrary() {
     setCurrentPage(1);
   }, [searchTerm, filters]);
 
-  const filteredTrades = trades.filter(trade => {
-    const instr = (trade.instrument || '').toLowerCase();
-    const strat = (trade.strategy || '').toLowerCase();
-    const q = searchTerm.toLowerCase();
+  const filteredTrades = useMemo(() => {
+    return trades.filter(trade => {
+      const instr = (trade.instrument || '').toLowerCase();
+      const strat = (trade.strategy || '').toLowerCase();
+      const q = searchTerm.toLowerCase();
 
-    const matchesSearch = instr.includes(q) || strat.includes(q);
-    const matchesInstrument = filters.instrument === 'All' || trade.instrument === filters.instrument;
-    const matchesStrategy = filters.strategy === 'All' || trade.strategy === filters.strategy;
-    const matchesSession = filters.session === 'All' || trade.session === filters.session;
-    const matchesResult = filters.result === 'All' || trade.result === filters.result;
-    
-    return matchesSearch && matchesInstrument && matchesStrategy && matchesSession && matchesResult;
-  });
+      const matchesSearch = instr.includes(q) || strat.includes(q);
+      const matchesInstrument = filters.instrument === 'All' || trade.instrument === filters.instrument;
+      const matchesStrategy = filters.strategy === 'All' || trade.strategy === filters.strategy;
+      const matchesSession = filters.session === 'All' || trade.session === filters.session;
+      const matchesResult = filters.result === 'All' || trade.result === filters.result;
+      
+      return matchesSearch && matchesInstrument && matchesStrategy && matchesSession && matchesResult;
+    });
+  }, [trades, searchTerm, filters]);
 
-  const totalPages = Math.ceil(filteredTrades.length / itemsPerPage);
-  const pagedTrades = filteredTrades.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = useMemo(() => Math.ceil(filteredTrades.length / itemsPerPage), [filteredTrades.length]);
+  const pagedTrades = useMemo(() => filteredTrades.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage), [filteredTrades, currentPage]);
 
   const openTradeDetails = (trade) => {
     setSelectedTrade(trade);

@@ -325,13 +325,37 @@ export function getRRDistribution(trades) {
   return Object.entries(buckets).map(([name, count]) => ({ name, count }));
 }
 
+// -------------- In-Memory RAM Cache System --------------------
+let tradesCache = null;
+let strategiesCache = null;
+let tradesCacheExp = 0;
+let strategiesCacheExp = 0;
+const CACHE_TTL = 1000 * 60 * 5; // 5 minute TTL
+
+export function invalidateCache(type = 'all') {
+  if (type === 'all' || type === 'trades') {
+    tradesCache = null;
+    tradesCacheExp = 0;
+  }
+  if (type === 'all' || type === 'strategies') {
+    strategiesCache = null;
+    strategiesCacheExp = 0;
+  }
+}
+
 // -------------- Supabase Bridged Operations --------------------
 
 // Trades
-export async function getTrades() {
+export async function getTrades(forceRefresh = false) {
+  if (!forceRefresh && tradesCache && Date.now() < tradesCacheExp) {
+    return { success: true, data: tradesCache, error: null };
+  }
   try {
     const data = await tradeService.getTrades();
-    return { success: true, data: Array.isArray(data) ? data : [], error: null };
+    const parsed = Array.isArray(data) ? data : [];
+    tradesCache = parsed;
+    tradesCacheExp = Date.now() + CACHE_TTL;
+    return { success: true, data: parsed, error: null };
   } catch (e) {
     console.error('[STORAGE API] Fetch trades failed:', e?.message || e?.details || e?.code || e);
     return { success: false, data: [], error: 'Failed to synchronize institutional data.' };
@@ -386,6 +410,7 @@ export async function saveTrade(trade) {
     }
 
     const data = await tradeService.createTrade(tradeData);
+    invalidateCache('trades');
     return { success: true, data, error: null };
   } catch (e) {
     console.error('[STORAGE API] Save trade failed:', e?.message || e);
@@ -421,6 +446,7 @@ export async function updateTrade(id, updates) {
     });
 
     const data = await tradeService.updateTrade(id, hardenedUpdates);
+    invalidateCache('trades');
     return { success: true, data, error: null };
   } catch (e) {
     console.error('[STORAGE API] Update trade failed:', e?.message || e);
@@ -431,6 +457,7 @@ export async function updateTrade(id, updates) {
 export async function deleteTrade(id) {
   try {
     const data = await tradeService.deleteTrade(id);
+    invalidateCache('trades');
     return { success: true, data, error: null };
   } catch (e) {
     console.error('[STORAGE API] Delete trade failed:', e?.message || e);
@@ -439,12 +466,17 @@ export async function deleteTrade(id) {
 }
 
 // Strategies
-export async function getStrategies() {
+export async function getStrategies(forceRefresh = false) {
+  if (!forceRefresh && strategiesCache && Date.now() < strategiesCacheExp) {
+    return { success: true, data: strategiesCache, error: null };
+  }
   try {
     const dbStrategies = await strategyService.getStrategies() || [];
     // Merge defaults with DB strategies and deduplicate
     const combined = [...new Set([...DEFAULT_STRATEGIES, ...dbStrategies])]
       .filter(s => s && s.toLowerCase().trim() !== 'supply zonedemand zone');
+    strategiesCache = combined;
+    strategiesCacheExp = Date.now() + CACHE_TTL;
     return { success: true, data: combined, error: null };
   } catch (e) {
     console.error('[STORAGE API] Fetch strategies failed:', e?.message || e);
@@ -455,6 +487,7 @@ export async function getStrategies() {
 export async function addStrategy(name) {
   try {
     const data = await strategyService.addStrategy(name);
+    invalidateCache('strategies');
     return { success: true, data, error: null };
   } catch (e) {
     return { success: false, data: null, error: 'Failed to inject custom strategy.' };
@@ -464,6 +497,7 @@ export async function addStrategy(name) {
 export async function deleteStrategy(name) {
   try {
     const data = await strategyService.deleteStrategy(name);
+    invalidateCache('strategies');
     return { success: true, data, error: null };
   } catch (e) {
     return { success: false, data: null, error: 'Failed to erase custom strategy.' };
