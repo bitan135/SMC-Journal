@@ -1,6 +1,6 @@
 'use client';
 
-import Link from 'next/link';
+import Image from 'next/image';import Link from 'next/link';
 import { 
   Plus, 
   BarChart3, 
@@ -81,17 +81,22 @@ export default function LandingPage() {
               </Link>
             </div>
 
-            {/* Product Screenshot Placeholder */}
-            <div className="mt-20 relative max-w-6xl mx-auto group animate-fade-in [animation-delay:600ms]">
+            {/* Product Screenshot */}
+            <div className="mt-20 relative max-w-6xl mx-auto group animate-fade-in [animation-delay:600ms] perspective-1000">
               <div className="absolute -inset-4 bg-gradient-to-r from-[var(--accent)] to-purple-600 rounded-[4rem] blur-3xl opacity-10 group-hover:opacity-20 transition-opacity" />
-              <div className="relative glass-card rounded-[2.5rem] border border-[var(--glass-border)] p-4 shadow-2xl overflow-hidden aspect-[16/9] flex items-center justify-center bg-[var(--card-hover)]">
-                 <div className="text-center space-y-4">
-                    <div className="w-20 h-20 rounded-3xl bg-[var(--background)] flex items-center justify-center mx-auto shadow-xl">
-                        <TrendingUp size={32} className="text-[var(--accent)]" />
-                    </div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]" aria-label="SMC Journal Dashboard Preview - Institutional Trade Tracking">
-                        [DASHBOARD_PREVIEW_SCREENSHOT]
-                    </p>
+              <div className="relative glass-card rounded-[2.5rem] border border-[var(--glass-border)] shadow-2xl overflow-hidden aspect-[16/10] bg-[#0A0A0A] rotate-x-[3deg] rotate-y-[-1deg] group-hover:rotate-x-0 group-hover:rotate-y-0 transition-transform duration-700 ease-out">
+                 <div className="absolute inset-0 z-10 bg-gradient-to-t from-[var(--background)]/80 via-transparent to-transparent pointer-events-none" />
+                 <Image 
+                    src="/screenshots/dashboard.png" 
+                    alt="SMC Journal Dashboard Preview - Institutional Trade Tracking" 
+                    fill 
+                    priority
+                    className="object-cover object-top opacity-95 group-hover:opacity-100 transition-opacity duration-700" 
+                    sizes="(max-width: 768px) 100vw, 1200px" 
+                 />
+                 <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 hidden md:flex items-center gap-2 px-6 py-3 rounded-full glass-effect border-[var(--glass-border)] bg-[#0A0A0A]/80 backdrop-blur-md shadow-2xl">
+                    <Sparkles size={16} className="text-[var(--accent)] animate-pulse" />
+                    <span className="text-xs font-black uppercase tracking-[0.2em] text-white">Built for Institutional Precision</span>
                  </div>
               </div>
             </div>
@@ -132,9 +137,18 @@ export default function LandingPage() {
                    </div>
                 </div>
               </div>
-              <div className="glass-card rounded-[32px] border-[var(--glass-border)] aspect-square flex items-center justify-center p-8 bg-[var(--background)] shadow-xl rotate-2">
-                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]" aria-label="Add Trade Form - Structured SMC Data Entry">
-                    [ADD_TRADE_FORM_SCREENSHOT]
+              <div className="group space-y-4">
+                 <div className="relative glass-card rounded-[2rem] border-[var(--glass-border)] aspect-[4/3] flex items-center justify-center bg-[#0A0A0A] shadow-2xl overflow-hidden rotate-2 group-hover:rotate-0 transition-transform duration-500 ease-out">
+                    <Image 
+                       src="/screenshots/add-trade.png" 
+                       alt="Add Trade Form - Structured SMC Data Entry" 
+                       fill
+                       className="object-cover object-left-top opacity-90 group-hover:opacity-100 transition-opacity duration-500" 
+                       sizes="(max-width: 768px) 100vw, 50vw" 
+                    />
+                 </div>
+                 <p className="text-center text-xs font-black uppercase tracking-widest text-[var(--text-muted)] group-hover:text-[var(--accent)] transition-colors">
+                    Track execution precision down to the pip level.
                  </p>
               </div>
             </div>
@@ -191,13 +205,20 @@ export default function LandingPage() {
                       </div>
                    </div>
 
-                   <div className="relative group">
-                      <div className="absolute -inset-2 bg-[var(--accent)] rounded-[40px] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
-                      <div className="relative glass-card rounded-[40px] border-[var(--glass-border)] bg-[var(--card-hover)] aspect-[4/5] flex items-center justify-center p-8 -rotate-3 group-hover:rotate-0 transition-transform duration-700 shadow-2xl">
-                          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]" aria-label="SMC Performance Audit - Logic and Execution Analytics">
-                            [PERFORMANCE_AUDIT_SCREENSHOT]
-                          </p>
+                   <div className="relative group space-y-4">
+                      <div className="absolute -inset-2 bg-[var(--accent)] rounded-[2.5rem] blur-2xl opacity-10 group-hover:opacity-20 transition-opacity" />
+                      <div className="relative glass-card rounded-[2.5rem] border-[var(--glass-border)] bg-[#0A0A0A] aspect-[4/5] flex items-center justify-center overflow-hidden -rotate-3 group-hover:rotate-0 transition-transform duration-700 shadow-2xl">
+                          <Image 
+                             src="/screenshots/trades.png" 
+                             alt="SMC Performance Audit - Logic and Execution Analytics" 
+                             fill
+                             className="object-cover object-top opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700" 
+                             sizes="(max-width: 768px) 100vw, 50vw" 
+                          />
                       </div>
+                      <p className="text-center text-xs font-black uppercase tracking-widest text-[var(--text-muted)] group-hover:text-[var(--foreground)] transition-colors absolute -bottom-8 left-1/2 -translate-x-1/2 w-full">
+                         Discover exactly which setups are bleeding your account.
+                      </p>
                    </div>
                 </div>
              </div>
@@ -248,15 +269,15 @@ export default function LandingPage() {
                  <div className="absolute inset-0 bg-[var(--accent)] rounded-[3rem] blur-[100px] opacity-20" />
                  <div className="relative bg-[#111] rounded-[3rem] border border-white/10 p-6 aspect-[16/10] flex items-center justify-center group overflow-hidden shadow-3xl">
                     <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                    <div className="text-center space-y-6 z-10 transition-transform duration-700 group-hover:scale-105">
-                        <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center mx-auto border border-white/20">
-                            <TrendingUp size={28} className="text-[var(--accent)]" />
-                        </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30" aria-label="Trader Insight Engine - Mathematical Edge Verification">
-                            [INSIGHT_ENGINE_UNLOCKED_SCREENSHOT]
-                        </p>
-                    </div>
-                    <div className="absolute bottom-12 inset-x-0 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-700">
+                    <Image 
+                       src="/screenshots/insights.png" 
+                       alt="Trader Insight Engine - Mathematical Edge Verification"
+                       fill
+                       className="object-cover object-left-top opacity-80 group-hover:opacity-100 transition-opacity duration-700"
+                       sizes="(max-width: 768px) 100vw, 800px"
+                    />
+                    <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-[#111] to-transparent pointer-events-none" />
+                    <div className="absolute bottom-12 inset-x-0 opacity-0 group-hover:opacity-100 transition-all translate-y-4 group-hover:translate-y-0 duration-700 z-20 flex justify-center">
                         <Link href="/signup" className="px-8 py-4 bg-white text-black rounded-2xl font-black uppercase tracking-widest text-[10px]">Verify My Edge Now</Link>
                     </div>
                  </div>
@@ -306,10 +327,14 @@ export default function LandingPage() {
                        <h3 className="text-2xl font-black tracking-tight">Structured <br /> Data Capture</h3>
                        <p className="text-xs text-[var(--text-muted)] font-medium leading-relaxed">Capture the "Why" behind every trade, not just the "How". Structured fields ensure clean data for analytics.</p>
                     </div>
-                    <div className="flex-1 bg-[var(--background)] border border-[var(--glass-border)] rounded-3xl aspect-[4/3] flex items-center justify-center p-4 shadow-inner">
-                        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] text-center opacity-50">
-                           [LOGGING_UI_MINI_PREVIEW]
-                        </p>
+                    <div className="relative flex-1 bg-[#0A0A0A] border border-[var(--glass-border)] rounded-3xl aspect-[4/3] flex items-center justify-center shadow-inner overflow-hidden group-hover:border-[var(--accent)]/50 transition-colors">
+                        <Image 
+                           src="/screenshots/add-trade.png" 
+                           alt="Logging UI Preview"
+                           fill
+                           className="object-cover object-left-top opacity-90 group-hover:scale-105 transition-transform duration-500"
+                           sizes="(max-width: 768px) 100vw, 33vw"
+                        />
                     </div>
                  </div>
                  <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 space-y-8 flex flex-col group hover:border-[var(--accent)]/40 transition-all">
@@ -318,10 +343,14 @@ export default function LandingPage() {
                        <h3 className="text-2xl font-black tracking-tight">Performance <br /> Pulse Dashboard</h3>
                        <p className="text-xs text-[var(--text-muted)] font-medium leading-relaxed">Real-time equity curves, win-rate segmentation, and risk-reward optimization dials at a glance.</p>
                     </div>
-                    <div className="flex-1 bg-[var(--background)] border border-[var(--glass-border)] rounded-3xl aspect-[4/3] flex items-center justify-center p-4 shadow-inner">
-                        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] text-center opacity-50">
-                           [DASHBOARD_UI_MINI_PREVIEW]
-                        </p>
+                    <div className="relative flex-1 bg-[#0A0A0A] border border-[var(--glass-border)] rounded-3xl aspect-[4/3] flex items-center justify-center shadow-inner overflow-hidden group-hover:border-purple-500/50 transition-colors">
+                        <Image 
+                           src="/screenshots/analytics.png" 
+                           alt="Analytics UI Preview"
+                           fill
+                           className="object-cover object-top opacity-90 group-hover:scale-105 transition-transform duration-500"
+                           sizes="(max-width: 768px) 100vw, 33vw"
+                        />
                     </div>
                  </div>
                  <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-8 space-y-8 flex flex-col group hover:border-[var(--accent)]/40 transition-all">
@@ -330,10 +359,14 @@ export default function LandingPage() {
                        <h3 className="text-2xl font-black tracking-tight">Strategy <br /> Edge Auditing</h3>
                        <p className="text-xs text-[var(--text-muted)] font-medium leading-relaxed">Define your setups and let our engine calculate exactly which model has the highest expectancy.</p>
                     </div>
-                    <div className="flex-1 bg-[var(--background)] border border-[var(--glass-border)] rounded-3xl aspect-[4/3] flex items-center justify-center p-4 shadow-inner">
-                        <p className="text-[8px] font-black uppercase tracking-[0.3em] text-[var(--text-muted)] text-center opacity-50">
-                           [STRATEGY_UI_MINI_PREVIEW]
-                        </p>
+                    <div className="relative flex-1 bg-[#0A0A0A] border border-[var(--glass-border)] rounded-3xl aspect-[4/3] flex items-center justify-center shadow-inner overflow-hidden group-hover:border-emerald-500/50 transition-colors">
+                        <Image 
+                           src="/screenshots/trades.png" 
+                           alt="Strategies UI Preview"
+                           fill
+                           className="object-cover object-left-top opacity-90 group-hover:scale-105 transition-transform duration-500"
+                           sizes="(max-width: 768px) 100vw, 33vw"
+                        />
                     </div>
                  </div>
               </div>
