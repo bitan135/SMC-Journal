@@ -11,7 +11,7 @@ import { useAuth } from '@/components/AuthProvider';
 
 const planDetails = {
   pro: { name: 'Pro Trader', price: 20, icon: Zap, color: '#6366F1' },
-  lifetime: { name: 'Legacy Hero', price: 50, icon: Crown, color: '#10B981' }
+  '6_month': { name: '6-Month Pro', price: 50, icon: Crown, color: '#10B981' }
 };
 
 function CheckoutFormContent() {

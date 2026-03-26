@@ -13,20 +13,20 @@ const faq = [
 ];
 
 const features = [
-  { name: "Unlimited Trades", free: true, pro: true, legacy: true },
-  { name: "SMC Tagging (BOS, CHoCH, etc)", free: true, pro: true, legacy: true },
-  { name: "Equity Curve", free: true, pro: true, legacy: true },
-  { name: "Session Overview", free: true, pro: true, legacy: true },
-  { name: "Strategy Stats", free: true, pro: true, legacy: true },
-  { name: "Psychology Log", free: true, pro: true, legacy: true },
-  { name: "Chart Screenshots", free: true, pro: true, legacy: true },
-  { name: "7+ Advanced Analytics", free: false, pro: true, legacy: true },
-  { name: "Drawdown Analysis", free: false, pro: true, legacy: true },
-  { name: "Monthly P&L", free: false, pro: true, legacy: true },
-  { name: "Deep Strategy Insights", free: false, pro: true, legacy: true },
-  { name: "Data Export (CSV/JSON)", free: false, pro: true, legacy: true },
-  { name: "Priority Support", free: false, pro: false, legacy: true },
-  { name: "Lifetime Updates", free: false, pro: false, legacy: true },
+  { name: "Unlimited Trades", free: true, pro: true, sixMonth: true },
+  { name: "SMC Tagging (BOS, CHoCH, etc)", free: true, pro: true, sixMonth: true },
+  { name: "Equity Curve", free: true, pro: true, sixMonth: true },
+  { name: "Session Overview", free: true, pro: true, sixMonth: true },
+  { name: "Strategy Stats", free: true, pro: true, sixMonth: true },
+  { name: "Psychology Log", free: true, pro: true, sixMonth: true },
+  { name: "Chart Screenshots", free: true, pro: true, sixMonth: true },
+  { name: "7+ Advanced Analytics", free: false, pro: true, sixMonth: true },
+  { name: "Drawdown Analysis", free: false, pro: true, sixMonth: true },
+  { name: "Monthly P&L", free: false, pro: true, sixMonth: true },
+  { name: "Deep Strategy Insights", free: false, pro: true, sixMonth: true },
+  { name: "Data Export (CSV/JSON)", free: false, pro: true, sixMonth: true },
+  { name: "Priority Support", free: false, pro: true, sixMonth: true },
+  { name: "6-Month Full Access", free: false, pro: false, sixMonth: true },
 ];
 
 export default function PricingPage() {
@@ -138,13 +138,13 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* LIFETIME PLAN */}
+          {/* 6-MONTH PRO PLAN */}
           <div className="p-10 rounded-[40px] glass-card flex flex-col items-center text-center shadow-premium hover:-translate-y-1 transition-all duration-500">
-            <h3 className="text-xs font-black uppercase tracking-widest text-text-muted mb-4">The OG Supporter</h3>
-            <div className="text-5xl font-black mb-2 text-text-primary">LEGACY</div>
+            <h3 className="text-xs font-black uppercase tracking-widest text-text-muted mb-4">The Power Pack</h3>
+            <div className="text-5xl font-black mb-2 text-text-primary">6-MONTH</div>
             <div className="flex items-baseline gap-1 mb-8">
               <span className="text-lg font-bold text-text-muted">$50</span>
-              <span className="text-text-muted/50 font-black uppercase text-[10px] tracking-widest">once</span>
+              <span className="text-text-muted/50 font-black uppercase text-[10px] tracking-widest">for 6 months</span>
             </div>
             <div className="w-full h-[1px] bg-border-custom my-4" />
             <ul className="space-y-4 mb-12 text-left w-full flex-grow pt-6">
@@ -154,7 +154,7 @@ export default function PricingPage() {
                 </div>
                 Everything in Pro
               </li>
-              {["Lifetime access", "All future features", "Zero monthly fees", "Priority support"].map((f, i) => (
+              {["6 months Pro access", "All advanced analytics", "Save $70 vs monthly", "Priority support"].map((f, i) => (
                 <li key={i} className="flex items-center gap-3 text-sm font-bold text-text-secondary">
                   <div className="w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0">
                     <Check size={12} className="text-emerald-500" />
@@ -164,7 +164,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <Link href="/signup" className="w-full py-5 glass-card border-border-custom hover:border-accent/50 rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all hover:bg-accent/5">
-              Secure Legacy Status
+              Get 6-Month Access
             </Link>
           </div>
         </div>
@@ -181,7 +181,7 @@ export default function PricingPage() {
                   <th className="py-6 px-8 text-left font-black text-[10px] uppercase tracking-widest text-text-muted">Benefit</th>
                   <th className="py-6 px-8 text-center font-black text-[10px] uppercase tracking-widest text-text-muted">Free</th>
                   <th className="py-6 px-8 text-center font-black text-[10px] uppercase tracking-widest text-accent">Pro</th>
-                  <th className="py-6 px-8 text-center font-black text-[10px] uppercase tracking-widest text-text-muted">Legacy</th>
+                  <th className="py-6 px-8 text-center font-black text-[10px] uppercase tracking-widest text-text-muted">6-Month</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border-custom">
@@ -190,7 +190,7 @@ export default function PricingPage() {
                     <td className="py-6 px-8 text-xs font-black text-text-secondary uppercase tracking-tight group-hover:text-text-primary transition-colors">{f.name}</td>
                     <td className="py-6 px-8 text-center">{f.free ? <Check size={18} className="mx-auto text-emerald-500" /> : <span className="text-text-muted/20">—</span>}</td>
                     <td className="py-6 px-8 text-center">{f.pro ? <Check size={18} className="mx-auto text-accent" /> : <span className="text-text-muted/20">—</span>}</td>
-                    <td className="py-6 px-8 text-center">{f.legacy ? <Check size={18} className="mx-auto text-purple-500" /> : <span className="text-text-muted/20">—</span>}</td>
+                    <td className="py-6 px-8 text-center">{f.sixMonth ? <Check size={18} className="mx-auto text-purple-500" /> : <span className="text-text-muted/20">—</span>}</td>
                   </tr>
                 ))}
               </tbody>

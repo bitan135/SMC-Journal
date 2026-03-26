@@ -30,11 +30,11 @@ const plans = [
     popular: true,
   },
   {
-    id: 'lifetime',
-    name: 'Legacy Hero',
+    id: '6_month',
+    name: '6-Month Pro',
     price: '$50',
-    description: 'Infinite Edge access',
-    features: ['Permanent Pro Access', 'Institutional Branding', 'Support the Vision', 'Priority Technical Support'],
+    description: '6 months of full Pro access',
+    features: ['6 Months Pro Access', 'All Advanced Analytics', 'Save $70 vs Monthly', 'Priority Support'],
     icon: Crown,
     color: '#10B981',
     gradient: 'from-emerald-600/20 to-transparent',
@@ -100,7 +100,7 @@ export default function BillingPage() {
                   <div className="flex items-baseline gap-1 mb-4">
                     <span className="text-5xl font-black text-[var(--foreground)]">{plan.price}</span>
                     <span className="text-[var(--text-muted)] text-sm font-bold tracking-tight">
-                        {plan.id === 'lifetime' ? 'FOREVER' : 'PER MONTH'}
+                        {plan.id === '6_month' ? 'FOR 6 MONTHS' : plan.id === 'free' ? '' : 'PER MONTH'}
                     </span>
                   </div>
                   <p className="text-[var(--text-secondary)] font-medium leading-relaxed">{plan.description}</p>

@@ -58,7 +58,7 @@ export default function InsightsPage() {
   
   // Access Logic
   const planId = subscription?.plan_id || 'free';
-  const isPaidUser = planId === 'pro' || planId === 'lifetime';
+  const isPaidUser = planId === 'pro' || planId === '6_month' || planId === 'lifetime_legacy';
   const hasBasicAccess = tradeCount >= 30; // Threshold logic still applies
   const hasAdvancedAccess = tradeCount >= 100 && isPaidUser; // Requires both 100 trades AND pro plan
 

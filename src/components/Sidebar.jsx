@@ -42,7 +42,8 @@ export default function Sidebar() {
 
   const getPlanBadge = () => {
     const plan = subscription?.plan_id || 'free';
-    if (plan === 'lifetime') return 'Lifetime Elite';
+    if (plan === 'lifetime_legacy') return 'Legacy Elite';
+    if (plan === '6_month') return '6-Month Pro';
     if (plan === 'pro') return 'Pro Trader';
     return 'Free Plan';
   };

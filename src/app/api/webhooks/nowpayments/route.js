@@ -71,13 +71,34 @@ export async function POST(req) {
       const planId = payment.plan_id;
       let periodEnd = null;
 
-      // Calculate period end for monthly plan
+      // Calculate period end based on plan
       if (planId === 'pro') {
         const date = new Date();
         date.setDate(date.getDate() + 30);
         periodEnd = date.toISOString();
-      } else if (planId === 'lifetime') {
-        periodEnd = null; // Infinite access
+      } else if (planId === '6_month') {
+        // Check if user already has an active subscription to extend
+        const { data: existingSub } = await supabaseAdmin
+          .from('subscriptions')
+          .select('current_period_end')
+          .eq('user_id', userId)
+          .single();
+
+        const now = new Date();
+        let baseDate = now;
+
+        // If existing subscription is still active, extend from its end date
+        if (existingSub?.current_period_end) {
+          const existingEnd = new Date(existingSub.current_period_end);
+          if (existingEnd > now) {
+            baseDate = existingEnd;
+          }
+        }
+
+        baseDate.setDate(baseDate.getDate() + 180);
+        periodEnd = baseDate.toISOString();
+      } else if (planId === 'lifetime_legacy') {
+        periodEnd = null; // Perpetual access
       }
 
       // Atomically upgrade subscription
@@ -85,7 +106,7 @@ export async function POST(req) {
         .from('subscriptions')
         .upsert({
           user_id: userId,
-          plan_id: planId,
+          plan_id: planId === 'lifetime_legacy' ? 'lifetime_legacy' : planId,
           status: 'active',
           current_period_end: periodEnd,
           updated_at: new Date().toISOString()
