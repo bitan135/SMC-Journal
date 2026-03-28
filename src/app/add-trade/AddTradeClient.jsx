@@ -63,8 +63,10 @@ export default function AddTrade() {
         emotional_state: formData.emotionalState || null,
         discipline_score: formData.disciplineScore || null,
         rule_adherence: formData.ruleAdherence,
-        setup_zone: formData.setupZone || null,
+        setup_zone: formData.setupZone || formData.setup_zone || null,
         poi_type: formData.poi_type || null,
+        timeframe_bias: formData.timeframe_bias || null,
+        bias_type: formData.bias_type || null,
       };
 
       try {
@@ -119,8 +121,9 @@ export default function AddTrade() {
         router.push('/dashboard');
       }, 1500);
     } catch (err) {
-      console.error('Submission error:', err?.message || err?.details || err?.code || err);
-      setSubmitError('Failed to save trade. Please check your connection and try again.');
+      console.error('[TRADE_LOG] Submission error:', err);
+      const msg = err?.message || 'Failed to save trade. Please check your connection and try again.';
+      setSubmitError(msg);
     } finally {
       setIsSubmitting(false);
     }

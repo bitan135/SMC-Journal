@@ -62,8 +62,17 @@ Defines all PostgreSQL tables, relationships, RLS policies, triggers, and storag
 | `setup_zone_type` | TEXT | | Supply/Demand |
 | `created_at` | TIMESTAMPTZ | now() | |
 | `updated_at` | TIMESTAMPTZ | now() | Auto-trigger |
+| `poi_type` | TEXT | | Continuous/Extreme (Supply/Demand only) |
+| `timeframe_bias` | TEXT | | 15M/1H/4H etc |
+| `bias_type` | TEXT | | Continuation/Reversal |
 
 **RLS:** ALL operations where `auth.uid() = user_id`
+
+**Constraints:**
+- `chk_sl_neq_entry`: `stop_loss != entry_price`
+- `chk_tp_neq_entry`: `take_profit != entry_price`
+- `chk_poi_type_scope`: `poi_type` must be null unless strategy is Supply/Demand related.
+- `chk_bias_type`: `bias_type` must be 'Continuation' or 'Reversal'.
 
 ### `strategies`
 | Column | Type | Constraints |

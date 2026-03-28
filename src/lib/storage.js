@@ -382,21 +382,18 @@ export async function saveTrade(trade) {
       lot_size: parseFloat(trade.lotSize || trade.lot_size) || 0.01,
       rr: parseFloat(trade.rr) || 0,
       pips: parseFloat(trade.pips) || 0,
-      risk_amount: parseFloat(trade.riskAmount || trade.risk_amount) || 0,
       trade_date: parseTradeDate(trade).toISOString(),
       smc_tags: Array.isArray(trade.smcTags || trade.smc_tags) ? (trade.smcTags || trade.smc_tags) : [],
       liquidity_sweep: Array.isArray(trade.liquiditySweep || trade.liquidity_sweep) ? (trade.liquiditySweep || trade.liquidity_sweep) : [],
     };
 
-    // Remove legacy/UI keys to keep DB clean
-    delete tradeData.entryPrice;
-    delete tradeData.stopLoss;
-    delete tradeData.takeProfit;
-    delete tradeData.lotSize;
-    delete tradeData.tradeDate;
-    delete tradeData.smcTags;
-    delete tradeData.liquiditySweep;
-    delete tradeData.riskAmount;
+    // Remove legacy/UI/calculated keys to keep DB clean
+    const KEYS_TO_REMOVE = [
+      'entryPrice', 'stopLoss', 'takeProfit', 'lotSize', 'tradeDate', 
+      'smcTags', 'liquiditySweep', 'riskAmount', 'risk_amount',
+      'timeframeBias', 'biasType', 'poiType'
+    ];
+    KEYS_TO_REMOVE.forEach(key => delete tradeData[key]);
 
     // Strict validation
     if (tradeData.entry_price === 0) {
@@ -448,9 +445,12 @@ export async function updateTrade(id, updates) {
     }
 
     // Cleanup
-    ['entryPrice', 'stopLoss', 'takeProfit', 'lotSize', 'tradeDate', 'smcTags', 'liquiditySweep', 'riskAmount', 'timeframeBias', 'biasType'].forEach(key => {
-      delete hardenedUpdates[key];
-    });
+    const KEYS_TO_REMOVE = [
+      'entryPrice', 'stopLoss', 'takeProfit', 'lotSize', 'tradeDate', 
+      'smcTags', 'liquiditySweep', 'riskAmount', 'risk_amount',
+      'timeframeBias', 'biasType', 'poiType'
+    ];
+    KEYS_TO_REMOVE.forEach(key => delete hardenedUpdates[key]);
 
     const data = await tradeService.updateTrade(id, hardenedUpdates);
     invalidateCache('trades');
