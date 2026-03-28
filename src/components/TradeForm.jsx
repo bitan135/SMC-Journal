@@ -9,7 +9,7 @@ import {
   calculateRR, calculatePips, calculateRiskAmount
 } from '@/lib/storage';
 
-export default function TradeForm({ initialData = null, onSubmit, isSubmitting, submitLabel = 'Log Sequence', strategies = [] }) {
+export default function TradeForm({ initialData = null, onSubmit, isSubmitting, submitLabel = 'Log Sequence', strategies = [], progressMessage = '' }) {
   const [formData, setFormData] = useState({
     instrument: 'EURUSD',
     direction: 'Buy',
@@ -530,8 +530,8 @@ export default function TradeForm({ initialData = null, onSubmit, isSubmitting, 
             )}
 
             {isSubmitting && (
-              <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center gap-3 text-blue-500 text-[10px] font-black uppercase tracking-widest">
-                <RefreshCcw size={14} className="animate-spin" /> Transmitting to Vault...
+              <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center gap-3 text-blue-500 text-[10px] font-black uppercase tracking-widest animate-pulse">
+                <RefreshCcw size={14} className="animate-spin" /> {progressMessage || 'Transmitting to Vault...'}
               </div>
             )}
 

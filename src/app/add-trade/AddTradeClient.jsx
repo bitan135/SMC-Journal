@@ -18,6 +18,7 @@ export default function AddTrade() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [submitProgress, setSubmitProgress] = useState(''); // New progress indicator
   useEffect(() => {
     const loadData = async () => {
       const res = await getStrategies();
@@ -34,13 +35,83 @@ export default function AddTrade() {
       let screenshotAfterUrl = formData.screenshotAfter;
 
       const { tradeService } = await import('@/lib/supabase');
+      
+      // Add a timeout helper
+      const withTimeout = (promise, ms, actionName) => {
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error(`${actionName} timed out after ${ms/1000}s`)), ms))
+        ]);
+      };
+
+      // Add a simple image compression helper
+      const compressImage = (file, maxWidth = 1920, quality = 0.8) => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
+
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+
+              canvas.toBlob((blob) => {
+                if (!blob) return reject(new Error('Canvas to Blob failed'));
+                const compressedFile = new File([blob], file.name, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now(),
+                });
+                resolve(compressedFile);
+              }, 'image/jpeg', quality);
+            };
+            img.onerror = (err) => reject(err);
+          };
+          reader.onerror = (err) => reject(err);
+        });
+      };
 
       if (formData.screenshotBeforeFile) {
-        screenshotBeforeUrl = await tradeService.uploadScreenshot(formData.screenshotBeforeFile, 'before');
+        setSubmitProgress('Optimizing setup configuration...');
+        const compressed = await compressImage(formData.screenshotBeforeFile).catch(err => {
+          console.warn('Compression failed, using original:', err);
+          return formData.screenshotBeforeFile;
+        });
+        
+        setSubmitProgress('Uploading setup configuration...');
+        screenshotBeforeUrl = await withTimeout(
+          tradeService.uploadScreenshot(compressed, 'before'),
+          45000, 
+          'Image upload (before)'
+        );
       }
       if (formData.screenshotAfterFile) {
-        screenshotAfterUrl = await tradeService.uploadScreenshot(formData.screenshotAfterFile, 'after');
+        setSubmitProgress('Optimizing settlement view...');
+        const compressed = await compressImage(formData.screenshotAfterFile).catch(err => {
+          console.warn('Compression failed, using original:', err);
+          return formData.screenshotAfterFile;
+        });
+
+        setSubmitProgress('Uploading settlement view...');
+        screenshotAfterUrl = await withTimeout(
+          tradeService.uploadScreenshot(compressed, 'after'),
+          45000,
+          'Image upload (after)'
+        );
       }
+
+      setSubmitProgress('Archiving to institutional vault...');
 
       const tradeToSave = {
         instrument: formData.instrument,
@@ -70,18 +141,21 @@ export default function AddTrade() {
       };
 
       try {
-        const res = await saveTrade(tradeToSave);
+        const res = await withTimeout(saveTrade(tradeToSave), 15000, 'Database save');
         if (!res.success) throw new Error(res.error);
         
+        setSubmitProgress('Deduplicating local cache...');
         // Track Event
-        const tradesRes = await getTrades();
-        const allTrades = tradesRes.success ? tradesRes.data : [];
-        posthog.capture('trade_logged', {
-          instrument: tradeToSave.instrument,
-          result: tradeToSave.result,
-          rr: tradeToSave.rr
-        });
+        const [tradesRes] = await Promise.all([
+          withTimeout(getTrades(), 5000, 'Cache sync').catch(() => ({ success: false })),
+          posthog.capture('trade_logged', {
+            instrument: tradeToSave.instrument,
+            result: tradeToSave.result,
+            rr: tradeToSave.rr
+          })
+        ]);
         
+        const allTrades = tradesRes?.success ? tradesRes.data : [];
         if (allTrades.length === 1) {
           posthog.capture('first_trade_logged');
         }
@@ -176,6 +250,7 @@ export default function AddTrade() {
               onSubmit={handleSubmit}
               isSubmitting={isSubmitting}
               submitLabel="Log Sequence"
+              progressMessage={submitProgress}
             />
           </>
         )}
