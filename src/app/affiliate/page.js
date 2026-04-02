@@ -69,7 +69,7 @@ export default function AffiliatePublicPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-56 pb-32 px-6">
+      <section className="relative pt-32 md:pt-56 pb-20 md:pb-32 px-6">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[600px] bg-accent/5 blur-[120px] rounded-full pointer-events-none" />
         
         <div className="max-w-5xl mx-auto text-center relative z-10 animate-fade-in">
@@ -78,7 +78,7 @@ export default function AffiliatePublicPage() {
             Partner Program Open
           </div>
           
-          <h1 className="text-5xl md:text-8xl font-black mb-10 leading-[0.9] tracking-tightest text-text-primary">
+          <h1 className="text-4xl md:text-8xl font-black mb-10 leading-[0.9] tracking-tightest text-text-primary">
             Scale With The <br /> <span className="text-gradient">SMC Standard.</span>
           </h1>
           
@@ -94,7 +94,7 @@ export default function AffiliatePublicPage() {
       </section>
 
       {/* Benefits Grid */}
-      <section className="py-32 px-6 bg-card/10 backdrop-blur-sm border-y border-border-custom">
+      <section className="py-20 md:py-32 px-6 bg-card/10 backdrop-blur-sm border-y border-border-custom">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 stagger-children">
           {[
             {
@@ -113,7 +113,7 @@ export default function AffiliatePublicPage() {
               desc: "Dedicated internal dashboard with live click-tracking and conversion transparency reporting."
             }
           ].map((benefit, i) => (
-            <div key={i} className="p-12 rounded-[48px] glass-card border-border-custom hover:border-accent/40 transition-all group hover:-translate-y-2 duration-500 shadow-premium">
+            <div key={i} className="p-8 md:p-12 rounded-[48px] glass-card border-border-custom hover:border-accent/40 transition-all group hover:-translate-y-2 duration-500 shadow-premium">
               <div className="w-16 h-16 rounded-2xl bg-accent/5 flex items-center justify-center mb-10 border border-border-custom text-accent group-hover:bg-accent group-hover:text-white transition-all duration-500 shadow-xl">
                 {benefit.icon}
               </div>
@@ -125,14 +125,14 @@ export default function AffiliatePublicPage() {
       </section>
 
       {/* Application Form */}
-      <section id="apply" className="py-48 px-6">
+      <section id="apply" className="py-32 md:py-48 px-6">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-20 animate-slide-up">
             <h2 className="text-4xl md:text-6xl font-black mb-6 text-text-primary tracking-tightest">Start Growing.</h2>
             <p className="text-lg text-text-muted font-medium uppercase tracking-[0.2em]">Partner Application</p>
           </div>
 
-          <div className="glass-card border-border-custom p-10 md:p-16 rounded-[64px] shadow-premium animate-fade-in">
+          <div className="glass-card border-border-custom p-6 md:p-16 rounded-[40px] md:rounded-[64px] shadow-premium animate-fade-in">
             {status === 'success' ? (
               <div className="text-center py-12">
                 <div className="w-24 h-24 rounded-full bg-accent/10 flex items-center justify-center mx-auto mb-8 border border-accent/20">
@@ -142,7 +142,7 @@ export default function AffiliatePublicPage() {
                 <p className="text-text-secondary mb-10 font-medium">We'll review your platform and get back to you shortly.</p>
                 <button 
                   onClick={() => setStatus('idle')}
-                  className="px-10 py-5 bg-accent text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all border-none shadow-xl shadow-accent/20"
+                  className="px-6 py-4 md:px-10 md:py-5 bg-accent text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all border-none shadow-xl shadow-accent/20"
                 >
                   Apply Again
                 </button>
@@ -156,7 +156,7 @@ export default function AffiliatePublicPage() {
                       required
                       type="text" 
                       placeholder="Institutional Name"
-                      className="w-full bg-background/50 border border-border-custom rounded-2xl px-6 py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
+                      className="w-full bg-background/50 border border-border-custom rounded-2xl px-5 py-4 md:px-6 md:py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
                       value={formData.name}
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                     />
@@ -167,7 +167,7 @@ export default function AffiliatePublicPage() {
                       required
                       type="email" 
                       placeholder="partner@vault.com"
-                      className="w-full bg-background/50 border border-border-custom rounded-2xl px-6 py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
+                      className="w-full bg-background/50 border border-border-custom rounded-2xl px-5 py-4 md:px-6 md:py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                     />
@@ -180,7 +180,7 @@ export default function AffiliatePublicPage() {
                     required
                     type="text" 
                     placeholder="YouTube / X / Discord / Trading Community"
-                    className="w-full bg-background/50 border border-border-custom rounded-2xl px-6 py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
+                    className="w-full bg-background/50 border border-border-custom rounded-2xl px-5 py-4 md:px-6 md:py-5 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 text-text-primary text-base"
                     value={formData.platform}
                     onChange={(e) => setFormData({...formData, platform: e.target.value})}
                   />
@@ -192,7 +192,7 @@ export default function AffiliatePublicPage() {
                     required
                     placeholder="Audience size, strategy focus, and promotion plan..."
                     rows={4}
-                    className="w-full bg-background/50 border border-border-custom rounded-3xl px-6 py-6 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 resize-none text-text-primary text-base"
+                    className="w-full bg-background/50 border border-border-custom rounded-3xl px-5 py-5 md:px-6 md:py-6 outline-none focus:border-accent transition-all font-bold placeholder:text-text-muted/30 resize-none text-text-primary text-base"
                     value={formData.audience}
                     onChange={(e) => setFormData({...formData, audience: e.target.value})}
                   />
@@ -201,7 +201,7 @@ export default function AffiliatePublicPage() {
                 <button 
                   disabled={status === 'loading'}
                   type="submit" 
-                  className="w-full py-8 bg-accent hover:bg-accent-hover disabled:opacity-50 text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] transition-all shadow-premium shadow-accent/30 active:scale-[0.98] border-none"
+                  className="w-full py-5 md:py-8 bg-accent hover:bg-accent-hover disabled:opacity-50 text-white rounded-3xl font-black text-xs uppercase tracking-[0.3em] transition-all shadow-premium shadow-accent/30 active:scale-[0.98] border-none"
                 >
                   {status === 'loading' ? 'Transmitting...' : 'Initialize Program Membership'}
                 </button>
@@ -212,7 +212,7 @@ export default function AffiliatePublicPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-32 px-6 border-t border-border-custom bg-card/5">
+      <footer className="py-16 md:py-32 px-6 border-t border-border-custom bg-card/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">

@@ -76,7 +76,7 @@ export default function LandingPage() {
       <main className="pt-16 sm:pt-20">
         
         {/* Minimalist Hero Section */}
-        <section className="relative pt-20 sm:pt-32 pb-20 sm:pb-40 overflow-hidden flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[85vh] bg-white border-b border-slate-200">
+        <section className="relative pt-16 sm:pt-32 pb-16 sm:pb-40 overflow-hidden flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[85vh] bg-white border-b border-slate-200">
           {/* Subtle Grid Background */}
           <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
                style={{ backgroundImage: 'linear-gradient(rgba(15,23,42,1) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
@@ -89,7 +89,7 @@ export default function LandingPage() {
             </div>
             
             <div className="space-y-6">
-              <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.95] text-slate-900">
+              <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.95] text-slate-900">
                 The Journal Built for <br />
                 <span className="text-indigo-600">Smart Money Concepts.</span>
               </h1>
@@ -110,12 +110,12 @@ export default function LandingPage() {
         </section>
 
         {/* Phase 2: Feature Breakdown */}
-        <section id="features" className="py-32 bg-slate-50">
+        <section id="features" className="py-20 md:py-32 bg-slate-50">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
                {/* Context Column */}
                <div className="lg:col-span-5 space-y-8 sticky top-32">
-                  <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-tight text-slate-900">
+                  <h2 className="text-3xl md:text-5xl font-black tracking-tighter leading-tight text-slate-900">
                      Track Structural Intent, <span className="text-indigo-600">Not Just Prices.</span>
                   </h2>
                   <div className="space-y-6 text-slate-500 font-medium leading-relaxed">
@@ -164,10 +164,10 @@ export default function LandingPage() {
         </section>
 
         {/* Phase 3: Abstract CSS Visual (Insight Engine) */}
-        <section id="insight-engine" className="py-32 bg-white border-y border-slate-200">
+        <section id="insight-engine" className="py-16 md:py-32 bg-white border-y border-slate-200">
           <div className="max-w-7xl mx-auto px-6 text-center space-y-20">
             <div className="space-y-6 max-w-3xl mx-auto">
-               <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-slate-900">
+               <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-slate-900">
                  Quantify Your <span className="text-indigo-600">Trading Model.</span>
                </h2>
                <p className="text-lg text-slate-500 font-medium leading-relaxed">
@@ -214,7 +214,7 @@ export default function LandingPage() {
         </section>
 
         {/* Phase 4: Extreme SEO Targeting Section */}
-        <section className="py-24 bg-slate-50">
+        <section className="py-16 md:py-24 bg-slate-50">
            <div className="max-w-4xl mx-auto px-6 space-y-12">
               <div className="text-center">
                  <h2 className="text-3xl font-black tracking-tight text-slate-900 mb-6">A Trading Journal Designed for Smart Money Concepts</h2>
@@ -241,10 +241,10 @@ export default function LandingPage() {
         </section>
 
         {/* Phase 5: CTA */}
-        <section className="py-32 bg-indigo-600 text-white relative overflow-hidden">
+        <section className="py-20 md:py-32 bg-indigo-600 text-white relative overflow-hidden">
            <div className="max-w-4xl mx-auto px-6 text-center space-y-10 relative z-10">
               <div className="space-y-6">
-                 <h2 className="text-5xl md:text-6xl font-black tracking-tighter">Start Logging Structural Data.</h2>
+                 <h2 className="text-4xl md:text-6xl font-black tracking-tighter">Start Logging Structural Data.</h2>
                  <p className="text-xl font-medium text-indigo-100 max-w-2xl mx-auto">Build discipline, discover your true expectancy, and treat your trading like a probability business.</p>
               </div>
               <Link href="/signup" className="inline-flex items-center gap-2 px-10 py-5 bg-white text-indigo-900 rounded-xl font-black uppercase tracking-[0.15em] text-xs hover:scale-105 transition-transform shadow-2xl">

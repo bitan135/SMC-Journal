@@ -107,14 +107,14 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-24 md:pb-32 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-28 md:pb-32 relative overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float"></div>
       <div className="absolute bottom-[5%] left-[-10%] w-[35%] h-[35%] bg-indigo-500/5 blur-[100px] rounded-full delay-700 animate-float"></div>
       
       <div className="relative z-10 w-full">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-16">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 md:gap-8 mb-8 md:mb-16">
             <div className="flex-1">
                 <div className="flex items-center gap-2 mb-3">
                       <span className="flex items-center gap-2 px-3 py-1 rounded-full glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed">
@@ -134,7 +134,7 @@ export default function Dashboard() {
             </div>
             <Link 
                 href="/add-trade"
-                className="group relative px-10 py-5 rounded-[24px] bg-[var(--accent)] text-white font-black text-sm tracking-widest uppercase overflow-hidden shadow-2xl shadow-indigo-500/40 hover:scale-[1.03] transition-all active:scale-95 flex items-center justify-center gap-3"
+                className="group relative px-6 py-4 md:px-10 md:py-5 rounded-[20px] md:rounded-[24px] bg-[var(--accent)] text-white font-black text-xs md:text-sm tracking-widest uppercase overflow-hidden shadow-2xl shadow-indigo-500/40 hover:scale-[1.03] transition-all active:scale-95 flex items-center justify-center gap-3"
             >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                 <div className="flex items-center justify-center gap-3 relative z-10">
@@ -145,7 +145,7 @@ export default function Dashboard() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-12 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 mb-12 stagger-children">
             <MetricCard
                 label="Win Rate"
                 value={`${winRate}%`}
@@ -191,7 +191,7 @@ export default function Dashboard() {
         </div>
 
         {/* Strategy Table */}
-        <div className="glass-card rounded-[40px] border-[var(--glass-border)] p-10 overflow-hidden shadow-premium mb-12 stagger-children">
+        <div className="glass-card rounded-[32px] md:rounded-[40px] border-[var(--glass-border)] p-6 md:p-10 shadow-premium mb-12 stagger-children">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
                     <h3 className="text-lg font-black text-[var(--text-secondary)] uppercase tracking-[0.2em] mb-2 flex items-center gap-3">
@@ -204,8 +204,8 @@ export default function Dashboard() {
                 </div>
             </div>
             
-            <div className="overflow-x-auto">
-                <table className="w-full text-left">
+            <div className="-mx-6 px-6 md:mx-0 md:px-0 overflow-x-auto pb-4 custom-scrollbar">
+                <table className="w-full text-left min-w-[600px]">
                     <thead>
                         <tr className="border-b border-[var(--glass-border)]">
                             <th className="pb-6 text-[10px] font-black text-[var(--text-secondary)] uppercase tracking-[0.3em] leading-relaxed">Strategy Configuration</th>
