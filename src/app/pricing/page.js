@@ -216,22 +216,62 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Contact CTA Institutional */}
-        <div className="p-12 md:p-24 rounded-[64px] bg-card border-none text-center relative overflow-hidden shadow-premium group">
-           <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-purple-600/5 transition-opacity duration-1000 group-hover:opacity-100 opacity-50" />
-           <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent text-white text-[10px] font-black uppercase tracking-widest mb-10 shadow-lg shadow-accent/20">
-                <Mail size={14} /> Direct Developer Access
+        {/* Dedicated Support Section */}
+        <section className="mb-20 animate-fade-in relative z-10">
+          <div className="text-center mb-16">
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest mb-6">
+              <Mail size={14} /> Always Here To Help
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black tracking-tightest mb-6">Contact Us Directly</h2>
+            <p className="text-lg font-medium text-text-secondary max-w-2xl mx-auto">
+              We operate with full transparency. Whether you need an enterprise solution, found a bug, or just want to say hi, reach out to the right channel below.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* General */}
+            <a href="mailto:hello@smcjournal.app" className="block p-8 rounded-[32px] glass-card hover:border-accent/30 transition-all group hover:-translate-y-1 shadow-sm hover:shadow-xl hover:shadow-accent/5">
+              <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-all text-indigo-500">
+                <Mail size={22} />
               </div>
-              <h2 className="text-3xl md:text-5xl font-black mb-6 tracking-tightest">Need custom analytics?</h2>
-              <p className="text-lg md:text-xl font-medium text-text-secondary max-w-xl mx-auto mb-12">
-                If you have unique setup requirements or need enterprise data solutions, let's talk SMC directly.
+              <h3 className="text-xl font-black mb-2 text-text-primary group-hover:text-accent transition-colors">General & Partners</h3>
+              <p className="text-sm font-medium text-text-secondary mb-6 line-clamp-2">
+                General inquiries, partnership opportunities, or just want to chat about the markets.
               </p>
-              <a href="mailto:hello.bitanbiswas@gmail.com" className="inline-flex items-center gap-4 px-12 py-5 bg-text-primary text-background rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-2xl group border-none">
-                Email Bitan <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </a>
-           </div>
-        </div>
+              <div className="text-xs font-black uppercase tracking-widest text-text-muted group-hover:text-accent transition-colors">
+                hello@smcjournal.app
+              </div>
+            </a>
+
+            {/* Beta */}
+            <a href="mailto:beta@smcjournal.app" className="block p-8 rounded-[32px] glass-card hover:border-emerald-500/30 transition-all group hover:-translate-y-1 shadow-sm hover:shadow-xl hover:shadow-emerald-500/5">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-all text-emerald-500">
+                <Sparkles size={22} />
+              </div>
+              <h3 className="text-xl font-black mb-2 text-text-primary group-hover:text-emerald-500 transition-colors">Beta & Feedback</h3>
+              <p className="text-sm font-medium text-text-secondary mb-6 line-clamp-2">
+                Submit bug reports, request new analytics features, or ask for Insight Engine early access.
+              </p>
+              <div className="text-xs font-black uppercase tracking-widest text-text-muted group-hover:text-emerald-500 transition-colors">
+                beta@smcjournal.app
+              </div>
+            </a>
+
+            {/* Support */}
+            <a href="mailto:support@smcjournal.app" className="block p-8 rounded-[32px] glass-card hover:border-rose-500/30 transition-all group hover:-translate-y-1 shadow-sm hover:shadow-xl hover:shadow-rose-500/5">
+              <div className="w-12 h-12 rounded-2xl bg-rose-500/10 flex items-center justify-center mb-6 group-hover:bg-rose-500 group-hover:text-white transition-all text-rose-500">
+                <HelpCircle size={22} />
+              </div>
+              <h3 className="text-xl font-black mb-2 text-text-primary group-hover:text-rose-500 transition-colors">Technical Support</h3>
+              <p className="text-sm font-medium text-text-secondary mb-6 line-clamp-2">
+                Account recovery, urgent technical issues, billing questions, or refund requests.
+              </p>
+              <div className="text-xs font-black uppercase tracking-widest text-text-muted group-hover:text-rose-500 transition-colors">
+                support@smcjournal.app
+              </div>
+            </a>
+          </div>
+        </section>
       </main>
 
       <footer className="py-20 px-6 border-t border-border-custom mt-20 text-center">

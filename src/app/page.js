@@ -13,7 +13,10 @@ import {
   Activity,
   ChevronRight,
   Menu,
-  X
+  X,
+  Mail,
+  Sparkles,
+  HelpCircle
 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -238,6 +241,65 @@ export default function LandingPage() {
                  </div>
               </div>
            </div>
+        </section>
+
+        {/* Phase 4.5: Support/Contact */}
+        <section className="py-20 md:py-32 bg-white border-t border-slate-200">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+               <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-[0.25em] mx-auto shadow-sm mb-6">
+                 <Mail size={12} className="text-indigo-600" /> Always Here To Help
+               </span>
+               <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-slate-900 mb-6">Contact Us Directly</h2>
+               <p className="text-lg font-medium text-slate-500 max-w-2xl mx-auto leading-relaxed">
+                 We operate with full transparency. Whether you need an enterprise solution, found a bug, or just want to say hi, reach out to the right channel below.
+               </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+               {/* General */}
+               <a href="mailto:hello@smcjournal.app" className="block p-8 border border-slate-200 rounded-2xl bg-white hover:border-indigo-300 transition-all group shadow-sm hover:shadow-md hover:-translate-y-1">
+                 <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center border border-indigo-100 mb-6 group-hover:bg-indigo-600 transition-colors">
+                   <Mail size={22} className="text-indigo-600 group-hover:text-white transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-black tracking-tight mb-2 text-slate-900 group-hover:text-indigo-600 transition-colors">General & Partners</h3>
+                 <p className="text-sm text-slate-500 font-medium leading-relaxed mb-6">
+                   General inquiries, partnership opportunities, or just want to chat about the markets.
+                 </p>
+                 <div className="text-xs font-black uppercase tracking-[0.1em] text-slate-400 group-hover:text-indigo-600 transition-colors">
+                   hello@smcjournal.app
+                 </div>
+               </a>
+
+               {/* Beta */}
+               <a href="mailto:beta@smcjournal.app" className="block p-8 border border-slate-200 rounded-2xl bg-white hover:border-emerald-300 transition-all group shadow-sm hover:shadow-md hover:-translate-y-1">
+                 <div className="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center border border-emerald-100 mb-6 group-hover:bg-emerald-600 transition-colors">
+                   <Sparkles size={22} className="text-emerald-600 group-hover:text-white transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-black tracking-tight mb-2 text-slate-900 group-hover:text-emerald-600 transition-colors">Beta & Feedback</h3>
+                 <p className="text-sm text-slate-500 font-medium leading-relaxed mb-6">
+                   Submit bug reports, request new analytics features, or ask for Insight Engine early access.
+                 </p>
+                 <div className="text-xs font-black uppercase tracking-[0.1em] text-slate-400 group-hover:text-emerald-600 transition-colors">
+                   beta@smcjournal.app
+                 </div>
+               </a>
+
+               {/* Support */}
+               <a href="mailto:support@smcjournal.app" className="block p-8 border border-slate-200 rounded-2xl bg-white hover:border-rose-300 transition-all group shadow-sm hover:shadow-md hover:-translate-y-1">
+                 <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center border border-rose-100 mb-6 group-hover:bg-rose-500 transition-colors">
+                   <HelpCircle size={22} className="text-rose-500 group-hover:text-white transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-black tracking-tight mb-2 text-slate-900 group-hover:text-rose-500 transition-colors">Technical Support</h3>
+                 <p className="text-sm text-slate-500 font-medium leading-relaxed mb-6">
+                   Account recovery, urgent technical issues, billing questions, or refund requests.
+                 </p>
+                 <div className="text-xs font-black uppercase tracking-[0.1em] text-slate-400 group-hover:text-rose-500 transition-colors">
+                   support@smcjournal.app
+                 </div>
+               </a>
+            </div>
+          </div>
         </section>
 
         {/* Phase 5: CTA */}
