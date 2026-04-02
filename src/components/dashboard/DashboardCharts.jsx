@@ -3,7 +3,7 @@
 import {
   XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar, Cell
 } from 'recharts';
-import ChartCard from '@/components/ChartCard';
+import ChartCard from './ChartCard';
 
 function CustomTooltip({ active, payload, label }) {
   if (!active || !payload?.length) return null;

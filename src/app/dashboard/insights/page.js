@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/shared/AuthProvider';
 import { 
   getTrades, 
   getWinRate, 
@@ -126,7 +126,7 @@ export default function InsightsPage() {
         </div>
         
         {/* Progress Tracker */}
-        <div className="glass-card rounded-[28px] p-6 border-[var(--glass-border)] min-w-[300px]">
+        <div className="glass-card rounded-[28px] p-6 border-[var(--glass-border)] w-full md:min-w-[300px]">
           <div className="flex justify-between items-end mb-4">
             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-muted)]">Sequence Status</span>
             <span className="text-2xl font-black text-[var(--foreground)] tracking-tighter">{tradeCount} <span className="text-xs text-[var(--text-muted)] uppercase">Trades</span></span>

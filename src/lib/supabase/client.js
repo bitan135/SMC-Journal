@@ -1,5 +1,5 @@
 import { createBrowserClient } from '@supabase/ssr';
-import { ENV } from '@/lib/env';
+import { ENV } from '@/config/env';
 
 export function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';

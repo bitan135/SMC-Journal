@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter, usePathname } from 'next/navigation';
-import { isProtectedRoute, isPublicRoute } from '@/lib/routes';
+import { isProtectedRoute, isPublicRoute } from '@/config/routes';
 
 const AuthContext = createContext({
   user: null,
@@ -85,7 +85,6 @@ export function AuthProvider({ children }) {
       // Only suppress loading state updates if we are in the middle of a manual initialization
       if (isInitializing) return;
 
-      console.log(`[AuthProvider] Auth Event: ${event}`);
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       

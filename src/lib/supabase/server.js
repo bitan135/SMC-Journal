@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies, headers } from 'next/headers';
-import { ENV } from '@/lib/env';
+import { ENV } from '@/config/env';
 
 export async function createClient() {
   const cookieStore = await cookies();

@@ -3,7 +3,7 @@
 import { Target, TrendingUp, Clock, BarChart3, Edit3, Trash2, Sparkles, SlidersHorizontal, Brain, ImageIcon, Zap, Smile, Frown, Shield, X } from 'lucide-react';
 import Image from 'next/image';
 import ModalContainer from '@/components/ui/ModalContainer';
-import TradeForm from '@/components/TradeForm';
+import TradeForm from '@/components/trade/TradeForm';
 import ResultBadge from '@/components/ui/ResultBadge';
 import SessionBadge from '@/components/ui/SessionBadge';
 

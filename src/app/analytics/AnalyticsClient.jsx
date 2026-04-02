@@ -2,9 +2,9 @@
 
 import dynamic from 'next/dynamic';
 import { ChartSkeleton } from '@/components/ui/SkeletonLoader';
-import PlanGuard from '@/components/PlanGuard';
+import PlanGuard from '@/components/shared/PlanGuard';
 
-const AnalyticsContent = dynamic(() => import('@/components/AnalyticsContent'), {
+const AnalyticsContent = dynamic(() => import('@/components/insights/AnalyticsContent'), {
   ssr: false,
   loading: () => (
     <div className="px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">

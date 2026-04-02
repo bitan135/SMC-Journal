@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import { useTheme } from './ThemeProvider';
 import { PanelLeftOpen } from 'lucide-react';
-import { isPublicRoute } from '@/lib/routes';
+import { isPublicRoute } from '@/config/routes';
 
 export default function LayoutWrapper({ children }) {
   const { isSidebarCollapsed, setSidebarCollapsed } = useTheme();

@@ -14,7 +14,6 @@ export function captureReferral() {
     const expires = new Date();
     expires.setTime(expires.getTime() + (30 * 24 * 60 * 60 * 1000));
     document.cookie = `smc_referral_code=${ref};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
-    console.log(`[Referral] Captured code in cookie: ${ref}`);
   }
 }
 

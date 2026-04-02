@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
-import { ENV } from '@/lib/env';
-import { isPublicRoute, isProtectedRoute } from '@/lib/routes';
+import { ENV } from '@/config/env';
+import { isPublicRoute, isProtectedRoute } from '@/config/routes';
 
 export async function updateSession(request) {
   const host = request.headers.get('host') || '';

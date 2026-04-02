@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { 
   BarChart3, 
@@ -10,21 +11,24 @@ import {
   ArrowRight,
   CheckCircle2,
   Activity,
-  ChevronRight
+  ChevronRight,
+  Menu,
+  X
 } from 'lucide-react';
 
 export default function LandingPage() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white font-sans antialiased overflow-x-hidden">
       
-      {/* Navigation (Legacy Structure Retrieved) */}
+      {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 backdrop-blur-xl bg-white/80 border-b border-slate-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group cursor-pointer">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center shadow-lg shadow-indigo-600/20 group-hover:scale-105 transition-transform duration-500">
-              <TrendingUp size={22} className="text-white" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center shadow-lg shadow-indigo-600/20 group-hover:scale-105 transition-transform duration-500">
+              <TrendingUp size={20} className="text-white" />
             </div>
-            <span className="font-black text-xl tracking-tighter text-slate-900">SMC JOURNAL</span>
+            <span className="font-black text-lg sm:text-xl tracking-tighter text-slate-900">SMC JOURNAL</span>
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link href="/features" className="text-xs font-black uppercase tracking-[0.15em] text-slate-500 hover:text-indigo-600 transition-colors">Features</Link>
@@ -32,19 +36,47 @@ export default function LandingPage() {
             <Link href="/pricing" className="text-xs font-black uppercase tracking-[0.15em] text-slate-500 hover:text-indigo-600 transition-colors">Pricing</Link>
             <Link href="/affiliate" className="text-xs font-black uppercase tracking-[0.15em] text-slate-500 hover:text-indigo-600 transition-colors">Affiliate</Link>
           </div>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-xs font-black uppercase tracking-[0.15em] text-slate-500 hover:text-indigo-600 transition-colors px-4">Login</Link>
-            <Link href="/signup" className="px-6 py-3 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-slate-900/10">
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Link href="/login" className="hidden sm:block text-xs font-black uppercase tracking-[0.15em] text-slate-500 hover:text-indigo-600 transition-colors px-4">Login</Link>
+            <Link href="/signup" className="px-4 sm:px-6 py-2.5 sm:py-3 bg-slate-900 text-white rounded-lg text-[10px] font-black uppercase tracking-[0.2em] hover:scale-105 transition-all shadow-xl shadow-slate-900/10">
               Get Started
             </Link>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
+        </div>
+        {/* Mobile Menu Dropdown */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] bg-white/95 backdrop-blur-xl border-t border-slate-100 ${mobileMenuOpen ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="px-6 py-4 space-y-1">
+            {[
+              { href: '/features', label: 'Features' },
+              { href: '/insight-engine', label: 'Insight Engine' },
+              { href: '/pricing', label: 'Pricing' },
+              { href: '/affiliate', label: 'Affiliate' },
+              { href: '/login', label: 'Login' },
+            ].map(item => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block py-3 px-4 rounded-xl text-sm font-bold text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 transition-all"
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
         </div>
       </nav>
 
-      <main className="pt-20">
+      <main className="pt-16 sm:pt-20">
         
         {/* Minimalist Hero Section */}
-        <section className="relative pt-32 pb-40 overflow-hidden flex flex-col items-center justify-center min-h-[85vh] bg-white border-b border-slate-200">
+        <section className="relative pt-20 sm:pt-32 pb-20 sm:pb-40 overflow-hidden flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[85vh] bg-white border-b border-slate-200">
           {/* Subtle Grid Background */}
           <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
                style={{ backgroundImage: 'linear-gradient(rgba(15,23,42,1) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} 

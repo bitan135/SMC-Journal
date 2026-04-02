@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import { 
   Trash2, Download, Upload, ShieldCheck, Database, RefreshCcw, Bell, DollarSign, Percent, Globe, Save, Monitor, Moon, Sun, ArrowLeft, Sparkles, User, Fingerprint, LogOut
 } from 'lucide-react';
-import { useTheme } from '@/components/ThemeProvider';
+import { useTheme } from '@/components/shared/ThemeProvider';
 import { getTrades, getStrategies, migrateLocalToCloud } from '@/lib/storage';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/shared/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ui/ConfirmModal';

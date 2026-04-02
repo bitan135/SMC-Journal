@@ -1,15 +1,15 @@
 import { Inter } from 'next/font/google';
-import './globals.css';
-import Sidebar from '@/components/Sidebar';
-import LayoutWrapper from '@/components/LayoutWrapper';
+import '@/styles/globals.css';
+import Sidebar from '@/components/shared/Sidebar';
+import LayoutWrapper from '@/components/shared/LayoutWrapper';
 import Onboarding from '@/components/ui/Onboarding';
-import { ThemeProvider } from '@/components/ThemeProvider';
-import { AuthProvider } from '@/components/AuthProvider';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { ThemeProvider } from '@/components/shared/ThemeProvider';
+import { AuthProvider } from '@/components/shared/AuthProvider';
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary';
 import { ToastProvider } from '@/components/ui/Toast';
 import { ConfirmProvider } from '@/components/ui/ConfirmModal';
-import PostHogProvider from '@/components/PostHogProvider';
-import ReferralTracker from '@/components/ReferralTracker';
+import PostHogProvider from '@/components/shared/PostHogProvider';
+import ReferralTracker from '@/components/shared/ReferralTracker';
 
 const inter = Inter({
   subsets: ['latin'],

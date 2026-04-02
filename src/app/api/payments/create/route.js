@@ -1,8 +1,8 @@
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { nowPaymentsService } from '@/lib/payments/nowpayments';
 import { rateLimit } from '@/lib/rateLimit';
-import { ENV } from '@/lib/env';
+import { ENV } from '@/config/env';
 
 export async function POST(req) {
   const supabase = await createClient();

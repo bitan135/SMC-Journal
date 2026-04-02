@@ -10,7 +10,7 @@ import {
 } from '@/lib/storage';
 import { posthog } from '@/lib/posthog';
 import { Crown } from 'lucide-react';
-import TradeForm from '@/components/TradeForm';
+import TradeForm from '@/components/trade/TradeForm';
 
 export default function AddTrade() {
   const router = useRouter();

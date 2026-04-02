@@ -6,8 +6,8 @@ import {
   BarChart, Bar, PieChart, Pie, Cell,
 } from 'recharts';
 import { Target, TrendingUp, BarChart3, Clock, PieChart as PieIcon, Activity, Sparkles, Zap, ShieldCheck } from 'lucide-react';
-import { useAuth } from './AuthProvider';
-import ChartCard from '@/components/ChartCard';
+import { useAuth } from '@/components/shared/AuthProvider';
+import ChartCard from '@/components/dashboard/ChartCard';
 import EmptyState from '@/components/ui/EmptyState';
 import { ChartSkeleton } from '@/components/ui/SkeletonLoader';
 import {

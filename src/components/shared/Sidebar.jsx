@@ -2,7 +2,7 @@
 
 import { useAuth } from './AuthProvider';
 import { useTheme } from './ThemeProvider';
-import { isPublicRoute } from '@/lib/routes';
+import { isPublicRoute } from '@/config/routes';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {

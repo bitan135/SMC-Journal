@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { Target, TrendingUp, BarChart3, X } from 'lucide-react';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '@/components/shared/AuthProvider';
 
 const steps = [
   {

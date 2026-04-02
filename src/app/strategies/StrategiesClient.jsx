@@ -11,7 +11,7 @@ import EmptyState from '@/components/ui/EmptyState';
 import { MetricSkeleton } from '@/components/ui/SkeletonLoader';
 import { useToast } from '@/components/ui/Toast';
 import { useConfirm } from '@/components/ui/ConfirmModal';
-import PlanGuard from '@/components/PlanGuard';
+import PlanGuard from '@/components/shared/PlanGuard';
 
 export default function Strategies() {
   const [strategies, setStrategies] = useState([]);

@@ -7,8 +7,8 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import MetricCard from '@/components/MetricCard';
-const DashboardCharts = dynamic(() => import('@/components/DashboardCharts'), {
+import MetricCard from '@/components/dashboard/MetricCard';
+const DashboardCharts = dynamic(() => import('@/components/dashboard/DashboardCharts'), {
   ssr: false,
   loading: () => (
     <>
@@ -19,7 +19,7 @@ const DashboardCharts = dynamic(() => import('@/components/DashboardCharts'), {
 });
 import { MetricSkeleton } from '@/components/ui/SkeletonLoader';
 import EmptyState from '@/components/ui/EmptyState';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/shared/AuthProvider';
 import {
   getTrades, getWinRate, getProfitFactor, getAverageRR,
   getEquityCurve, getWinRateByGroup, getStrategyInsights,

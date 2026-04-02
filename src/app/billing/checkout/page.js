@@ -7,7 +7,7 @@ import {
   ArrowRight, Loader2, Check, AlertCircle, Zap, Crown, Copy, ExternalLink, RefreshCcw, Clock
 } from 'lucide-react';
 import Link from 'next/link';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/shared/AuthProvider';
 
 const planDetails = {
   pro: { name: 'Pro Trader', price: 20, icon: Zap, color: '#6366F1' },
