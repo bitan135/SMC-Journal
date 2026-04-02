@@ -171,10 +171,9 @@ export default function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-4 left-4 right-4 h-16 md:h-20 bg-white/90 backdrop-blur-xl rounded-2xl border border-slate-200 z-50 flex items-center justify-around px-2 shadow-xl shadow-slate-200/50">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-2xl border-t border-slate-200 z-50 flex items-center justify-around px-2 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
         {navItems
           .filter(item => ['Dashboard', 'Trades', 'Add Trade', 'Analytics', 'Settings'].includes(item.label))
-          .concat([{ href: '#', label: 'Logout', icon: LogOut, onClick: signOut }])
           .map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -188,8 +187,8 @@ export default function Sidebar() {
                 } ${item.label === 'Logout' ? 'hover:text-rose-600 hover:bg-rose-50 p-2 rounded-xl' : ''}`}
               >
                 {item.href === '/add-trade' ? (
-                  <Link href="/add-trade">
-                    <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-indigo-600 flex items-center justify-center -mt-8 shadow-xl shadow-indigo-600/40 border-4 border-slate-50">
+                  <Link href="/add-trade" className="flex flex-col items-center">
+                    <div className={`w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all shadow-lg ${isActive ? 'bg-indigo-700 shadow-indigo-700/40 scale-105' : 'bg-indigo-600 shadow-indigo-600/30'}`}>
                       <Icon size={24} className="text-white" />
                     </div>
                   </Link>
