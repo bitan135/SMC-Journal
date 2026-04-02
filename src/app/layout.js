@@ -22,15 +22,6 @@ export const metadata = {
   description: 'Track your trades, identify mistakes, and improve your execution with SMC Journal. A free trading journal built for serious traders.',
   keywords: 'trading journal, forex trading journal, smc trading journal, free trading journal, trading analytics tool, smart money concepts, trading log, trade tracker',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://smcjournal.com'),
-  icons: {
-    icon: [
-      { url: '/favicon.png', type: 'image/png' },
-      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
-    ],
-    apple: [
-      { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
   openGraph: {
     title: 'SMC Journal – The Professional SMC Trading Journal',
     description: 'Track your trades, identify mistakes, and improve your execution. Built for serious traders.',
