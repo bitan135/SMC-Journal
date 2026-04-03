@@ -3,11 +3,12 @@ import FoundingMemberClient from './FoundingMemberClient';
 export const metadata = {
   title: 'Founding Member Offer — SMC Journal',
   description: 'Join the exclusive 10-person founding member group for SMC Journal and secure lifetime access.',
+  metadataBase: new URL('https://smcjournal.app'),
   openGraph: {
     title: 'Founding Member Offer — SMC Journal',
     description: 'Own the edge for a lifetime. Only 10 spots remaining.',
     images: [{ 
-      url: 'https://smcjournal.app/founding-member-og.png',
+      url: '/founding-member-og.png',
       width: 1200,
       height: 630,
       alt: 'Founding Member Offer — SMC Journal'
