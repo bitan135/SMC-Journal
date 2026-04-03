@@ -144,7 +144,7 @@ export function AuthProvider({ children }) {
   // Optimized Gate: Only block if we are genuinely waiting for the VERY first session check.
   // We no longer block on profile/subscription fetching.
   const isRedirecting = !isLoading && user && isPublicRoute(pathname);
-  const shouldShowGate = isLoading && pathname !== '/';
+  const shouldShowGate = isLoading && pathname !== '/' && pathname !== '/founding-member';
 
   if (shouldShowGate) {
     return (
