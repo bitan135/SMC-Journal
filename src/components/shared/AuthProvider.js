@@ -106,10 +106,16 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     // Client-side session sync guard
     // If the client hydrates and sees a user, but we are on a public route (like / or /login),
-    // we should immediately push them to the dashboard to handle "middleware misses".
+    // we should immediately push them to their destination.
     if (!isLoading && user && isPublicRoute(pathname)) {
-      // Use window.location.href for a clean reset across potential domain boundaries
-      window.location.href = '/dashboard';
+      // Improved Redirect logic: check for 'next' parameter to support checkout funnel
+      const searchParams = new URLSearchParams(window.location.search);
+      const next = searchParams.get('next');
+      
+      const targetPath = (next && next.startsWith('/')) ? next : '/dashboard';
+      
+      console.log(`[AuthProvider] User session detected on public route. Redirecting to: ${targetPath}`);
+      window.location.href = targetPath;
     }
   }, [user, isLoading, pathname]);
 

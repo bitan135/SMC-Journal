@@ -174,75 +174,143 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Phase 3: Abstract CSS Visual (Insight Engine) */}
-        <section id="insight-engine" className="py-16 md:py-32 bg-white border-y border-slate-200">
-          <div className="max-w-7xl mx-auto px-6 text-center space-y-20">
-            <div className="space-y-6 max-w-3xl mx-auto">
-               <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-slate-900">
-                 Quantify Your <span className="text-indigo-600">Trading Model.</span>
-               </h2>
-               <p className="text-lg text-slate-500 font-medium leading-relaxed">
-                 Transform raw chart execution into actionable insight. Know clearly which specific setup yields the highest risk-to-reward ratio for your personality.
-               </p>
-            </div>
+        {/* Phase 3: Premium Insight Engine Visual */}
+        <section id="insight-engine" className="py-24 md:py-40 bg-white relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(#4f46e5 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+          
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8 text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-600 text-[10px] font-black uppercase tracking-widest">
+                  <Sparkles size={12} /> The Insight Engine
+                </div>
+                <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-slate-900 leading-[0.95]">
+                  Institutional Logic. <br />
+                  <span className="text-indigo-600">Quantified.</span>
+                </h2>
+                <p className="text-lg text-slate-500 font-medium leading-relaxed max-w-xl">
+                  Most journals give you a P&L curve. We give you a structural diagnostic. The Insight Engine audits every execution against HTF narrative, liquidity sweeps, and Fair Value Gaps to isolate your true edge.
+                </p>
+                
+                <div className="space-y-4 pt-4">
+                   {[
+                     { t: "Structural Sync Analysis", d: "Correlation between HTF bias and LTF execution." },
+                     { t: "Liquidity Window Audits", d: "Performance metrics filtered by session killzones." },
+                     { t: "Psychological Leak Detection", d: "The financial cost of emotional vs. logical trades." }
+                   ].map((item, i) => (
+                     <div key={i} className="flex gap-4">
+                        <div className="mt-1 w-5 h-5 rounded-full bg-indigo-600 flex items-center justify-center shrink-0">
+                           <CheckCircle2 size={12} className="text-white" />
+                        </div>
+                        <div className="space-y-1">
+                           <h4 className="text-sm font-bold text-slate-900 leading-none">{item.t}</h4>
+                           <p className="text-xs text-slate-500 font-medium">{item.d}</p>
+                        </div>
+                     </div>
+                   ))}
+                </div>
+              </div>
 
-            {/* Abstract Analytics Chart Mockup */}
-            <div className="relative max-w-4xl mx-auto">
-               <div className="bg-slate-50 border border-slate-200 rounded-3xl p-8 md:p-12 overflow-hidden shadow-xl relative" style={{ minHeight: '340px' }}>
-                  
-                  {/* Legend */}
-                  <div className="flex items-center justify-between mb-8">
-                    <div className="flex items-center gap-3 bg-white px-4 py-2 border border-slate-200 rounded-full shadow-sm">
-                       <div className="w-2 h-2 rounded-full bg-indigo-600 animate-pulse" />
-                       <span className="text-[10px] font-black uppercase tracking-widest text-slate-600">Model Expectancy Flow</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-indigo-500" /><span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Profit</span></div>
-                      <div className="flex items-center gap-1.5"><div className="w-2.5 h-2.5 rounded-sm bg-rose-400" /><span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Drawdown</span></div>
-                    </div>
-                  </div>
-                  
-                  {/* Chart Area */}
-                  <div className="relative" style={{ height: '200px' }}>
-                    {/* Zero line at 30% from bottom for negative bars */}
-                    <div className="absolute left-0 right-0 bottom-[30%] border-t border-dashed border-slate-300" />
-                    <div className="absolute left-0 right-0 bottom-[30%] flex items-end justify-between gap-2 md:gap-3 px-2" style={{ height: '70%' }}>
-                       {[30, 55, 20, 70, 45, 15, 80, 95, 75, 100].map((h, i) => (
-                          <div key={i} className="flex-1 group relative">
-                             <div 
-                               className="w-full bg-indigo-500 rounded-t-lg group-hover:bg-indigo-600 transition-all duration-300 shadow-sm"
-                               style={{ height: `${h}%`, minHeight: '8px' }}
-                             />
-                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-slate-900 text-white text-[10px] px-2.5 py-1 rounded-lg shadow-lg transition-opacity whitespace-nowrap z-10 pointer-events-none font-bold">
-                                +{(h * 0.42).toFixed(1)}R
-                             </div>
-                          </div>
-                       ))}
-                    </div>
-                    {/* Negative bars below zero line */}
-                    <div className="absolute left-0 right-0 top-[70%] flex items-start justify-between gap-2 md:gap-3 px-2" style={{ height: '30%' }}>
-                       {[0, 0, 50, 0, 0, 80, 0, 0, 30, 0].map((h, i) => (
-                          <div key={i} className="flex-1 group relative">
-                             {h > 0 && (
-                               <div 
-                                 className="w-full bg-rose-400 rounded-b-lg group-hover:bg-rose-500 transition-all duration-300 shadow-sm"
-                                 style={{ height: `${h}%`, minHeight: '4px' }}
-                               />
-                             )}
-                          </div>
-                       ))}
-                    </div>
-                  </div>
+              {/* High-Fidelity Dashboard Mockup */}
+              <div className="relative group">
+                <div className="absolute -inset-4 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-[40px] blur-2xl group-hover:blur-3xl transition-all duration-700" />
+                <div className="relative bg-slate-950 rounded-[32px] border border-slate-800 shadow-2xl p-6 md:p-8 overflow-hidden aspect-[4/3] flex flex-col gap-6">
+                   
+                   {/* Top Bar Actions */}
+                   <div className="flex items-center justify-between border-b border-slate-800 pb-6">
+                      <div className="flex items-center gap-3">
+                         <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+                            <Binary size={16} className="text-white" />
+                         </div>
+                         <div className="flex flex-col">
+                            <span className="text-[10px] font-black text-white uppercase tracking-widest">Diagnostic v2.4</span>
+                            <span className="text-[8px] font-bold text-slate-500 uppercase tracking-widest">HTF/LTF SYNC ACTIVE</span>
+                         </div>
+                      </div>
+                      <div className="flex gap-2">
+                         <div className="w-2 h-2 rounded-full bg-slate-800" />
+                         <div className="w-2 h-2 rounded-full bg-slate-800" />
+                         <div className="w-2 h-2 rounded-full bg-indigo-500" />
+                      </div>
+                   </div>
 
-                  {/* X-Axis Labels */}
-                  <div className="flex items-center justify-between px-2 mt-3 border-t border-slate-200 pt-3">
-                    {['Mon','Tue','Wed','Thu','Fri','Mon','Tue','Wed','Thu','Fri'].map((d, i) => (
-                      <span key={i} className="flex-1 text-center text-[9px] font-bold text-slate-400 uppercase tracking-wider">{d}</span>
-                    ))}
-                  </div>
-               </div>
+                   {/* Main Metrics */}
+                   <div className="grid grid-cols-3 gap-4">
+                      {[
+                        { l: "EXPECTANCY", v: "+0.84R", c: "text-emerald-400" },
+                        { l: "WIN RATE", v: "64.2%", c: "text-white" },
+                        { l: "PROFIT FACTOR", v: "2.41", c: "text-indigo-400" }
+                      ].map((m, i) => (
+                        <div key={i} className="bg-white/5 rounded-2xl p-4 border border-white/5">
+                           <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest block mb-1">{m.l}</span>
+                           <span className={`text-sm md:text-lg font-black ${m.c}`}>{m.v}</span>
+                        </div>
+                      ))}
+                   </div>
+
+                   {/* Visual Graph Bar (Simplified for Premium Feel) */}
+                   <div className="flex-grow bg-white/[0.02] border border-white/5 rounded-2xl p-6 flex flex-col justify-between">
+                      <div className="flex justify-between items-center mb-4">
+                         <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Model Probability Distribution</span>
+                         <span className="text-[9px] font-black text-indigo-400 uppercase tracking-widest">Institutional Mode</span>
+                      </div>
+                      <div className="h-32 flex items-end justify-between gap-2">
+                         {[40, 70, 45, 90, 60, 30, 85, 55, 100, 75].map((h, i) => (
+                           <div key={i} className="flex-1 group/bar relative">
+                              <div 
+                                className="w-full bg-gradient-to-t from-indigo-600/50 to-indigo-500 rounded-t-md transition-all duration-1000 origin-bottom scale-y-0 animate-[grow_1s_ease-out_forwards]"
+                                style={{ height: `${h}%`, animationDelay: `${i * 0.1}s` }}
+                              />
+                              <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover/bar:opacity-100 transition-opacity">
+                                 <span className="text-[8px] font-black text-white bg-slate-900 px-2 py-1 rounded border border-white/10">+{(h/12).toFixed(1)}%</span>
+                              </div>
+                           </div>
+                         ))}
+                      </div>
+                      <div className="flex justify-between mt-4">
+                         {['EU','GU','AU','GOLD','USD','JPY','GBP','NZD','CAD','CHF'].map((sym, i) => (
+                           <span key={i} className="flex-1 text-center text-[7px] font-black text-slate-600 uppercase tracking-widest">{sym}</span>
+                         ))}
+                      </div>
+                   </div>
+
+                   {/* Dynamic Status Bar */}
+                   <div className="pt-2 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                         <div className="flex h-2 w-2 relative">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                         </div>
+                         <span className="text-[8px] font-black text-slate-500 uppercase tracking-[0.2em]">Live Analytical Sync Stream</span>
+                      </div>
+                      <div className="px-3 py-1 bg-white/5 rounded-full border border-white/5 text-[8px] font-black text-indigo-300 uppercase tracking-widest">
+                         SMC Logic Enabled
+                      </div>
+                   </div>
+                </div>
+
+                {/* Floating Aesthetic Labels */}
+                <div className="absolute -top-6 -right-6 bg-white border border-slate-200 px-4 py-2 rounded-xl shadow-xl flex items-center gap-2 animate-bounce-slow">
+                   <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                   <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest">Model Confirmed</span>
+                </div>
+                <div className="absolute -bottom-4 -left-4 bg-indigo-600 text-white px-4 py-2 rounded-xl shadow-xl flex items-center gap-2">
+                   <Zap size={12} />
+                   <span className="text-[10px] font-black uppercase tracking-widest">Auto-Audited</span>
+                </div>
+              </div>
             </div>
           </div>
+          
+          <style jsx>{`
+            @keyframes bounce-slow {
+              0%, 100% { transform: translateY(0); }
+              50% { transform: translateY(-10px); }
+            }
+            .animate-bounce-slow {
+              animation: bounce-slow 4s ease-in-out infinite;
+            }
+          `}</style>
         </section>
 
         {/* Phase 4: Extreme SEO Targeting Section */}

@@ -12,6 +12,8 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  const { billing } = await req.json();
+
   // Rate limiting (3 requests per minute per user)
   const limit = rateLimit(`payment_fm_${user.id}`, 3, 60000);
   if (!limit.success) {
@@ -58,7 +60,7 @@ export async function POST(req) {
       price_amount: 79,
       price_currency: 'usd',
       pay_currency: 'usdtarb', // USDT on Arbitrum
-      ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`, // Reusing mapped hook wrapper
+      ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: orderId,
       order_description: "SMC Journal Founding Member Lifetime Plan",
       success_url: `${baseUrl}/dashboard?payment=success&plan=founding-member`,
@@ -85,7 +87,7 @@ export async function POST(req) {
       pay_amount: payment.pay_amount,
       pay_currency: payment.pay_currency,
       plan_id: 'lifetime',
-      billing_details: {}
+      billing_details: billing || {}
     });
 
     if (dbError) throw dbError;

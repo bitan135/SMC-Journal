@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/components/shared/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, Loader2, CheckCircle2, ChevronRight, Lock } from 'lucide-react';
+import { ShieldCheck, Loader2, CheckCircle2, ChevronRight, Lock, TrendingUp, ArrowRight, Wallet, BadgeCheck, Sparkles, Zap, Crown } from 'lucide-react';
 import Link from 'next/link';
 
 export default function FoundingMemberCheckout() {
@@ -11,22 +11,41 @@ export default function FoundingMemberCheckout() {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
+  
+  // Billing Form State
+  const [billingData, setBillingData] = useState({
+    fullName: '',
+    email: '',
+    region: 'United States'
+  });
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.replace('/login?next=/checkout/founding-member');
+      const nextUrl = '/checkout/founding-member';
+      router.replace(`/login?next=${encodeURIComponent(nextUrl)}`);
+    } else if (user) {
+      setBillingData(prev => ({
+        ...prev,
+        fullName: profile?.full_name || '',
+        email: user.email || ''
+      }));
     }
-  }, [user, authLoading, router]);
+  }, [user, profile, authLoading, router]);
 
   if (authLoading || !user) {
     return (
-      <div className="min-h-screen bg-[var(--background)] flex items-center justify-center">
-        <Loader2 className="animate-spin text-[var(--accent)]" size={32} />
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center space-y-4">
+        <Loader2 className="animate-spin text-indigo-500" size={32} />
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Securing Session...</span>
       </div>
     );
   }
 
+  const isFormValid = billingData.fullName.trim().length > 2 && billingData.email.includes('@');
+
   const handleCheckout = async () => {
+    if (!isFormValid) return;
+    
     try {
       setIsProcessing(true);
       setError(null);
@@ -34,6 +53,7 @@ export default function FoundingMemberCheckout() {
       const res = await fetch('/api/payments/create-founding-member', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ billing: billingData })
       });
 
       const data = await res.json();
@@ -55,84 +75,186 @@ export default function FoundingMemberCheckout() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--background)] py-20 px-4 flex flex-col items-center">
-      <div className="w-full max-w-2xl">
-        <div className="flex items-center gap-2 text-sm text-[var(--text-muted)] mb-8 font-black uppercase tracking-widest">
-            <Link href="/" className="hover:text-[var(--foreground)] transition-colors">Home</Link>
-            <ChevronRight size={14} />
-            <span className="text-[var(--accent)]">Secure Checkout</span>
+    <div className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500 font-sans antialiased overflow-x-hidden pt-12 relative">
+      
+      {/* Background Ambience */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 blur-[130px] rounded-full pointer-events-none opacity-50" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none opacity-50" />
+
+      <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
+        
+        {/* Simple Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+          <Link href="/founding-member" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20">
+                <TrendingUp size={16} className="text-white" />
+              </div>
+              <span className="font-black text-sm tracking-tighter text-white uppercase">SMC Journal</span>
+          </Link>
+          
+          {/* Progress Stepper */}
+          <div className="flex items-center gap-4">
+             <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-full bg-indigo-600/20 border border-indigo-500/50 flex items-center justify-center">
+                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                </div>
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Billing</span>
+             </div>
+             <div className="w-8 h-px bg-slate-800" />
+             <div className="flex items-center gap-2 opacity-30">
+                <div className="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Payment</span>
+             </div>
+          </div>
         </div>
 
-        <div className="glass-card shadow-premium p-8 md:p-12 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)]/10 blur-[80px] rounded-full -translate-y-1/2 translate-x-1/4 pointer-events-none" />
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
           
-          <div className="flex items-center gap-4 mb-10 pb-10 border-b border-[var(--border)]">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center shadow-lg shadow-[var(--accent)]/20">
-              <ShieldCheck className="text-white" size={32} />
+          {/* Left: Billing Form */}
+          <div className="lg:col-span-7 space-y-8">
+            <div className="space-y-4">
+               <h1 className="text-4xl font-black tracking-tighter text-white leading-tight">Billing & Member <br />Information</h1>
+               <p className="text-slate-400 font-medium leading-relaxed max-w-md text-sm">
+                 Complete your details to secure your permanent account status. Your Founding Member certificate and communication will be sent to this email.
+               </p>
             </div>
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-[var(--foreground)] tracking-tight">Complete Your Order</h1>
-              <p className="text-[var(--text-muted)] text-sm mt-1">Founding Member Lifetime Access</p>
+
+            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-[32px] p-8 space-y-6">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                     <input 
+                        type="text" 
+                        value={billingData.fullName}
+                        onChange={(e) => setBillingData({...billingData, fullName: e.target.value})}
+                        className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 outline-none transition-colors"
+                        placeholder="e.g. John Smith"
+                     />
+                  </div>
+                  <div className="space-y-2">
+                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Billing Email</label>
+                     <input 
+                        type="email" 
+                        value={billingData.email}
+                        readOnly
+                        className="w-full bg-slate-900/30 border border-slate-800/50 rounded-xl px-4 py-3 text-sm text-slate-500 outline-none cursor-not-allowed"
+                     />
+                  </div>
+               </div>
+               <div className="space-y-2">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Region / Country</label>
+                  <select 
+                     value={billingData.region}
+                     onChange={(e) => setBillingData({...billingData, region: e.target.value})}
+                     className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 outline-none transition-colors appearance-none"
+                  >
+                     <option>United States</option>
+                     <option>United Kingdom</option>
+                     <option>Europe</option>
+                     <option>Asia</option>
+                     <option>Africa</option>
+                     <option>Oceania</option>
+                     <option>South America</option>
+                     <option>Middle East</option>
+                  </select>
+               </div>
+            </div>
+
+            <div className="p-1 rounded-[32px] bg-gradient-to-br from-indigo-500/10 to-transparent">
+              <div className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[30px] p-8 space-y-6">
+                <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">Lifetime Summary</h3>
+                <ul className="space-y-4">
+                  {[
+                    { t: "Founding Member Insight Engine", d: "Early access to behavioral trade synthesis core.", i: Sparkles },
+                    { t: "Institutional Diagnostics", d: "Advanced trade metrics and risk profiling.", i: Zap },
+                    { t: "Permanent Pro Status", d: "Zero renewal fees, forever.", i: Crown },
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-4">
+                      <div className="mt-1 w-5 h-5 rounded-md bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-center shrink-0">
+                         <item.i className="text-indigo-400" size={12} />
+                      </div>
+                      <div className="space-y-0.5">
+                         <h4 className="text-sm font-black text-white leading-tight">{item.t}</h4>
+                         <p className="text-[11px] text-slate-500 font-medium">{item.d}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[var(--text-muted)]">Order Summary</h2>
-              
-              <ul className="space-y-4">
-                {[
-                  "Lifetime Access to SMC Journal Pro",
-                  "Advanced Quantitative Analytics Unlocked",
-                  "AI Session Insights & Playbook Modeling",
-                  "Priority Feature Request Pipeline"
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <CheckCircle2 className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
-                    <span className="text-sm text-[var(--foreground)] font-medium leading-relaxed">{item}</span>
-                  </li>
-                ))}
-              </ul>
+          {/* Right: Checkout Sidebar */}
+          <div className="lg:col-span-5 sticky top-12">
+            <div className="bg-white rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden text-slate-900">
+               {/* Decorative glow */}
+               <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 blur-[40px] rounded-full pointer-events-none" />
+               
+               <div className="flex items-center justify-between mb-8">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Order Summary</span>
+                  <div className="px-2 py-1 rounded bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase tracking-widest">Lifetime Only</div>
+               </div>
+
+               <div className="space-y-4 mb-8 text-sm">
+                  <div className="flex justify-between">
+                     <span className="font-bold text-slate-500">Founding Member Pass</span>
+                     <span className="font-black">$79.00</span>
+                  </div>
+                  <div className="flex justify-between">
+                     <span className="font-bold text-slate-500">Platform Onboarding</span>
+                     <span className="font-black text-emerald-600">FREE</span>
+                  </div>
+               </div>
+
+               <div className="h-px bg-slate-100 mb-6" />
+
+               <div className="flex items-baseline justify-between mb-10">
+                  <span className="text-lg font-black text-slate-900">Total Due</span>
+                  <span className="text-4xl font-black text-slate-900">$79</span>
+               </div>
+
+               {error && (
+                 <div className="mb-6 p-4 bg-rose-50 border border-rose-100 rounded-2xl flex items-start gap-3">
+                   <div className="mt-0.5 w-4 h-4 rounded-full bg-rose-500 flex items-center justify-center shrink-0">
+                      <Lock size={10} className="text-white" />
+                   </div>
+                   <p className="text-[11px] text-rose-600 font-bold leading-tight">{error}</p>
+                 </div>
+               )}
+
+               <button
+                 onClick={handleCheckout}
+                 disabled={isProcessing || !isFormValid}
+                 className="w-full py-5 rounded-2xl bg-indigo-600 text-white font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-indigo-600/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed"
+               >
+                 {isProcessing ? (
+                   <>
+                     <Loader2 className="animate-spin" size={16} />
+                     Initiating...
+                   </>
+                 ) : (
+                   <>
+                     <Wallet size={16} className="group-hover:-rotate-12 transition-transform" />
+                     {isFormValid ? 'Continue to Payment' : 'Fill Form Above'}
+                   </>
+                 )}
+               </button>
+
+               <p className="mt-6 text-[10px] text-center text-slate-400 font-bold uppercase tracking-widest flex items-center justify-center gap-2">
+                  <Lock size={10} className="text-slate-300" /> Secure Crypto Checkout
+               </p>
             </div>
 
-            <div className="bg-[var(--card)] border border-[var(--border)] p-6 rounded-3xl self-start sticky top-24">
-              <div className="flex justify-between items-center mb-6">
-                <span className="text-sm font-bold text-[var(--text-muted)]">Total Due Today</span>
-                <span className="text-4xl font-black text-[var(--foreground)]">$79</span>
-              </div>
-
-              {error && (
-                <div className="mb-6 p-4 bg-[#EF444410] border border-[#EF444420] rounded-2xl text-[13px] text-[#EF4444] font-medium animate-slide-up">
-                  {error}
-                </div>
-              )}
-
-              <button
-                onClick={handleCheckout}
-                disabled={isProcessing}
-                className="w-full py-4 rounded-[20px] bg-[var(--accent)] text-white font-black text-sm tracking-[0.2em] uppercase hover:shadow-[0_0_30px_rgba(99,102,241,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {isProcessing ? (
-                  <>
-                    <Loader2 className="animate-spin" size={18} />
-                    Processing...
-                  </>
-                ) : (
-                  <>
-                    <Lock size={16} />
-                    Pay with Crypto
-                  </>
-                )}
-              </button>
-              
-              <p className="text-[10px] text-center text-[var(--text-muted)] mt-5 font-medium flex items-center justify-center gap-1.5">
-                <ShieldCheck size={12} className="text-[var(--profit)]" />
-                Payments processed securely via NOWPayments
-              </p>
-            </div>
+            <Link href="/founding-member" className="inline-flex items-center gap-2 mt-6 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors mx-auto w-full justify-center">
+               Cancel Selection
+            </Link>
           </div>
         </div>
       </div>
+      
+      <style jsx global>{`
+        body { background-color: #020617; }
+      `}</style>
     </div>
   );
 }
