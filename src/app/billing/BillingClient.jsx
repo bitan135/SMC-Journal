@@ -146,40 +146,47 @@ export default function BillingPage() {
           })}
         </div>
 
-        <div className="mt-24 p-12 rounded-[40px] bg-slate-900 shadow-2xl relative overflow-hidden group border border-white/5">
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-emerald-500/10 opacity-50 transition-opacity duration-1000"></div>
+        <div className="mt-24 p-12 rounded-[40px] bg-white shadow-premium relative overflow-hidden group border border-slate-100">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 via-transparent to-emerald-500/5 opacity-50 transition-opacity duration-1000"></div>
             
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-left">
                 <div className="space-y-6">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black uppercase tracking-widest">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-[10px] font-black uppercase tracking-widest">
                        Secure Protocol
                     </div>
-                    <h3 className="text-3xl font-black tracking-tighter text-white leading-tight">Professional <br />Infrastructure</h3>
-                    <p className="text-slate-400 font-medium leading-relaxed max-w-md">
+                    <h3 className="text-3xl font-black tracking-tighter text-slate-900 leading-tight">Professional <br />Infrastructure</h3>
+                    <p className="text-slate-500 font-medium leading-relaxed max-w-md">
                       SMC Journal partners with **NOWPayments** to deliver institutional-grade cryptographic settlements. Your transactions are handled across distributed ledgers for maximum speed and sub-cent overhead.
                     </p>
                 </div>
 
                 <div className="flex flex-col items-center lg:items-end gap-8">
-                    <div className="p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 w-full max-w-sm space-y-6 shadow-xl">
+                    <div className="p-8 rounded-3xl bg-slate-50 backdrop-blur-xl border border-slate-100 w-full max-w-sm space-y-6 shadow-sm group-hover:border-indigo-200 transition-all">
                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Processing Engine</span>
-                          <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Status: Online</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Processing Engine</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Status: Online</span>
                        </div>
                        <div className="flex items-center gap-4">
                           <img 
-                            src="https://nowpayments.io/images/nowpayments-logo-white.svg" 
+                            src="https://nowpayments.io/images/nowpayments-logo-black.svg" 
                             className="h-6"
                             alt="NOWPayments" 
+                            onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.nextSibling.style.display = 'block';
+                            }}
                           />
-                          <div className="h-6 w-px bg-slate-800"></div>
+                          {/* Fallback text if logo fails */}
+                          <span className="hidden font-black text-slate-900 tracking-tighter text-xl">NOWPayments</span>
+                          
+                          <div className="h-6 w-px bg-slate-200"></div>
                           <div className="flex items-center gap-2">
                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                             <span className="text-[11px] font-black text-white uppercase tracking-wider">Live Settlement Layer</span>
+                             <span className="text-[11px] font-black text-slate-900 uppercase tracking-wider">Live Layer</span>
                           </div>
                        </div>
-                       <p className="text-[10px] text-slate-500 font-bold leading-relaxed uppercase tracking-wide">
-                          Supporting 300+ Digital Assets with instant on-chain finality.
+                       <p className="text-[10px] text-slate-400 font-bold leading-relaxed uppercase tracking-wide">
+                          Supporting 300+ Digital Assets with instant settlement.
                        </p>
                     </div>
                 </div>

@@ -62,7 +62,7 @@ export async function POST(req) {
       ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: orderId,
       order_description: "SMC Journal Founding Member Lifetime Plan",
-      success_url: `${baseUrl}/dashboard?payment=success&plan=founding-member`,
+      success_url: `${baseUrl}/payment-success?plan=founding-member`,
       cancel_url: `${baseUrl}/checkout/founding-member?cancelled=true`
     };
 

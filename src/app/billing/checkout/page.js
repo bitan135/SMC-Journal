@@ -315,9 +315,18 @@ function CheckoutFormContent() {
             </div>
           </div>
           
-          <div className="px-10 py-8 rounded-[40px] bg-white/5 border border-white/10 flex items-center gap-6">
-              <img src="https://nowpayments.io/images/nowpayments-logo-white.svg" className="h-5 opacity-50 grey-invert" alt="NOWPayments" />
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed">
+          <div className="px-10 py-8 rounded-[40px] bg-slate-50 border border-slate-100 flex items-center gap-6 transition-all hover:border-indigo-100">
+              <img 
+                src="https://nowpayments.io/images/nowpayments-logo-black.svg" 
+                className="h-5 opacity-80" 
+                alt="NOWPayments" 
+                onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextSibling.style.display = 'block';
+                }}
+              />
+              <span className="hidden font-black text-slate-900 tracking-tighter text-lg">NOWPayments</span>
+              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
                  You will be redirected to the secure NOWPayments gateway for final cryptographic settlement.
               </p>
           </div>

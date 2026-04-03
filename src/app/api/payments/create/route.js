@@ -51,7 +51,7 @@ export async function POST(req) {
       ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: `${user.id}_${Date.now()}`,
       order_description: `SMC Journal ${planId.replace('_', ' ').toUpperCase()} Plan${isPromo ? ' (PROMO: SMC2026)' : ''}`,
-      success_url: `${baseUrl}/dashboard?payment=success`,
+      success_url: `${baseUrl}/payment-success?plan=${planId}`,
       cancel_url: `${baseUrl}/billing?cancelled=true`
     };
 
