@@ -51,7 +51,7 @@ export async function POST(req) {
       return NextResponse.json({ error: 'You are already a Lifetime Pro Member.' }, { status: 400 });
     }
 
-    // 3. Initiate NOWPayments
+    // 3. Initiate NOWPayments Invoice
     const baseUrl = ENV.SITE_URL.replace(/\/$/, '');
     
     // As instructed by architectural design: 'founding-member-{user_id}-{timestamp}'
@@ -59,7 +59,6 @@ export async function POST(req) {
     const payload = {
       price_amount: 79,
       price_currency: 'usd',
-      pay_currency: 'usdtarb', // USDT on Arbitrum
       ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: orderId,
       order_description: "SMC Journal Founding Member Lifetime Plan",
@@ -67,35 +66,33 @@ export async function POST(req) {
       cancel_url: `${baseUrl}/checkout/founding-member?cancelled=true`
     };
 
-    const payment = await nowPaymentsService.createPayment(payload);
+    const invoice = await nowPaymentsService.createInvoice(payload);
 
-    if (payment.status === false || payment.error || !payment.payment_id) {
-       const msg = payment.message || payment.error || 'NOWPayments API Error';
-       console.error('[Founding Member] Payment Error Details:', payment);
+    if (invoice.status === false || invoice.error || !invoice.id) {
+       const msg = invoice.message || invoice.error || 'NOWPayments API Error';
+       console.error('[Founding Member] Invoice Error Details:', invoice);
        return NextResponse.json({ error: msg }, { status: 400 });
     }
 
     // Save payment record in DB referencing this order
+    // Note: We store the invoice ID in the payment_id column for initial tracking
     const { error: dbError } = await supabase.from('crypto_payments').insert({
       user_id: user.id,
-      payment_id: String(payment.payment_id),
-      order_id: payment.order_id,
+      payment_id: String(invoice.id),
+      order_id: invoice.order_id,
       price_amount: 79,
       price_currency: 'usd',
-      payment_status: payment.payment_status,
-      pay_address: payment.pay_address,
-      pay_amount: payment.pay_amount,
-      pay_currency: payment.pay_currency,
+      payment_status: 'created',
       plan_id: 'lifetime',
       billing_details: billing || {}
     });
 
     if (dbError) throw dbError;
 
-    console.log(`[FOUNDING_PAYMENT_CREATED] user_id=${user.id} payment_id=${payment.payment_id}`);
+    console.log(`[FOUNDING_INVOICE_CREATED] user_id=${user.id} invoice_id=${invoice.id}`);
 
-    // Frontend handles redirect
-    return NextResponse.json(payment);
+    // Frontend handles redirect using invoice_url
+    return NextResponse.json(invoice);
   } catch (error) {
     console.error('[Founding Member] Payment creation error:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });

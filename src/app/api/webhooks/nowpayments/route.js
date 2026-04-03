@@ -34,7 +34,7 @@ export async function POST(req) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
   }
 
-  const { payment_status, payment_id, order_id } = payload;
+  const { payment_status, payment_id, order_id, invoice_id } = payload;
   
   if (!payment_id || !order_id || typeof order_id !== 'string') {
     return NextResponse.json({ error: 'Incomplete payload' }, { status: 400 });
@@ -48,18 +48,21 @@ export async function POST(req) {
   const isFoundingMember = order_id.startsWith('founding-member-');
   const userId = isFoundingMember ? order_id.split('-')[2] : order_id.split('_')[0];
 
-  console.log(`[WEBHOOK_RECEIVED] payment_id=${payment_id} status=${payment_status} user_id=${userId}`);
+  console.log(`[WEBHOOK_RECEIVED] payment_id=${payment_id} invoice_id=${invoice_id || 'N/A'} status=${payment_status} order_id=${order_id}`);
 
   try {
     // 2. Update payment record status
     const supabaseAdmin = getSupabaseAdmin();
+    
+    // We look up by order_id because it's our most reliable anchor for both direct and invoice payments
     await supabaseAdmin
       .from('crypto_payments')
       .update({ 
+        payment_id: String(payment_id), // Always keep the latest real payment_id
         payment_status,
         updated_at: new Date().toISOString()
       })
-      .eq('payment_id', String(payment_id));
+      .or(`payment_id.eq.${payment_id}${invoice_id ? `,payment_id.eq.${invoice_id}` : ''},order_id.eq.${order_id}`);
 
     // 3. Handle finished payment (Subscription Update)
     if (payment_status === 'finished' || payment_status === 'partially_paid') {

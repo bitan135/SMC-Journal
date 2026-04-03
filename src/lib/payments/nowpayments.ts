@@ -6,10 +6,12 @@ const API_URL = 'https://api.nowpayments.io/v1';
 export interface CreatePaymentRequest {
   price_amount: number;
   price_currency: string;
-  pay_currency: string;
-  ipn_callback_url: string;
-  order_id: string;
-  order_description: string;
+  pay_currency?: string;
+  ipn_callback_url?: string;
+  order_id?: string;
+  order_description?: string;
+  success_url?: string;
+  cancel_url?: string;
 }
 
 export const nowPaymentsService = {
@@ -24,7 +26,22 @@ export const nowPaymentsService = {
   },
 
   /**
-   * Create a payment
+   * Create a invoice (Hosted Checkout)
+   */
+  async createInvoice(data: CreatePaymentRequest) {
+    const res = await fetch(`${API_URL}/invoice`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': API_KEY,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    return res.json();
+  },
+
+  /**
+   * Create a payment (Direct Crypto)
    */
   async createPayment(data: CreatePaymentRequest) {
     const res = await fetch(`${API_URL}/payment`, {
