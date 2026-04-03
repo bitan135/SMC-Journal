@@ -109,8 +109,10 @@ function CheckoutFormContent() {
       });
       
       const payment = await res.json();
-      if (payment.payment_id) {
-        router.push(`/billing/checkout?id=${payment.payment_id}`);
+      
+      if (payment.invoice_url) {
+        // Redirect to NOWPayments Hosted Checkout
+        window.location.href = payment.invoice_url;
       } else {
         throw new Error(payment.error || 'Initiation failed');
       }
@@ -120,154 +122,13 @@ function CheckoutFormContent() {
     }
   };
 
-  const copyToClipboard = (text, field) => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
-  };
-
   const finalPrice = Math.max(0, plan.price - discount);
-
-  // --- RENDER PAYMENT STATUS VIEW ---
-  if (paymentIdParam && (paymentDetails || isCheckingStatus)) {
-    if (isCheckingStatus && !paymentDetails) {
-      return (
-        <div className="min-h-[60vh] flex flex-col items-center justify-center p-10 animate-fade-in">
-          <Loader2 className="animate-spin text-[var(--accent)] mb-4" size={48} />
-          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--text-muted)]">Retrieving Settlement Protocol...</p>
-        </div>
-      );
-    }
-
-    const isFinished = paymentDetails?.payment_status === 'finished';
-    const isPending = paymentDetails?.payment_status === 'waiting' || paymentDetails?.payment_status === 'confirming';
-
-    return (
-      <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-4xl mx-auto animate-fade-in relative z-10">
-        <Link 
-          href="/billing"
-          className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-12 hover:text-[var(--foreground)] transition-all group w-fit"
-        >
-          <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Abandon Settlement
-        </Link>
-
-        <div className="glass-card rounded-[48px] border-[var(--glass-border)] overflow-hidden shadow-premium">
-          <div className="p-8 border-b border-[var(--glass-border)] bg-[var(--glass-bg)] flex items-center justify-between">
-            <h2 className="text-[11px] font-black text-[var(--foreground)] uppercase tracking-[0.4em] flex items-center gap-3">
-              <ShieldCheck className="text-[var(--accent)]" size={16} /> Settlement Verification
-            </h2>
-            <div className="flex items-center gap-3">
-              <span className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center gap-2 ${
-                isFinished ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 
-                'bg-amber-500/10 text-amber-500 border border-amber-500/20 animate-pulse'
-              }`}>
-                {isFinished ? <Check size={12} /> : <Clock size={12} />}
-                {paymentDetails?.payment_status?.toUpperCase() || 'SYNCHRONIZING'}
-              </span>
-            </div>
-          </div>
-
-          <div className="p-10 space-y-12">
-            {isFinished ? (
-              <div className="text-center py-10 space-y-6 animate-fade-in-up">
-                <div className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto border border-emerald-500/20">
-                  <Check className="text-emerald-500" size={48} />
-                </div>
-                <div>
-                  <h3 className="text-3xl font-black text-[var(--foreground)] tracking-tighter mb-2">Protocol Secured</h3>
-                  <p className="text-[var(--text-secondary)] font-medium">Payment confirmed. Your institutional access is being provisioned.</p>
-                </div>
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--accent)] animate-pulse">Redirecting to Dashboard...</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-                <div className="space-y-8">
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">USDT Deployment Amount (ARB)</label>
-                    <div className="flex gap-2">
-                       <div className="flex-1 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-5 text-2xl font-black text-[var(--foreground)] tracking-tight">
-                        {paymentDetails?.pay_amount} <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-widest">USDT</span>
-                      </div>
-                      <button 
-                        onClick={() => copyToClipboard(paymentDetails?.pay_amount, 'amount')}
-                        className="p-5 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all active:scale-95"
-                        title="Copy Amount"
-                      >
-                        {copiedField === 'amount' ? <Check size={20} /> : <Copy size={20} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <label className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest ml-1">Settlement Node (Address)</label>
-                    <div className="flex gap-2">
-                       <div className="flex-1 bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-5 text-sm font-bold text-[var(--foreground)] break-all font-mono leading-relaxed overflow-hidden">
-                        {paymentDetails?.pay_address}
-                      </div>
-                      <button 
-                        onClick={() => copyToClipboard(paymentDetails?.pay_address, 'address')}
-                        className="p-5 rounded-2xl bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[var(--accent)] hover:bg-[var(--accent)]/10 transition-all active:scale-95 shrink-0"
-                        title="Copy Address"
-                      >
-                        {copiedField === 'address' ? <Check size={20} /> : <Copy size={20} />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="p-6 rounded-3xl bg-amber-500/5 border border-amber-500/10 space-y-3">
-                    <h4 className="text-[10px] font-black text-amber-500 uppercase tracking-widest flex items-center gap-2">
-                      <AlertCircle size={14} /> Crucial Protocol
-                    </h4>
-                    <p className="text-xs text-amber-500/80 font-medium leading-relaxed">
-                      Deploy funds ONLY via the <strong>Arbitrum (ARB)</strong> network. Initiating transfers via other protocols (ERC-20, BSC) will result in permanent loss of assets.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-8">
-                  <div className="bg-[var(--glass-bg)] p-8 rounded-[32px] border border-[var(--glass-border)] space-y-6">
-                    <h3 className="text-[10px] font-black text-[var(--foreground)] uppercase tracking-[0.3em]">Network Verification</h3>
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-[var(--text-muted)] font-black uppercase tracking-widest">Network</span>
-                        <span className="text-emerald-500 font-black tracking-widest uppercase">Arbitrum One</span>
-                      </div>
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-[var(--text-muted)] font-black uppercase tracking-widest">Currency</span>
-                        <span className="text-[var(--foreground)] font-bold">USDT (Tether)</span>
-                      </div>
-                      <div className="flex justify-between items-center text-xs">
-                        <span className="text-[var(--text-muted)] font-black uppercase tracking-widest">Payment ID</span>
-                        <span className="text-[var(--foreground)] font-mono">{paymentDetails?.payment_id}</span>
-                      </div>
-                    </div>
-                    <div className="h-px bg-[var(--glass-border)]" />
-                    <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)] font-medium">
-                      <RefreshCcw size={14} className="animate-spin text-[var(--accent)]" />
-                      Polling network for confirmation...
-                    </div>
-                  </div>
-
-                  <button 
-                    onClick={() => fetchPaymentDetails(paymentIdParam)}
-                    className="w-full py-4 bg-[var(--glass-bg)] border border-[var(--glass-border)] text-[10px] font-black text-[var(--foreground)] uppercase tracking-widest rounded-2xl hover:border-[var(--accent)]/30 transition-all active:scale-95"
-                  >
-                    Force Manual Re-Sync
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   // --- RENDER BILLING FORM (INITIAL) ---
   return (
     <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-10 max-w-6xl mx-auto animate-fade-in relative overflow-hidden">
       {/* Background Ambience */}
-      <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float pointer-events-none"></div>
+      <div className="absolute top-[-5%] left-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float pointer-events-none transition-all"></div>
       
       <Link 
         href="/billing"
@@ -295,7 +156,8 @@ function CheckoutFormContent() {
                     <input
                       required
                       type="text"
-                      className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner"
+                      placeholder="Enter your full name"
+                      className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner placeholder:text-[var(--text-muted)]/30"
                       value={formData.fullName}
                       onChange={e => setFormData({...formData, fullName: e.target.value})}
                     />
@@ -310,7 +172,7 @@ function CheckoutFormContent() {
                     className="w-full bg-[var(--background)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--text-secondary)] cursor-not-allowed"
                     value={formData.email}
                   />
-                  <p className="text-[9px] font-bold text-[var(--text-muted)] mt-1.5 ml-1">This is your account email. Update it in Settings.</p>
+                  <p className="text-[9px] font-bold text-[var(--text-muted)] mt-1.5 ml-1">Plan will be activated for this account.</p>
                 </div>
               </div>
 
@@ -321,7 +183,7 @@ function CheckoutFormContent() {
                     <input
                       required
                       type="text"
-                      className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner"
+                      className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl pl-12 pr-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner placeholder:text-[var(--text-muted)]/30"
                       placeholder="Street address, apartment, suite"
                       value={formData.address}
                       onChange={e => setFormData({...formData, address: e.target.value})}
@@ -335,7 +197,8 @@ function CheckoutFormContent() {
                   <input
                     required
                     type="text"
-                    className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner"
+                    placeholder="City"
+                    className="w-full bg-[var(--glass-bg)] border border-[var(--glass-border)] rounded-2xl px-6 py-4 text-sm font-bold text-[var(--foreground)] outline-none focus:border-[var(--accent)] transition-all shadow-inner placeholder:text-[var(--text-muted)]/30"
                     value={formData.city}
                     onChange={e => setFormData({...formData, city: e.target.value})}
                   />
@@ -362,17 +225,23 @@ function CheckoutFormContent() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full py-5 bg-[var(--accent)] text-white font-black rounded-3xl shadow-2xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all text-sm tracking-[0.2em] uppercase flex items-center justify-center gap-3"
+                  className="w-full py-5 bg-[var(--accent)] text-white font-black rounded-3xl shadow-2xl shadow-indigo-500/20 hover:scale-[1.02] active:scale-95 transition-all text-sm tracking-[0.2em] uppercase flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed group"
                 >
                   {loading ? (
-                    <Loader2 className="animate-spin" size={20} />
+                    <>
+                      <Loader2 className="animate-spin" size={20} />
+                      Redirecting to Secure Gateway...
+                    </>
                   ) : (
                     <>
-                      Proceed to Crypto Settlement
-                      <ArrowRight size={20} />
+                      Confirm & Proceed to Payment
+                      <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
+                <p className="mt-4 text-center text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center justify-center gap-2">
+                   <ShieldCheck size={14} className="text-emerald-500" /> Managed Security Protocol by NOWPayments
+                </p>
               </div>
             </form>
           </div>
@@ -385,8 +254,8 @@ function CheckoutFormContent() {
                 <ShieldCheck className="text-[var(--accent)]" size={16} /> Final Computation
             </h3>
             
-            <div className="flex items-start gap-6 mb-10 p-6 rounded-3xl bg-[var(--glass-bg)] border border-[var(--glass-border)]">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border border-white/5`}>
+            <div className="flex items-start gap-6 mb-10 p-6 rounded-3xl bg-[var(--glass-bg)] border border-[var(--glass-border)] transition-all hover:border-[var(--accent)]/20">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center border border-white/5 bg-[var(--background)]`}>
                     <plan.icon size={24} style={{ color: plan.color }} />
                 </div>
                 <div>
@@ -444,6 +313,13 @@ function CheckoutFormContent() {
                     </p>
                 )}
             </div>
+          </div>
+          
+          <div className="px-10 py-8 rounded-[40px] bg-white/5 border border-white/10 flex items-center gap-6">
+              <img src="https://nowpayments.io/images/nowpayments-logo-white.svg" className="h-5 opacity-50 grey-invert" alt="NOWPayments" />
+              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed">
+                 You will be redirected to the secure NOWPayments gateway for final cryptographic settlement.
+              </p>
           </div>
         </div>
       </div>

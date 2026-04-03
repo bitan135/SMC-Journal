@@ -146,28 +146,42 @@ export default function BillingPage() {
           })}
         </div>
 
-        <div className="mt-24 p-12 rounded-[var(--card-radius)] glass-card border-[var(--glass-border)] text-center relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
-            <div className="relative z-10 flex flex-col items-center">
-                <div className="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center mb-6">
-                    <ShieldCheck size={24} className="text-[var(--accent)]" />
+        <div className="mt-24 p-12 rounded-[40px] bg-slate-900 shadow-2xl relative overflow-hidden group border border-white/5">
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-transparent to-emerald-500/10 opacity-50 transition-opacity duration-1000"></div>
+            
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-left">
+                <div className="space-y-6">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black uppercase tracking-widest">
+                       Secure Protocol
+                    </div>
+                    <h3 className="text-3xl font-black tracking-tighter text-white leading-tight">Professional <br />Infrastructure</h3>
+                    <p className="text-slate-400 font-medium leading-relaxed max-w-md">
+                      SMC Journal partners with **NOWPayments** to deliver institutional-grade cryptographic settlements. Your transactions are handled across distributed ledgers for maximum speed and sub-cent overhead.
+                    </p>
                 </div>
-                <h3 className="text-2xl font-bold text-[var(--foreground)] mb-3">Institutional Security</h3>
-                <p className="text-[var(--text-secondary)] mb-10 max-w-xl font-medium">
-                    Payments are handled exclusively through the **Arbitrum Network** for sub-cent fees and instant finality. 100% Secure & On-Chain.
-                </p>
-                <div className="flex items-center gap-6 saturate-50 hover:saturate-100 transition-all">
-                    <img 
-                        src="https://nowpayments.io/images/nowpayments-logo-white.svg" 
-                        className="h-7 grey-invert opacity-80"
-                        alt="NOWPayments" 
-                    />
-                    <div className="w-px h-6 bg-[var(--glass-border)]"></div>
-                    <img 
-                        src="https://cryptologos.cc/logos/arbitrum-arb-logo.svg?v=032" 
-                        className="h-8 shadow-sm"
-                        alt="Arbitrum" 
-                    />
+
+                <div className="flex flex-col items-center lg:items-end gap-8">
+                    <div className="p-8 rounded-3xl bg-white/5 backdrop-blur-xl border border-white/10 w-full max-w-sm space-y-6 shadow-xl">
+                       <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Processing Engine</span>
+                          <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Status: Online</span>
+                       </div>
+                       <div className="flex items-center gap-4">
+                          <img 
+                            src="https://nowpayments.io/images/nowpayments-logo-white.svg" 
+                            className="h-6"
+                            alt="NOWPayments" 
+                          />
+                          <div className="h-6 w-px bg-slate-800"></div>
+                          <div className="flex items-center gap-2">
+                             <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                             <span className="text-[11px] font-black text-white uppercase tracking-wider">Live Settlement Layer</span>
+                          </div>
+                       </div>
+                       <p className="text-[10px] text-slate-500 font-bold leading-relaxed uppercase tracking-wide">
+                          Supporting 300+ Digital Assets with instant on-chain finality.
+                       </p>
+                    </div>
                 </div>
             </div>
         </div>

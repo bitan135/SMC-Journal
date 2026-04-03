@@ -48,33 +48,29 @@ export async function POST(req) {
     const payload = {
       price_amount: finalPrice,
       price_currency: 'usd',
-      pay_currency: 'usdtarb', // USDT on Arbitrum (High speed, Low fee)
       ipn_callback_url: `${baseUrl}/api/webhooks/nowpayments`,
       order_id: `${user.id}_${Date.now()}`,
-      order_description: `SMC Journal ${planId.replace('_', ' ').toUpperCase()} Plan${isPromo ? ' (PROMO: SMC2026)' : ''}`
+      order_description: `SMC Journal ${planId.replace('_', ' ').toUpperCase()} Plan${isPromo ? ' (PROMO: SMC2026)' : ''}`,
+      success_url: `${baseUrl}/dashboard?payment=success`,
+      cancel_url: `${baseUrl}/billing?cancelled=true`
     };
 
+    const invoice = await nowPaymentsService.createInvoice(payload);
 
-    const payment = await nowPaymentsService.createPayment(payload);
-    
-
-    if (payment.status === false || payment.error || !payment.payment_id) {
-       const msg = payment.message || payment.error || 'NOWPayments API Error';
-       console.error('Payment Error Details:', payment);
+    if (invoice.status === false || invoice.error || !invoice.id) {
+       const msg = invoice.message || invoice.error || 'NOWPayments API Error';
+       console.error('Invoice Error Details:', invoice);
        return NextResponse.json({ error: msg }, { status: 400 });
     }
 
     // Save payment record in DB
     const { error: dbError } = await supabase.from('crypto_payments').insert({
       user_id: user.id,
-      payment_id: String(payment.payment_id),
-      order_id: payment.order_id,
+      payment_id: String(invoice.id),
+      order_id: invoice.order_id,
       price_amount: prices[planId],
       price_currency: 'usd',
-      payment_status: payment.payment_status,
-      pay_address: payment.pay_address,
-      pay_amount: payment.pay_amount,
-      pay_currency: payment.pay_currency,
+      payment_status: 'created',
       plan_id: planId,
       billing_details: billingDetails,
       coupon_code: isPromo ? coupon : null
@@ -82,9 +78,9 @@ export async function POST(req) {
 
     if (dbError) throw dbError;
 
-    console.log(`[PAYMENT_CREATED] user_id=${user.id} email=${user.email} plan=${planId} payment_id=${payment.payment_id} amount=${finalPrice}`);
+    console.log(`[INVOICE_CREATED] user_id=${user.id} email=${user.email} plan=${planId} invoice_id=${invoice.id} amount=${finalPrice}`);
 
-    return NextResponse.json(payment);
+    return NextResponse.json(invoice);
   } catch (error) {
     console.error('Payment creation error:', error);
     return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
