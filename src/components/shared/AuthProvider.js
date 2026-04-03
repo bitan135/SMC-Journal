@@ -107,7 +107,7 @@ export function AuthProvider({ children }) {
     // Client-side session sync guard
     // If the client hydrates and sees a user, but we are on a public route (like / or /login),
     // we should immediately push them to their destination.
-    if (!isLoading && user && isPublicRoute(pathname)) {
+    if (!isLoading && user && isPublicRoute(pathname) && pathname !== '/founding-member') {
       // Improved Redirect logic: check for 'next' parameter to support checkout funnel
       const searchParams = new URLSearchParams(window.location.search);
       const next = searchParams.get('next');

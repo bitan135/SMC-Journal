@@ -10,8 +10,7 @@ export const PUBLIC_ROUTES = [
   '/reset-password',
   '/insight-engine',
   '/auth/callback',
-  '/founding-member',
-  '/checkout/founding-member'
+  '/founding-member'
 ];
 
 export const PROTECTED_PATHS = [
@@ -22,7 +21,8 @@ export const PROTECTED_PATHS = [
   '/strategies',
   '/billing',
   '/settings',
-  '/donation'
+  '/donation',
+  '/checkout/founding-member'
 ];
 
 export function isPublicRoute(pathname) {

@@ -75,11 +75,11 @@ export default function FoundingMemberCheckout() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white selection:bg-indigo-500 font-sans antialiased overflow-x-hidden pt-12 relative">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500 font-sans antialiased overflow-x-hidden pt-12 relative">
       
-      {/* Background Ambience */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 blur-[130px] rounded-full pointer-events-none opacity-50" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-600/10 blur-[120px] rounded-full pointer-events-none opacity-50" />
+      {/* Background Ambience - Softer for light mode */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-indigo-500/5 blur-[130px] rounded-full pointer-events-none opacity-50" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-purple-500/5 blur-[120px] rounded-full pointer-events-none opacity-50" />
 
       <div className="max-w-4xl mx-auto px-6 py-12 relative z-10">
         
@@ -89,21 +89,21 @@ export default function FoundingMemberCheckout() {
               <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-600/20">
                 <TrendingUp size={16} className="text-white" />
               </div>
-              <span className="font-black text-sm tracking-tighter text-white uppercase">SMC Journal</span>
+              <span className="font-black text-sm tracking-tighter text-slate-900 uppercase">SMC Journal</span>
           </Link>
           
           {/* Progress Stepper */}
           <div className="flex items-center gap-4">
              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-full bg-indigo-600/20 border border-indigo-500/50 flex items-center justify-center">
-                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
+                <div className="w-5 h-5 rounded-full bg-indigo-600/10 border border-indigo-200 flex items-center justify-center">
+                   <div className="w-1.5 h-1.5 rounded-full bg-indigo-600" />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-400">Billing</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-indigo-600">Billing</span>
              </div>
-             <div className="w-8 h-px bg-slate-800" />
+             <div className="w-8 h-px bg-slate-200" />
              <div className="flex items-center gap-2 opacity-30">
-                <div className="w-5 h-5 rounded-full border border-slate-700 flex items-center justify-center" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Payment</span>
+                <div className="w-5 h-5 rounded-full border border-slate-300 flex items-center justify-center" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Payment</span>
              </div>
           </div>
         </div>
@@ -113,40 +113,40 @@ export default function FoundingMemberCheckout() {
           {/* Left: Billing Form */}
           <div className="lg:col-span-7 space-y-8">
             <div className="space-y-4">
-               <h1 className="text-4xl font-black tracking-tighter text-white leading-tight">Billing & Member <br />Information</h1>
-               <p className="text-slate-400 font-medium leading-relaxed max-w-md text-sm">
+               <h1 className="text-4xl font-black tracking-tighter text-slate-900 leading-tight">Billing & Member <br />Information</h1>
+               <p className="text-slate-500 font-medium leading-relaxed max-w-md text-sm">
                  Complete your details to secure your permanent account status. Your Founding Member certificate and communication will be sent to this email.
                </p>
             </div>
 
-            <div className="bg-slate-900/60 backdrop-blur-xl border border-white/5 rounded-[32px] p-8 space-y-6">
+            <div className="bg-white border border-slate-200 rounded-[32px] p-8 space-y-6 shadow-xl shadow-slate-200/50">
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Full Name</label>
                      <input 
                         type="text" 
                         value={billingData.fullName}
                         onChange={(e) => setBillingData({...billingData, fullName: e.target.value})}
-                        className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 outline-none transition-colors"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-indigo-600 focus:bg-white outline-none transition-all"
                         placeholder="e.g. John Smith"
                      />
                   </div>
                   <div className="space-y-2">
-                     <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Billing Email</label>
+                     <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Billing Email</label>
                      <input 
                         type="email" 
                         value={billingData.email}
                         readOnly
-                        className="w-full bg-slate-900/30 border border-slate-800/50 rounded-xl px-4 py-3 text-sm text-slate-500 outline-none cursor-not-allowed"
+                        className="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-400 outline-none cursor-not-allowed"
                      />
                   </div>
                </div>
                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Region / Country</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Region / Country</label>
                   <select 
                      value={billingData.region}
                      onChange={(e) => setBillingData({...billingData, region: e.target.value})}
-                     className="w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-sm focus:border-indigo-500 outline-none transition-colors appearance-none"
+                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 focus:border-indigo-600 focus:bg-white outline-none transition-all appearance-none"
                   >
                      <option>United States</option>
                      <option>United Kingdom</option>
@@ -160,9 +160,8 @@ export default function FoundingMemberCheckout() {
                </div>
             </div>
 
-            <div className="p-1 rounded-[32px] bg-gradient-to-br from-indigo-500/10 to-transparent">
-              <div className="bg-slate-900/40 backdrop-blur-xl border border-white/5 rounded-[30px] p-8 space-y-6">
-                <h3 className="text-xs font-black uppercase tracking-widest text-slate-500">Lifetime Summary</h3>
+            <div className="bg-white border border-slate-200 rounded-[32px] p-8 space-y-6 shadow-sm">
+                <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">Lifetime Summary</h3>
                 <ul className="space-y-4">
                   {[
                     { t: "Founding Member Insight Engine", d: "Early access to behavioral trade synthesis core.", i: Sparkles },
@@ -170,23 +169,22 @@ export default function FoundingMemberCheckout() {
                     { t: "Permanent Pro Status", d: "Zero renewal fees, forever.", i: Crown },
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-4">
-                      <div className="mt-1 w-5 h-5 rounded-md bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-center shrink-0">
-                         <item.i className="text-indigo-400" size={12} />
+                      <div className="mt-1 w-5 h-5 rounded-md bg-indigo-600/10 border border-indigo-200 flex items-center justify-center shrink-0">
+                         <item.i className="text-indigo-600" size={12} />
                       </div>
                       <div className="space-y-0.5">
-                         <h4 className="text-sm font-black text-white leading-tight">{item.t}</h4>
+                         <h4 className="text-sm font-black text-slate-900 leading-tight">{item.t}</h4>
                          <p className="text-[11px] text-slate-500 font-medium">{item.d}</p>
                       </div>
                     </li>
                   ))}
                 </ul>
-              </div>
             </div>
           </div>
 
           {/* Right: Checkout Sidebar */}
           <div className="lg:col-span-5 sticky top-12">
-            <div className="bg-white rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden text-slate-900">
+            <div className="bg-white rounded-[32px] p-8 md:p-10 shadow-2xl relative overflow-hidden text-slate-900 border border-slate-200">
                {/* Decorative glow */}
                <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-600/5 blur-[40px] rounded-full pointer-events-none" />
                
@@ -245,16 +243,12 @@ export default function FoundingMemberCheckout() {
                </p>
             </div>
 
-            <Link href="/founding-member" className="inline-flex items-center gap-2 mt-6 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-white transition-colors mx-auto w-full justify-center">
+            <Link href="/founding-member" className="inline-flex items-center gap-2 mt-6 text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-indigo-600 transition-colors mx-auto w-full justify-center">
                Cancel Selection
             </Link>
           </div>
         </div>
       </div>
-      
-      <style jsx global>{`
-        body { background-color: #020617; }
-      `}</style>
     </div>
   );
 }
