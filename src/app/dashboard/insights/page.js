@@ -196,27 +196,27 @@ export default function InsightsPage() {
                 <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
                     <Zap size={14} className="text-amber-500" /> Win Rate
                 </p>
-                <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter">{winRate}%</span>
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 capitalize">Overall Edge</span>
+                <div className="flex flex-col gap-1 mt-1">
+                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter leading-none">{winRate}%</span>
+                    <span className="text-[10px] font-bold text-[var(--text-muted)] capitalize truncate opacity-80">Overall Edge</span>
                 </div>
             </div>
             <div className="glass-card rounded-[28px] border-[var(--glass-border)] p-8 space-y-4 hover:border-[var(--accent)]/30 transition-all">
                 <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
                     <BarChart3 size={14} className="text-[var(--accent)]" /> Profit Factor
                 </p>
-                <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter">{profitFactor}</span>
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 capitalize">Risk/Reward Efficiency</span>
+                <div className="flex flex-col gap-1 mt-1">
+                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter leading-none">{profitFactor}</span>
+                    <span className="text-[10px] font-bold text-[var(--text-muted)] capitalize truncate opacity-80">Risk/Reward Efficiency</span>
                 </div>
             </div>
             <div className="glass-card rounded-[28px] border-[var(--glass-border)] p-8 space-y-4 hover:border-[var(--accent)]/30 transition-all">
                 <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-2">
                     <Target size={14} className="text-emerald-500" /> Average RR
                 </p>
-                <div className="flex items-end gap-2">
-                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter">{avgRR}R</span>
-                    <span className="text-[10px] font-bold text-[var(--text-muted)] mb-1.5 capitalize">Per Win</span>
+                <div className="flex flex-col gap-1 mt-1">
+                    <span className="text-4xl font-black text-[var(--foreground)] tracking-tighter leading-none">{avgRR}R</span>
+                    <span className="text-[10px] font-bold text-[var(--text-muted)] capitalize truncate opacity-80">Per Win</span>
                 </div>
             </div>
           </div>

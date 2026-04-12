@@ -56,7 +56,7 @@ export default function Sidebar() {
         {/* Logo */}
         <div 
           onClick={() => setSidebarCollapsed(!isSidebarCollapsed)}
-          className="flex items-center gap-4 px-8 h-20 mt-4 mb-2 relative cursor-pointer group/logo"
+          className="shrink-0 flex items-center gap-4 px-8 h-20 mt-4 mb-2 relative cursor-pointer group/logo"
         >
           <div className="w-10 h-10 rounded-[14px] bg-gradient-to-br from-[var(--accent)] to-indigo-800 flex items-center justify-center shadow-lg shadow-[var(--accent)]/20 group-hover/logo:scale-110 transition-transform duration-500">
             <TrendingUp size={22} className="text-white" />
@@ -110,7 +110,7 @@ export default function Sidebar() {
 
         {/* Plan Upgrade CTA */}
         {subscription?.plan_id === 'free' && (
-          <div className="mx-4 mb-4 p-5 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-indigo-800 relative overflow-hidden group/cta shadow-lg shadow-[var(--accent)]/10">
+          <div className="shrink-0 mx-4 mb-4 p-5 rounded-2xl bg-gradient-to-br from-[var(--accent)] to-indigo-800 relative overflow-hidden group/cta shadow-lg shadow-[var(--accent)]/10">
             <div className="absolute top-0 right-0 p-2 opacity-20 group-hover/cta:rotate-12 transition-transform">
               <Sparkles size={40} className="text-white" />
             </div>
@@ -128,7 +128,7 @@ export default function Sidebar() {
         )}
 
         {/* User Card */}
-        <div className="p-4 mx-4 mb-6 rounded-2xl bg-[var(--sidebar-bg)] border border-[var(--border)] relative overflow-hidden group shadow-sm">
+        <div className="shrink-0 p-4 mx-4 mb-6 rounded-2xl bg-[var(--sidebar-bg)] border border-[var(--border)] relative overflow-hidden group shadow-sm">
             {isLoading ? (
                 <div className="flex items-center gap-3 animate-pulse">
                     <div className="w-10 h-10 rounded-full bg-[var(--glass-bg)]" />

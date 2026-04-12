@@ -47,12 +47,12 @@ export default function MetricCard({
           <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-[0.3em] mb-4 leading-relaxed group-hover:text-[var(--accent)] transition-colors">
             {label}
           </p>
-          <div className="flex items-baseline gap-2">
-            <h3 className="text-2xl md:text-4xl font-black text-[var(--foreground)] tracking-tighter leading-tight">
+          <div className="flex flex-col gap-1 mt-1">
+            <h3 className="text-3xl md:text-4xl font-black text-[var(--foreground)] tracking-tighter leading-none truncate">
               {value}
             </h3>
             {subValue && (
-              <p className="text-[11px] text-[var(--text-muted)] font-black uppercase tracking-widest opacity-60">
+              <p className="text-[10px] md:text-[11px] text-[var(--text-muted)] font-black uppercase tracking-widest opacity-80 truncate">
                 {subValue}
               </p>
             )}
