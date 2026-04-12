@@ -494,16 +494,16 @@ export async function saveTrade(trade) {
     // Hardening: Enforce types and defaults
     const tradeData = {
       ...trade,
-      entry_price: parseFloat(trade.entryPrice || trade.entry_price) || 0,
-      stop_loss: parseFloat(trade.stopLoss || trade.stop_loss) || null,
-      take_profit: parseFloat(trade.takeProfit || trade.take_profit) || null,
-      lot_size: parseFloat(trade.lotSize || trade.lot_size) || 0.01,
+      entry_price: !isNaN(parseFloat(trade.entryPrice ?? trade.entry_price)) ? parseFloat(trade.entryPrice ?? trade.entry_price) : 0,
+      stop_loss: !isNaN(parseFloat(trade.stopLoss ?? trade.stop_loss)) ? parseFloat(trade.stopLoss ?? trade.stop_loss) : null,
+      take_profit: !isNaN(parseFloat(trade.takeProfit ?? trade.take_profit)) ? parseFloat(trade.takeProfit ?? trade.take_profit) : null,
+      lot_size: !isNaN(parseFloat(trade.lotSize ?? trade.lot_size)) ? parseFloat(trade.lotSize ?? trade.lot_size) : 0.01,
       rr: parseFloat(trade.rr) || 0,
       pips: parseFloat(trade.pips) || 0,
       trade_date: parseTradeDate(trade).toISOString(),
       instrument: trade.instrument?.toUpperCase() || 'EURUSD',
       result: trade.result || 'Break Even',
-      type: trade.type || 'Buy',
+      type: trade.type || trade.direction || 'Buy',
       setup_images: Array.isArray(trade.setup_images) ? trade.setup_images : [],
       smc_tags: Array.isArray(trade.smcTags || trade.smc_tags) ? (trade.smcTags || trade.smc_tags) : [],
       liquidity_sweep: Array.isArray(trade.liquiditySweep || trade.liquidity_sweep) ? (trade.liquiditySweep || trade.liquidity_sweep) : [],
@@ -513,11 +513,17 @@ export async function saveTrade(trade) {
     if (tradeData.entry_price <= 0) {
       return { success: false, data: null, error: 'Institutional Error: Entry price must be a positive numerical value.' };
     }
-    if (tradeData.stop_loss && tradeData.type === 'Buy' && tradeData.stop_loss >= tradeData.entry_price) {
+    if (tradeData.stop_loss !== null && tradeData.type === 'Buy' && tradeData.stop_loss >= tradeData.entry_price) {
       return { success: false, data: null, error: 'Risk Validation: Stop Loss must be below Entry for Buy positions.' };
     }
-    if (tradeData.stop_loss && tradeData.type === 'Sell' && tradeData.stop_loss <= tradeData.entry_price) {
+    if (tradeData.stop_loss !== null && tradeData.type === 'Sell' && tradeData.stop_loss <= tradeData.entry_price) {
       return { success: false, data: null, error: 'Risk Validation: Stop Loss must be above Entry for Sell positions.' };
+    }
+    if (tradeData.take_profit !== null && tradeData.type === 'Buy' && tradeData.take_profit <= tradeData.entry_price) {
+      return { success: false, data: null, error: 'Risk Validation: Take Profit must be above Entry for Buy positions.' };
+    }
+    if (tradeData.take_profit !== null && tradeData.type === 'Sell' && tradeData.take_profit >= tradeData.entry_price) {
+      return { success: false, data: null, error: 'Risk Validation: Take Profit must be below Entry for Sell positions.' };
     }
 
     // Remove legacy/UI/calculated keys to keep DB clean
@@ -560,10 +566,10 @@ export async function updateTrade(id, updates) {
     // Hardening: Enforce types for updates
     const hardenedUpdates = { ...updates };
     
-    if (updates.entryPrice || updates.entry_price) hardenedUpdates.entry_price = parseFloat(updates.entryPrice || updates.entry_price) || 0;
-    if (updates.stopLoss !== undefined || updates.stop_loss !== undefined) hardenedUpdates.stop_loss = parseFloat(updates.stopLoss || updates.stop_loss) || null;
-    if (updates.takeProfit !== undefined || updates.take_profit !== undefined) hardenedUpdates.take_profit = parseFloat(updates.takeProfit || updates.take_profit) || null;
-    if (updates.lotSize || updates.lot_size) hardenedUpdates.lot_size = parseFloat(updates.lotSize || updates.lot_size) || 0;
+    if (updates.entryPrice !== undefined || updates.entry_price !== undefined) hardenedUpdates.entry_price = !isNaN(parseFloat(updates.entryPrice ?? updates.entry_price)) ? parseFloat(updates.entryPrice ?? updates.entry_price) : 0;
+    if (updates.stopLoss !== undefined || updates.stop_loss !== undefined) hardenedUpdates.stop_loss = !isNaN(parseFloat(updates.stopLoss ?? updates.stop_loss)) ? parseFloat(updates.stopLoss ?? updates.stop_loss) : null;
+    if (updates.takeProfit !== undefined || updates.take_profit !== undefined) hardenedUpdates.take_profit = !isNaN(parseFloat(updates.takeProfit ?? updates.take_profit)) ? parseFloat(updates.takeProfit ?? updates.take_profit) : null;
+    if (updates.lotSize !== undefined || updates.lot_size !== undefined) hardenedUpdates.lot_size = !isNaN(parseFloat(updates.lotSize ?? updates.lot_size)) ? parseFloat(updates.lotSize ?? updates.lot_size) : 0;
     if (updates.rr !== undefined) hardenedUpdates.rr = parseFloat(updates.rr) || 0;
     if (updates.pips !== undefined) hardenedUpdates.pips = parseFloat(updates.pips) || 0;
     if (updates.tradeDate || updates.trade_date) hardenedUpdates.trade_date = parseTradeDate(updates).toISOString();

@@ -161,13 +161,11 @@ export default function AddTrade() {
         }
       } catch (saveErr) {
         // Fallback for schema mismatches — strips all optional psychology/new columns on any schema error
-        // Includes: PGRST204 (Missing column), 42703 (Undefined column), 23514 (Check constraint violation - e.g. poi_type)
+        // Includes: PGRST204 (Missing column), 42703 (Undefined column)
         const isSchemaError = saveErr.code === 'PGRST204' || 
                              saveErr.code === '42703' || 
-                             saveErr.code === '23514' ||
                              saveErr.message?.toLowerCase().includes('column') || 
-                             saveErr.message?.toLowerCase().includes('schema') ||
-                             saveErr.message?.toLowerCase().includes('constraint');
+                             saveErr.message?.toLowerCase().includes('schema');
 
         if (isSchemaError) {
           console.warn('[TRADE_LOG] Schema/Constraint mismatch — retrying with legacy core fields only:', saveErr.message);
