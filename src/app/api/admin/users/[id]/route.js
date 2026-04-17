@@ -81,10 +81,10 @@ export async function PATCH(req, { params }) {
         user_id: id,
         plan_id: 'free',
         status: 'active',
-        current_period_end: new Date().toISOString(), // expires immediately
+        current_period_end: null, // Free plans don't expire and shouldn't trigger lockout
         updated_at: new Date().toISOString()
       };
-      updates.subscription_end_date = new Date().toISOString();
+      updates.subscription_end_date = null;
     }
 
     if (Object.keys(updates).length === 0) {
