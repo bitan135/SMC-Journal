@@ -24,7 +24,6 @@ export default function AffiliateDashboard() {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  // Correcting the import inside the code
   const router = useRouter();
 
   useEffect(() => {
@@ -61,7 +60,7 @@ export default function AffiliateDashboard() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-        <Loader2 size={40} className="text-[var(--accent)] animate-spin" />
+        <Loader2 size={40} className="text-purple-500 animate-spin" />
       </div>
     );
   }
@@ -71,120 +70,120 @@ export default function AffiliateDashboard() {
   const { affiliate, stats, referrals } = data;
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[var(--accent)]/30 pb-20">
+    <div className="min-h-screen bg-[#050505] text-white selection:bg-purple-500/30 pb-20 font-sans">
       {/* Header */}
-      <nav className="border-b border-white/5 bg-black/50 backdrop-blur-xl sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--accent)] to-purple-600 flex items-center justify-center">
-              <TrendingUp size={22} className="text-white" />
+      <nav className="border-b border-white/[0.06] bg-[#0a0a0a]/80 backdrop-blur-xl sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center shrink-0">
+              <TrendingUp size={20} className="text-white" />
             </div>
-            <div>
-              <p className="text-xs font-black uppercase tracking-widest text-[var(--accent)] leading-none mb-1">Partner Portal</p>
-              <h1 className="text-lg font-bold tracking-tight leading-none">{affiliate.name}</h1>
+            <div className="min-w-0">
+              <p className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-purple-400 leading-none mb-0.5">Partner Portal</p>
+              <h1 className="text-sm sm:text-lg font-bold tracking-tight leading-none text-white truncate">{affiliate.name}</h1>
             </div>
           </div>
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold hover:bg-red-500/10 hover:text-red-500 hover:border-red-500/20 transition-all"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] text-[10px] sm:text-xs font-bold text-white/60 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/20 transition-all"
           >
-            <LogOut size={14} /> Log Out
+            <LogOut size={14} /> <span className="hidden sm:inline">Log Out</span>
           </button>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 pt-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-8 sm:pt-12">
         {/* Welcome Section */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-8 mb-8 sm:mb-12">
           <div>
-            <h2 className="text-4xl font-black tracking-tighter mb-2">Performance Overview</h2>
-            <p className="text-white/40 font-medium tracking-tight">Track your referrals and earnings in real-time.</p>
+            <h2 className="text-2xl sm:text-4xl font-black tracking-tighter mb-1 sm:mb-2 text-white">Performance Overview</h2>
+            <p className="text-white/30 font-medium tracking-tight text-sm">Track your referrals and earnings in real-time.</p>
           </div>
-          <div className="flex items-center gap-4 p-4 rounded-2xl glass-card border-white/5">
-            <Calendar size={18} className="text-[var(--accent)]" />
-            <span className="text-sm font-bold opacity-60">Last 30 Days</span>
+          <div className="flex items-center gap-3 sm:gap-4 px-4 py-3 rounded-2xl bg-white/[0.03] border border-white/[0.06]">
+            <Calendar size={16} className="text-purple-400 shrink-0" />
+            <span className="text-xs sm:text-sm font-bold text-white/40 whitespace-nowrap">All Time</span>
           </div>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-12">
           {[
-            { label: 'Total Clicks', value: stats.totalClicks, color: 'text-blue-500', icon: MousePointer2 },
-            { label: 'Signups', value: stats.totalSignups, color: 'text-purple-500', icon: Users },
-            { label: 'Total Earned', value: `$${(stats.totalEarned || 0).toFixed(2)}`, color: 'text-emerald-500', icon: DollarSign },
-            { label: 'Pending Payout', value: `$${(stats.pendingPayout || 0).toFixed(2)}`, color: 'text-[var(--accent)]', icon: ShieldCheck }
+            { label: 'Total Clicks', value: stats.totalClicks, color: 'text-blue-400', icon: MousePointer2, bg: 'bg-blue-500/5 border-blue-500/10' },
+            { label: 'Signups', value: stats.totalSignups, color: 'text-purple-400', icon: Users, bg: 'bg-purple-500/5 border-purple-500/10' },
+            { label: 'Total Earned', value: `$${(stats.totalEarned || 0).toFixed(2)}`, color: 'text-emerald-400', icon: DollarSign, bg: 'bg-emerald-500/5 border-emerald-500/10' },
+            { label: 'Pending Payout', value: `$${(stats.pendingPayout || 0).toFixed(2)}`, color: 'text-amber-400', icon: ShieldCheck, bg: 'bg-amber-500/5 border-amber-500/10' }
           ].map((s, i) => (
-            <div key={i} className="p-8 rounded-[32px] glass-card border-white/5 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                <s.icon size={64} />
+            <div key={i} className={`p-5 sm:p-8 rounded-2xl sm:rounded-[32px] ${s.bg} border relative overflow-hidden group`}>
+              <div className="absolute top-0 right-0 p-3 sm:p-4 opacity-[0.07] group-hover:scale-110 transition-transform">
+                <s.icon size={48} className="text-white" />
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2">{s.label}</p>
-              <p className={`text-4xl font-black tracking-tight ${s.color}`}>{s.value}</p>
+              <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/25 mb-1 sm:mb-2 whitespace-nowrap truncate">{s.label}</p>
+              <p className={`text-2xl sm:text-4xl font-black tracking-tight ${s.color} whitespace-nowrap`}>{s.value}</p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {/* Referral Tool */}
-          <div className="lg:col-span-1 space-y-8">
-            <div className="p-8 rounded-[40px] glass-card border-white/5 bg-gradient-to-br from-zinc-900/50 to-black">
-              <h3 className="text-xl font-bold mb-6 flex items-center gap-3">
-                <Globe size={20} className="text-[var(--accent)]" /> Your Promo Tool
+          <div className="lg:col-span-1 space-y-6 sm:space-y-8">
+            <div className="p-6 sm:p-8 rounded-3xl sm:rounded-[40px] bg-white/[0.02] border border-white/[0.06]">
+              <h3 className="text-lg sm:text-xl font-bold mb-5 sm:mb-6 flex items-center gap-3 text-white">
+                <Globe size={20} className="text-purple-400" /> Your Promo Tool
               </h3>
               
-              <div className="space-y-6">
+              <div className="space-y-5 sm:space-y-6">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2">Personal Coupon Code</label>
+                  <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Personal Coupon Code</label>
                   <div className="relative group">
                     <input 
                       readOnly
                       value={affiliate.coupon_code}
-                      className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 font-mono text-xl text-[var(--accent)] font-black outline-none"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-white/[0.04] border border-white/[0.08] font-mono text-lg sm:text-xl text-purple-400 font-black outline-none"
                     />
                     <button 
                       onClick={() => copyToClipboard(affiliate.coupon_code)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-white/10 hover:bg-[var(--accent)] hover:text-black transition-all"
+                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg sm:rounded-xl bg-white/[0.06] hover:bg-purple-500 hover:text-white transition-all text-white/40"
                     >
-                      {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+                      {copied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
                     </button>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-white/40 ml-2">Referral Link</label>
+                  <label className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/30 ml-1">Referral Link</label>
                   <div className="relative group">
                     <input 
                       readOnly
                       value={`https://smcjournal.app?ref=${affiliate.coupon_code}`}
-                      className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-xs text-white/50 outline-none pr-12"
+                      className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-white/[0.04] border border-white/[0.08] text-[10px] sm:text-xs text-white/40 outline-none pr-12 font-mono"
                     />
                     <button 
                       onClick={() => copyToClipboard(`https://smcjournal.app?ref=${affiliate.coupon_code}`)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-xl bg-white/10 hover:bg-[var(--accent)] hover:text-black transition-all"
+                      className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg sm:rounded-xl bg-white/[0.06] hover:bg-purple-500 hover:text-white transition-all text-white/40"
                     >
-                      <Copy size={16} />
+                      <Copy size={14} />
                     </button>
                   </div>
                 </div>
 
-                <div className="pt-4 p-6 rounded-2xl bg-[var(--accent)]/5 border border-[var(--accent)]/10">
-                  <p className="text-xs font-bold leading-relaxed">
-                    <span className="text-[var(--accent)]">Pro Tip:</span> Users who use your link or code get a <span className="font-black">{((affiliate.discount_rate || 0.10) * 100).toFixed(0)}% discount</span>, and you earn <span className="font-black">{((affiliate.commission_rate || 0.10) * 100).toFixed(0)}% commission</span> for life.
+                <div className="p-4 sm:p-5 rounded-xl sm:rounded-2xl bg-purple-500/[0.06] border border-purple-500/[0.12]">
+                  <p className="text-[11px] sm:text-xs font-bold leading-relaxed text-white/60">
+                    <span className="text-purple-400 font-black">Pro Tip:</span> Users who use your link or code get a <span className="font-black text-white">{((affiliate.discount_rate || 0.10) * 100).toFixed(0)}% discount</span>, and you earn <span className="font-black text-white">{((affiliate.commission_rate || 0.10) * 100).toFixed(0)}% commission</span> for life.
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="p-8 rounded-[40px] glass-card border-white/5">
-              <h3 className="text-xl font-bold mb-4">Payout Settings</h3>
-              <p className="text-white/40 text-sm mb-6">Payment threshold: $100.00</p>
-              <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden mb-8">
+            <div className="p-6 sm:p-8 rounded-3xl sm:rounded-[40px] bg-white/[0.02] border border-white/[0.06]">
+              <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 text-white">Payout Settings</h3>
+              <p className="text-white/30 text-xs sm:text-sm mb-4 sm:mb-6">Payment threshold: $100.00</p>
+              <div className="w-full h-2 bg-white/[0.04] rounded-full overflow-hidden mb-6 sm:mb-8">
                 <div 
                   className="h-full bg-emerald-500 rounded-full transition-all duration-1000" 
-                  style={{ width: `${Math.min(100, (stats.pendingPayout / 100) * 100)}%` }} 
+                  style={{ width: `${Math.min(100, ((stats.pendingPayout || 0) / 100) * 100)}%` }} 
                 />
               </div>
-              <button disabled className="w-full py-4 rounded-2xl bg-white/5 border border-white/10 text-white/30 text-xs font-black uppercase tracking-widest cursor-not-allowed">
+              <button disabled className="w-full py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-white/[0.03] border border-white/[0.06] text-white/20 text-[10px] sm:text-xs font-black uppercase tracking-widest cursor-not-allowed">
                 Request Payout
               </button>
             </div>
@@ -192,44 +191,44 @@ export default function AffiliateDashboard() {
 
           {/* Activity Table */}
           <div className="lg:col-span-2">
-            <div className="p-8 rounded-[40px] glass-card border-white/5 h-full">
-              <h3 className="text-xl font-bold mb-8">Recent Referrals</h3>
+            <div className="p-6 sm:p-8 rounded-3xl sm:rounded-[40px] bg-white/[0.02] border border-white/[0.06] h-full">
+              <h3 className="text-lg sm:text-xl font-bold mb-6 sm:mb-8 text-white">Recent Referrals</h3>
               
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
+              <div className="overflow-x-auto -mx-2">
+                <table className="w-full border-collapse min-w-[500px]">
                   <thead>
-                    <tr className="text-left border-b border-white/5">
-                      <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-white/30">Signup Date</th>
-                      <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-white/30">User ID</th>
-                      <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-white/30">Plan</th>
-                      <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-white/30">Earnings</th>
-                      <th className="pb-4 text-[10px] font-black uppercase tracking-widest text-white/30">Status</th>
+                    <tr className="text-left border-b border-white/[0.06]">
+                      <th className="pb-3 sm:pb-4 px-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/25">Signup Date</th>
+                      <th className="pb-3 sm:pb-4 px-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/25">User ID</th>
+                      <th className="pb-3 sm:pb-4 px-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/25">Plan</th>
+                      <th className="pb-3 sm:pb-4 px-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/25">Earnings</th>
+                      <th className="pb-3 sm:pb-4 px-2 text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/25">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-white/[0.04]">
                     {referrals.length === 0 ? (
                       <tr>
-                        <td colSpan="5" className="py-20 text-center text-white/20 font-medium">No referrals yet. Start sharing your link!</td>
+                        <td colSpan="5" className="py-16 sm:py-20 text-center text-white/15 font-medium text-sm">No referrals yet. Start sharing your link!</td>
                       </tr>
                     ) : (
                       referrals.map((r, i) => (
-                        <tr key={i} className="group">
-                          <td className="py-4 text-sm font-mono text-white/40">{r.signup_date ? new Date(r.signup_date).toLocaleDateString() : '—'}</td>
-                          <td className="py-4 text-sm font-bold text-white/60">...{r.user_id?.slice(-8)}</td>
-                          <td className="py-4">
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
-                              r.plan_purchased ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-white/5 text-white/30 border border-white/10'
+                        <tr key={i} className="group hover:bg-white/[0.02] transition-colors">
+                          <td className="py-3 sm:py-4 px-2 text-xs sm:text-sm font-mono text-white/35">{r.signup_date ? new Date(r.signup_date).toLocaleDateString() : '—'}</td>
+                          <td className="py-3 sm:py-4 px-2 text-xs sm:text-sm font-bold text-white/50">...{r.user_id?.slice(-8)}</td>
+                          <td className="py-3 sm:py-4 px-2">
+                            <span className={`px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-black uppercase tracking-widest ${
+                              r.plan_purchased ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-white/[0.04] text-white/25 border border-white/[0.06]'
                             }`}>
                               {r.plan_purchased || 'Free'}
                             </span>
                           </td>
-                          <td className="py-4 font-bold font-mono text-emerald-400">
+                          <td className="py-3 sm:py-4 px-2 font-bold font-mono text-emerald-400 text-xs sm:text-sm">
                              {(r.commission_earned || 0) > 0 ? `+$${Number(r.commission_earned).toFixed(2)}` : '--'}
                           </td>
-                          <td className="py-4">
+                          <td className="py-3 sm:py-4 px-2">
                             <div className="flex items-center gap-2">
-                              <div className={`w-1.5 h-1.5 rounded-full ${r.commission_paid ? 'bg-emerald-500' : 'bg-[var(--accent)] animate-pulse'}`} />
-                              <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                              <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${r.commission_paid ? 'bg-emerald-500' : 'bg-purple-500 animate-pulse'}`} />
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-white/40 whitespace-nowrap">
                                 {r.commission_paid ? 'Paid' : 'Pending'}
                               </span>
                             </div>
@@ -245,13 +244,14 @@ export default function AffiliateDashboard() {
         </div>
       </main>
 
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="p-8 rounded-[40px] bg-gradient-to-r from-[var(--accent)]/10 to-purple-500/10 border border-white/5 flex flex-col md:flex-row items-center justify-between gap-8">
+      {/* Help Banner */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="p-6 sm:p-8 rounded-3xl sm:rounded-[40px] bg-gradient-to-r from-purple-500/[0.08] to-indigo-500/[0.08] border border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-8">
           <div>
-            <h4 className="text-xl font-bold mb-2">Need Help?</h4>
-            <p className="text-white/40 text-sm">Contact our partner success team for custom assets and support.</p>
+            <h4 className="text-lg sm:text-xl font-bold mb-1 sm:mb-2 text-white">Need Help?</h4>
+            <p className="text-white/30 text-xs sm:text-sm">Contact our partner success team for custom assets and support.</p>
           </div>
-          <a href="mailto:partners@smcjournal.app" className="px-8 py-4 rounded-2xl bg-white text-black text-sm font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl">
+          <a href="mailto:partners@smcjournal.app" className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl bg-white text-black text-[10px] sm:text-sm font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl whitespace-nowrap">
             Email Support
           </a>
         </div>
