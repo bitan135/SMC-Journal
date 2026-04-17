@@ -22,45 +22,63 @@ export async function GET(request) {
         
         if (refCode) {
           try {
-            // 1. Find the affiliate
-            const { data: affiliate } = await supabase
-              .from('affiliates')
-              .select('id, total_referrals, total_earnings_usd')
-              .eq('referral_code', refCode)
-              .single();
+            // Sanitize the referral code to match coupon_code format
+            const sanitizedRef = String(refCode).toUpperCase().replace(/[^A-Z0-9_-]/g, '').slice(0, 32);
 
-            if (affiliate && affiliate.id !== user.id) {
-              // 2. Check if user already has a referrer
-              const { data: profile } = await supabase
-                .from('profiles')
-                .select('referred_by')
-                .eq('id', user.id)
+            if (sanitizedRef) {
+              // 1. Find the affiliate by coupon_code (unified field name)
+              const { data: affiliate } = await supabase
+                .from('affiliates')
+                .select('id, commission_rate, total_referrals, total_earnings_usd')
+                .eq('coupon_code', sanitizedRef)
+                .eq('status', 'active')
                 .single();
 
-              if (profile && !profile.referred_by) {
-                // 3. Link user to affiliate
-                await supabase
+              if (affiliate && affiliate.id !== user.id) {
+                // 2. Check if user already has a referrer (prevent re-attribution)
+                const { data: profile } = await supabase
                   .from('profiles')
-                  .update({ referred_by: affiliate.id })
-                  .eq('id', user.id);
+                  .select('referred_by')
+                  .eq('id', user.id)
+                  .single();
 
-                // 4. Create referral record
-                await supabase
-                  .from('referrals')
-                  .insert({
-                    affiliate_id: affiliate.id,
-                    referred_user_id: user.id,
-                    status: 'pending',
-                    commission_amount_usd: 0.00
-                  });
+                if (profile && !profile.referred_by) {
+                  // 3. Link user to affiliate
+                  await supabase
+                    .from('profiles')
+                    .update({ referred_by: affiliate.id })
+                    .eq('id', user.id);
 
-                // 5. Update affiliate stats
-                await supabase
-                  .from('affiliates')
-                  .update({ 
-                    total_referrals: (affiliate.total_referrals || 0) + 1
-                  })
-                  .eq('id', affiliate.id);
+                  // 4. Check for duplicate referral record
+                  const { data: existingReferral } = await supabase
+                    .from('affiliate_referrals')
+                    .select('id')
+                    .eq('affiliate_id', affiliate.id)
+                    .eq('user_id', user.id)
+                    .limit(1);
+
+                  if (!existingReferral || existingReferral.length === 0) {
+                    // 5. Create referral record in the UNIFIED table (affiliate_referrals)
+                    await supabase
+                      .from('affiliate_referrals')
+                      .insert({
+                        affiliate_id: affiliate.id,
+                        user_id: user.id,
+                        signup_date: new Date().toISOString(),
+                        plan_purchased: null,
+                        commission_earned: 0,
+                        commission_paid: false,
+                      });
+
+                    // 6. Increment affiliate referral counter
+                    await supabase
+                      .from('affiliates')
+                      .update({ 
+                        total_referrals: (affiliate.total_referrals || 0) + 1
+                      })
+                      .eq('id', affiliate.id);
+                  }
+                }
               }
             }
           } catch (err) {

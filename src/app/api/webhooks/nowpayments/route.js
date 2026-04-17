@@ -56,7 +56,7 @@ export async function POST(req) {
     
     const { data: currentPayment } = await supabaseAdmin
       .from('crypto_payments')
-      .select('payment_status, plan_id')
+      .select('payment_status, plan_id, price_amount, coupon_code')
       .eq('payment_id', String(payment_id))
       .single();
 
@@ -80,6 +80,7 @@ export async function POST(req) {
     if (payment_status === 'finished' || payment_status === 'partially_paid') {
       // Re-fetch or use currentPayment if it was missing before insertion
       const planId = currentPayment?.plan_id || payload.price_amount > 70 ? 'lifetime' : (payload.price_amount > 40 ? '6_month' : 'pro');
+      const paidAmount = currentPayment?.price_amount || payload.price_amount || 0;
       let periodEnd = null;
 
       // Calculate period end based on plan
@@ -142,8 +143,7 @@ export async function POST(req) {
         if (profileError) console.error('[Webhook] Failed to update profile', profileError);
 
         if (isFoundingMember) {
-           // Increment slots table using SQL increment procedure usually, but since ServiceRole has bypass, 
-           // let's fetch current and increment securely.
+           // Increment slots table
            const { data: spotsData } = await supabaseAdmin
              .from('founding_member_spots')
              .select('claimed_spots, total_spots')
@@ -160,6 +160,72 @@ export async function POST(req) {
                 .neq('claimed_spots', null); // Update the single row globally
            }
         }
+      }
+
+      // ============================================================
+      // 5. AFFILIATE COMMISSION ATTRIBUTION
+      // ============================================================
+      try {
+        // Check if the paying user was referred by an affiliate
+        const { data: payerProfile } = await supabaseAdmin
+          .from('profiles')
+          .select('referred_by')
+          .eq('id', userId)
+          .single();
+
+        if (payerProfile?.referred_by) {
+          // Get the affiliate's commission rate
+          const { data: affiliate } = await supabaseAdmin
+            .from('affiliates')
+            .select('id, commission_rate, total_earnings_usd')
+            .eq('id', payerProfile.referred_by)
+            .eq('status', 'active')
+            .single();
+
+          if (affiliate && paidAmount > 0) {
+            const commissionRate = affiliate.commission_rate || 0.10; // Default 10%
+            const commissionEarned = parseFloat((paidAmount * commissionRate).toFixed(2));
+
+            // Update the referral record with commission info
+            const { error: refUpdateError } = await supabaseAdmin
+              .from('affiliate_referrals')
+              .update({
+                plan_purchased: planId,
+                commission_earned: commissionEarned,
+                commission_paid: false,
+              })
+              .eq('affiliate_id', affiliate.id)
+              .eq('user_id', userId);
+
+            if (refUpdateError) {
+              // If no existing record, create one (edge case: user paid before referral was tracked)
+              console.warn('[Commission] No existing referral record, creating one:', refUpdateError.message);
+              await supabaseAdmin
+                .from('affiliate_referrals')
+                .insert({
+                  affiliate_id: affiliate.id,
+                  user_id: userId,
+                  signup_date: new Date().toISOString(),
+                  plan_purchased: planId,
+                  commission_earned: commissionEarned,
+                  commission_paid: false,
+                });
+            }
+
+            // Increment affiliate total earnings
+            await supabaseAdmin
+              .from('affiliates')
+              .update({
+                total_earnings_usd: parseFloat(((affiliate.total_earnings_usd || 0) + commissionEarned).toFixed(2))
+              })
+              .eq('id', affiliate.id);
+
+            console.log(`[COMMISSION_ATTRIBUTED] affiliate_id=${affiliate.id} user_id=${userId} amount=$${commissionEarned} plan=${planId}`);
+          }
+        }
+      } catch (commissionError) {
+        // Commission attribution failure should NOT block the payment processing
+        console.error('[Commission Attribution] Non-blocking error:', commissionError);
       }
 
       console.log(`[SUBSCRIPTION_ASSIGNED] user_id=${userId} plan=${planId} period_end=${periodEnd || 'perpetual'}`);

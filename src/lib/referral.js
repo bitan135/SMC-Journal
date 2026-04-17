@@ -2,6 +2,7 @@
 
 /**
  * Captures referral code from URL and stores it in a cookie.
+ * Sanitized to prevent XSS injection via crafted ?ref= values.
  */
 export function captureReferral() {
   if (typeof window === 'undefined') return;
@@ -10,10 +11,14 @@ export function captureReferral() {
   const ref = urlParams.get('ref');
 
   if (ref) {
+    // Sanitize: only allow alphanumeric, underscore, hyphen. Max 32 chars.
+    const sanitized = ref.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 32);
+    if (!sanitized) return;
+
     // Store for 30 days
     const expires = new Date();
     expires.setTime(expires.getTime() + (30 * 24 * 60 * 60 * 1000));
-    document.cookie = `smc_referral_code=${ref};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
+    document.cookie = `smc_referral_code=${encodeURIComponent(sanitized)};expires=${expires.toUTCString()};path=/;SameSite=Lax`;
   }
 }
 

@@ -2,12 +2,29 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { signAffiliateToken } from '@/lib/affiliate-auth';
+import { rateLimit } from '@/lib/rateLimit';
 
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
     if (!email || !password) {
       return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
+    }
+
+    // Input length validation to prevent oversized payloads
+    if (email.length > 255 || password.length > 128) {
+      return NextResponse.json({ error: 'Invalid input length' }, { status: 400 });
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Rate limit: 5 attempts per 5 minutes per email
+    const limit = rateLimit(`aff_login_${normalizedEmail}`, 5, 300000);
+    if (!limit.success) {
+      return NextResponse.json(
+        { error: 'Too many login attempts. Please wait 5 minutes.' },
+        { status: 429 }
+      );
     }
 
     const sb = createClient(
@@ -18,7 +35,7 @@ export async function POST(req) {
     const { data: aff, error } = await sb
       .from('affiliates')
       .select('*')
-      .eq('email', email.toLowerCase().trim())
+      .eq('email', normalizedEmail)
       .eq('status', 'active')
       .single();
 

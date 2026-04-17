@@ -111,8 +111,8 @@ export default function AffiliateDashboard() {
           {[
             { label: 'Total Clicks', value: stats.totalClicks, color: 'text-blue-500', icon: MousePointer2 },
             { label: 'Signups', value: stats.totalSignups, color: 'text-purple-500', icon: Users },
-            { label: 'Total Earned', value: `$${stats.totalEarned.toFixed(2)}`, color: 'text-emerald-500', icon: DollarSign },
-            { label: 'Pending Payout', value: `$${stats.pendingPayout.toFixed(2)}`, color: 'text-[var(--accent)]', icon: ShieldCheck }
+            { label: 'Total Earned', value: `$${(stats.totalEarned || 0).toFixed(2)}`, color: 'text-emerald-500', icon: DollarSign },
+            { label: 'Pending Payout', value: `$${(stats.pendingPayout || 0).toFixed(2)}`, color: 'text-[var(--accent)]', icon: ShieldCheck }
           ].map((s, i) => (
             <div key={i} className="p-8 rounded-[32px] glass-card border-white/5 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
@@ -169,7 +169,7 @@ export default function AffiliateDashboard() {
 
                 <div className="pt-4 p-6 rounded-2xl bg-[var(--accent)]/5 border border-[var(--accent)]/10">
                   <p className="text-xs font-bold leading-relaxed">
-                    <span className="text-[var(--accent)]">Pro Tip:</span> Users who use your link or code get a <span className="font-black">{(affiliate.discount_rate * 100).toFixed(0)}% discount</span>, and you earn <span className="font-black">{(affiliate.commission_rate * 100).toFixed(0)}% commission</span> for life.
+                    <span className="text-[var(--accent)]">Pro Tip:</span> Users who use your link or code get a <span className="font-black">{((affiliate.discount_rate || 0.10) * 100).toFixed(0)}% discount</span>, and you earn <span className="font-black">{((affiliate.commission_rate || 0.10) * 100).toFixed(0)}% commission</span> for life.
                   </p>
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function AffiliateDashboard() {
                     ) : (
                       referrals.map((r, i) => (
                         <tr key={i} className="group">
-                          <td className="py-4 text-sm font-mono text-white/40">{new Date(r.signup_date).toLocaleDateString()}</td>
+                          <td className="py-4 text-sm font-mono text-white/40">{r.signup_date ? new Date(r.signup_date).toLocaleDateString() : '—'}</td>
                           <td className="py-4 text-sm font-bold text-white/60">...{r.user_id?.slice(-8)}</td>
                           <td className="py-4">
                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
@@ -224,7 +224,7 @@ export default function AffiliateDashboard() {
                             </span>
                           </td>
                           <td className="py-4 font-bold font-mono text-emerald-400">
-                             {r.commission_earned > 0 ? `+$${r.commission_earned.toFixed(2)}` : '--'}
+                             {(r.commission_earned || 0) > 0 ? `+$${Number(r.commission_earned).toFixed(2)}` : '--'}
                           </td>
                           <td className="py-4">
                             <div className="flex items-center gap-2">

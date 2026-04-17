@@ -34,11 +34,23 @@ export default function AffiliatePublicPage() {
       const res = await fetch('/api/affiliate/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          platform: formData.platform,
+          audience: formData.audience,
+        })
       });
       
       if (res.ok) setStatus('success');
-      else setStatus('error');
+      else {
+        const data = await res.json().catch(() => ({}));
+        if (data.error?.includes('already exists')) {
+          setStatus('duplicate');
+        } else {
+          setStatus('error');
+        }
+      }
     } catch (err) {
       setStatus('error');
     }
