@@ -38,6 +38,8 @@ export async function PATCH(req, { params }) {
     if (body.isPro !== undefined) updates.is_pro = body.isPro;
     if (body.status) updates.status = body.status;
 
+    let subUpsert = null;
+
     if (body.extendMonths) {
       const { data: profile } = await sb.from('profiles').select('subscription_end_date').eq('id', id).single();
       const currentEnd = profile?.subscription_end_date ? new Date(profile.subscription_end_date) : null;
@@ -48,8 +50,41 @@ export async function PATCH(req, { params }) {
       newEnd.setMonth(newEnd.getMonth() + Number(body.extendMonths));
       
       updates.subscription_end_date = newEnd.toISOString();
-      updates.plan_type = 'pro'; // or pro_monthly
+      updates.plan_type = 'pro'; 
       updates.is_pro = true;
+
+      // Ensure subscriptions table reflects the extension
+      subUpsert = {
+        user_id: id,
+        plan_id: 'pro',
+        status: 'active',
+        current_period_end: updates.subscription_end_date,
+        updated_at: new Date().toISOString()
+      };
+    }
+
+    if (body.plan === 'lifetime') {
+      updates.plan_type = 'lifetime';
+      updates.is_pro = true;
+      updates.subscription_start_date = new Date().toISOString();
+      updates.subscription_end_date = null; // Perpetual
+
+      subUpsert = {
+        user_id: id,
+        plan_id: 'lifetime',
+        status: 'active',
+        current_period_end: null,
+        updated_at: new Date().toISOString()
+      };
+    } else if (body.plan === 'free') {
+      subUpsert = {
+        user_id: id,
+        plan_id: 'free',
+        status: 'active',
+        current_period_end: new Date().toISOString(), // expires immediately
+        updated_at: new Date().toISOString()
+      };
+      updates.subscription_end_date = new Date().toISOString();
     }
 
     if (Object.keys(updates).length === 0) {
@@ -59,6 +94,11 @@ export async function PATCH(req, { params }) {
     // Update the profile
     const { error: profileError } = await sb.from('profiles').update(updates).eq('id', id);
     if (profileError) throw profileError;
+
+    // Sync to subscriptions table to ensure PlanGuard resolves it correctly
+    if (subUpsert) {
+      await sb.from('subscriptions').upsert(subUpsert, { onConflict: 'user_id' });
+    }
 
     // Log the action
     await logAction(sb, session.email, 'UPDATE_USER', id, updates);

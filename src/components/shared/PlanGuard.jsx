@@ -20,7 +20,7 @@ export default function PlanGuard({ children, requiredPlan = 'pro', featureName 
 
   const currentPlan = subscription?.plan_id || 'free';
   const hasAccess = 
-    (requiredPlan === 'pro' && (currentPlan === 'pro' || currentPlan === '6_month' || currentPlan === 'lifetime_legacy')) ||
+    (requiredPlan === 'pro' && (currentPlan === 'pro' || currentPlan === '6_month' || currentPlan === 'lifetime' || currentPlan === 'pro_lifetime' || currentPlan === 'lifetime_legacy')) ||
     requiredPlan === 'free';
 
   if (!hasAccess) {

@@ -36,8 +36,11 @@ export async function GET(req) {
     const { data: profiles, error: profilesError } = await sb.from('profiles').select('*');
     if (profilesError) throw profilesError;
 
+    const { data: subscriptions } = await sb.from('subscriptions').select('user_id, plan_id, status');
+
     // Create a map of profiles
     const profilesMap = new Map((profiles || []).map(p => [p.id, p]));
+    const subsMap = new Map((subscriptions || []).map(s => [s.user_id, s]));
 
     // Fetch affiliates mapping
     const { data: referrals } = await sb.from('affiliate_referrals').select('user_id, affiliate_id');
@@ -49,13 +52,29 @@ export async function GET(req) {
     // Combine and build users array
     let usersList = authUsers.map(au => {
       const p = profilesMap.get(au.id) || {};
+      const sub = subsMap.get(au.id) || {};
       const partner = userReferralMap.get(au.id);
+
+      // Normalize lifetime checks across both tables
+      let computedPlan = p.plan_type || 'free';
+      const subPlan = sub.plan_id;
+      
+      if (
+        computedPlan === 'pro_lifetime' || 
+        computedPlan === 'lifetime_legacy' || 
+        computedPlan === 'lifetime' || 
+        subPlan === 'lifetime' ||
+        subPlan === 'lifetime_legacy'
+      ) {
+        computedPlan = 'lifetime';
+      }
+
       return {
         id: au.id,
         email: au.email,
         name: p.full_name || 'No Name',
-        plan: p.plan_type || 'free',
-        isPro: !!p.is_pro,
+        plan: computedPlan,
+        isPro: !!p.is_pro || computedPlan === 'lifetime' || subPlan === 'pro',
         status: p.status || 'active',
         joinDate: au.created_at,
         lastLogin: au.last_sign_in_at,
