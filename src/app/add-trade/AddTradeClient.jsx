@@ -202,25 +202,25 @@ export default function AddTrade() {
   };
 
   return (
-    <div className="min-h-screen px-4 sm:px-6 lg:px-10 py-6 md:py-10 max-w-[1440px] mx-auto animate-fade-in pb-32 lg:pb-10 relative overflow-hidden">
+    <div className="min-h-screen px-4 sm:px-6 lg:px-10 pt-4 md:pt-6 pb-20 lg:pb-10 max-w-[1440px] mx-auto animate-fade-in relative overflow-hidden">
       {/* Background Ambience */}
       <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-[var(--accent)]/5 blur-[120px] rounded-full animate-float"></div>
       
       <div className="relative z-10 w-full">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-8 md:mb-16 px-2">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-6 md:mb-10 px-2">
             <div className="flex-1">
                 <button 
                   onClick={() => router.back()}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-8 hover:text-[var(--foreground)] hover:border-[var(--accent)]/30 transition-all group w-fit leading-relaxed"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl glass-effect border-[var(--glass-border)] text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em] mb-6 hover:text-[var(--foreground)] hover:border-[var(--accent)]/30 transition-all group w-fit leading-relaxed"
                 >
                   <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
                 </button>
-                <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 mb-3">
                     <span className="flex items-center gap-2 px-3 py-1 rounded-full glass-effect border-[var(--glass-border)] text-[var(--accent)] text-[10px] font-black uppercase tracking-[0.2em] animate-pulse leading-relaxed">
                         <Sparkles size={12} /> Execution Profile
                     </span>
                 </div>
-                <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none text-gradient mb-4">
+                <h1 className="text-2xl md:text-5xl font-black text-[var(--foreground)] tracking-tighter leading-none text-gradient mb-3">
                     New Entry Log
                 </h1>
                 <p className="text-[var(--text-secondary)] font-medium max-w-lg">Log your institutional setups with millisecond precision.</p>
