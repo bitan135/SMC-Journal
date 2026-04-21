@@ -506,7 +506,6 @@ export async function saveTrade(trade) {
       instrument: trade.instrument?.toUpperCase() || 'EURUSD',
       result: trade.result || 'Break Even',
       type: trade.type || trade.direction || 'Buy',
-      setup_images: Array.isArray(trade.setup_images) ? trade.setup_images : [],
       smc_tags: Array.isArray(trade.smcTags || trade.smc_tags) ? (trade.smcTags || trade.smc_tags) : [],
       liquidity_sweep: Array.isArray(trade.liquiditySweep || trade.liquidity_sweep) ? (trade.liquiditySweep || trade.liquidity_sweep) : [],
     };
@@ -532,7 +531,7 @@ export async function saveTrade(trade) {
     const KEYS_TO_REMOVE = [
       'entryPrice', 'stopLoss', 'takeProfit', 'lotSize', 'tradeDate', 
       'smcTags', 'liquiditySweep', 'riskAmount', 'risk_amount',
-      'timeframeBias', 'biasType', 'poiType'
+      'timeframeBias', 'biasType', 'poiType', 'setup_images'
     ];
     KEYS_TO_REMOVE.forEach(key => delete tradeData[key]);
 
@@ -589,7 +588,7 @@ export async function updateTrade(id, updates) {
     const KEYS_TO_REMOVE = [
       'entryPrice', 'stopLoss', 'takeProfit', 'lotSize', 'tradeDate', 
       'smcTags', 'liquiditySweep', 'riskAmount', 'risk_amount',
-      'timeframeBias', 'biasType', 'poiType'
+      'timeframeBias', 'biasType', 'poiType', 'setup_images'
     ];
     KEYS_TO_REMOVE.forEach(key => delete hardenedUpdates[key]);
 
