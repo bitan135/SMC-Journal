@@ -76,10 +76,20 @@ export const tradeService = {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
-    const fileName = `${user.id}/${Date.now()}-${file.name}`;
+    // Make sure we have a clean file name to prevent URL parsing errors
+    const originalName = file.name || 'image.jpg';
+    const cleanName = originalName.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const fileName = `${user.id}/${Date.now()}-${cleanName}`;
+    
+    // Explicitly providing contentType prevents Supabase JS fetch from hanging
+    // on dynamically constructed File objects inside Next.js client environments.
     const { data, error } = await supabase.storage
       .from('trade-screenshots')
-      .upload(fileName, file);
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type || 'image/jpeg'
+      });
     
     if (error) throw error;
 
